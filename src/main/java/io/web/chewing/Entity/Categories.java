@@ -2,5 +2,5 @@ package io.web.chewing.Entity;
 
 public enum Categories {
 
-    Korean, Chinese, Japanese, cafe
+    Korean, Chinese, Japanese,Western ,cafe
 }

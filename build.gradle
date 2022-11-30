@@ -26,28 +26,35 @@ repositories {
 
 dependencies {
     /*  해당 의존성들은 설정 필요해서 주석처리함
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     
 
     
-    testImplementation 'org.springframework.security:spring-security-test'
+
     */
 
     /* 시큐리티 의존성 먼저 적용시 불편해짐
      implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-     implementation 'org.springframework.boot:spring-boot-starter-security'
+
      */
 
+    /*testImplementation 'org.springframework.security:spring-security-test'*/
+    /*implementation 'org.springframework.boot:spring-boot-starter-security'*/
+
+    testImplementation 'org.projectlombok:lombok:1.18.22'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 
     annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
     annotationProcessor(
 
             "javax.persistence:javax.persistence-api",
@@ -57,6 +64,8 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+
+    implementation 'org.modelmapper:modelmapper:3.1.0'
 }
 
 tasks.named('test') {

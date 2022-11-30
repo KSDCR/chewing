@@ -4,6 +4,7 @@ package io.web.chewing.Entity;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Builder
+@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -43,7 +45,7 @@ public class Member extends BaseEntity {
 
     @ColumnDefault("0")
     private char delete_yn;
-
+    
     private char gender;
 
     private boolean verify;
