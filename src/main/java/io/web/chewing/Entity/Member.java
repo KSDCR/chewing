@@ -1,6 +1,7 @@
 package io.web.chewing.Entity;
 
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -21,13 +22,19 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @NotNull
     private String name;
 
+    @Column(nullable = false, unique = true)
     private String nickname;
+
+    @NotNull
     private String password;
 
+    @NotNull
     private String client_gb;
 
     private String phone;

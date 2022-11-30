@@ -21,8 +21,11 @@ public class Reply extends BaseEntity{
     @JoinColumn(name = "review_id")
     private Review review;
 
-    private String writer;
+    @OneToOne
+    @JoinColumn(name = "member_nickname")
+    private Member member;
 
+    @NonNull
     @Column(length = 500)
     private String content;
 }

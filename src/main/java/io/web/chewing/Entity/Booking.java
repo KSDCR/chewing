@@ -1,6 +1,7 @@
 package io.web.chewing.Entity;
 
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,19 +21,23 @@ public class Booking extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_nickname")
     private Member member;
 
+    @NonNull
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @NonNull
     private Long people;
 
+    @NotNull
     private LocalDateTime date;
 
+    @NotNull
     private LocalDateTime time;
 
 }

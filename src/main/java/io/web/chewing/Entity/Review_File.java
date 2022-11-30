@@ -21,5 +21,6 @@ public class Review_File extends BaseEntity{
     @JoinColumn(name = "review_id")
     private Review review;
 
+    @NonNull
     private String name;
 }

@@ -20,6 +20,7 @@ public class Store extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String detail;
@@ -31,6 +32,8 @@ public class Store extends BaseEntity {
     private String address;
 
     private String phone;
+
+    private String file;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
