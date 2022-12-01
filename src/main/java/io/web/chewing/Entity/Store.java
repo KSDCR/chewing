@@ -35,7 +35,7 @@ public class Store extends BaseEntity {
 
     private String file;
 
-
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();

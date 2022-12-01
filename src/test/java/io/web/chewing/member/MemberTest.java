@@ -4,25 +4,26 @@ import io.web.chewing.Entity.Categories;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.MemberRole;
 import io.web.chewing.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.stream.IntStream;
 
 @SpringBootTest
+@Slf4j
 public class MemberTest {
 
     @Autowired
     private MemberRepository memberRepository;
 
 
-
-
     @Test
     public void insertUser(){
         // 1~4User 5ADMIN
-        IntStream.rangeClosed(1,5).forEach(i ->{
+        IntStream.rangeClosed(6,10).forEach(i ->{
             Member member = Member.builder()
                     .email("user"+i+"@studym.com")
                     .password("1234")
@@ -37,7 +38,7 @@ public class MemberTest {
                     .build();
             // 기본롤
             member.addMemberRole(MemberRole.USER);
-            member.addCategories(Categories.cafe);
+            member.addCategories(Categories.Cafe);
             member.addCategories(Categories.Korean);
             if(i > 4){
                 member.addMemberRole(MemberRole.ADMIN);
@@ -46,4 +47,10 @@ public class MemberTest {
             memberRepository.save(member);
         });
     }
+
+    public void testRead(){
+
+    }
+
+
 }
