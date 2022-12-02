@@ -3,7 +3,7 @@ package io.web.chewing.Entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Time;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +25,9 @@ public class Store extends BaseEntity {
 
     private String detail;
 
-    private LocalDateTime openTime;
+    private Time openTime;
 
-    private LocalDateTime closeTime;
+    private Time closeTime;
 
     private String address;
 
@@ -35,7 +35,7 @@ public class Store extends BaseEntity {
 
     private String file;
 
-
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();

@@ -50,10 +50,12 @@ public class Member extends BaseEntity {
 
     private boolean verify;
 
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();

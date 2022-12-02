@@ -5,7 +5,8 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Builder
@@ -21,7 +22,7 @@ public class Booking extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_nickname")
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
     private Member member;
 
     @NonNull
@@ -35,9 +36,9 @@ public class Booking extends BaseEntity {
     private Long people;
 
     @NotNull
-    private LocalDateTime date;
+    private Date date;
 
     @NotNull
-    private LocalDateTime time;
+    private Time time;
 
 }
