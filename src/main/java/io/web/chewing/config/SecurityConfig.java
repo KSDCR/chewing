@@ -1,7 +1,15 @@
 package io.web.chewing.config;
 
+import io.web.chewing.config.security.filter.ApiCheckFilter;
+import io.web.chewing.config.security.filter.ApiLoginFilter;
+import io.web.chewing.config.security.handler.ApiLoginFailHandler;
+import io.web.chewing.config.security.handler.Custom403Handler;
+import io.web.chewing.config.security.handler.MemberLoginSuccessHandler;
+import io.web.chewing.config.security.service.AuthUserDetailsService;
+import io.web.chewing.config.security.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,42 +17,96 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 
-
-@Slf4j
+@Log4j2
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
+    private final DataSource dataSource;
+    private final AuthUserDetailsService userDetailsService;
+
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    private final DataSource dataSource;
 
     @Bean
-    public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+/*      
+        Controller 단에서 롤 걸어줌
+        http.authorizeRequests().antMatchers("/api/title").permitAll();
+        http.authorizeRequests().antMatchers("/api/main").hasRole("USER");
+        http.authorizeRequests().antMatchers("api/admin").hasRole("ADMIN");*/
+
+
         http.formLogin();
         http.csrf().disable();
         http.logout();
-
+        http.oauth2Login().successHandler(successHandler());
+        http.rememberMe().key("12345678").tokenRepository(persistentTokenRepository()).tokenValiditySeconds(60 * 10).userDetailsService(userDetailsService);//10분짜리 로그인 유지 토큰
 
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
 
+
+        http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(apiLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+
         return http.build();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+
+        return (web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return new MemberLoginSuccessHandler(passwordEncoder());
+    }
+
+    @Bean
+    public Filter apiLoginFilter(AuthenticationManager authenticationManager) {
+
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login", jwtUtil());
+        apiLoginFilter.setAuthenticationManager(authenticationManager);
+
+        apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
+
+        return apiLoginFilter;
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);
+
+        return repo;
+    }
+
+    @Bean
+    public JWTUtil jwtUtil() {
+        return new JWTUtil();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -52,4 +114,16 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+
+    @Bean
+    public Filter apiCheckFilter() {
+        return new ApiCheckFilter("/member/**/*", jwtUtil());
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new Custom403Handler();
+    }
 }
+
+

@@ -30,7 +30,7 @@ dependencies {
      implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
      */
-
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
@@ -56,6 +56,18 @@ dependencies {
 
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+
+
+    //Jwt 오류(io.jsonwebtoken.lang.UnknownClassException 해결을 위해 추가한 의존성
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-gson
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-gson', version: '0.11.2'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
 
     implementation 'org.modelmapper:modelmapper:3.1.0'

@@ -3,6 +3,7 @@ package io.web.chewing.Entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,9 +26,9 @@ public class Store extends BaseEntity {
 
     private String detail;
 
-    private LocalDateTime openTime;
+    private Time openTime;
 
-    private LocalDateTime closeTime;
+    private Time closeTime;
 
     private String address;
 
