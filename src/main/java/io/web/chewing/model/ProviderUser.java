@@ -15,6 +15,7 @@ public interface ProviderUser {
     String getProfile();
     String getGender();
     String getPhone();
+    String getNickName();
 
     List<? extends GrantedAuthority> getAuthorities();
     Map<String,Object> getAttributes();

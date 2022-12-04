@@ -17,4 +17,24 @@ public class KakaoUser extends OAuth2ProviderUser {
     public String getUsername() {
         return null;
     }
+
+    @Override
+    public String getProfile() {
+        return null;
+    }
+
+    @Override
+    public String getGender() {
+        return null;
+    }
+
+    @Override
+    public String getPhone() {
+        return null;
+    }
+
+    @Override
+    public String getNickName() {
+        return null;
+    }
 }

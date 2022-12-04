@@ -16,6 +16,26 @@ public class GoogleUser extends OAuth2ProviderUser{
 
     @Override
     public String getUsername() {
-        return (String) getAttributes().get("sub");
+        return (String) getAttributes().get("email");
+    }
+
+    @Override
+    public String getProfile() {
+        return (String) getAttributes().get("picture");
+    }
+
+    @Override
+    public String getGender() {
+        return null;
+    }
+
+    @Override
+    public String getPhone() {
+        return null;
+    }
+
+    @Override
+    public String getNickName() {
+        return null;
     }
 }

@@ -7,6 +7,7 @@ import io.web.chewing.model.ProviderUser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,9 @@ public abstract class AbstractOAuth2UserService {
             case "kakao" -> new KakaoUser(oAuth2User, clientRegistration);
             default -> throw new IllegalStateException("Unexpected value: " + registrationId);
         };
+    }
+
+    protected void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+
     }
 }
