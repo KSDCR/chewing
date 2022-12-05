@@ -37,7 +37,7 @@ public class Member extends BaseEntity {
     private String password;
 
     @NotNull
-    private String client_gb;
+    private String provider;
 
     private String phone;
 
@@ -46,7 +46,7 @@ public class Member extends BaseEntity {
     @ColumnDefault("0")
     private char delete_yn;
     
-    private char gender;
+    private String gender;
 
     private boolean verify;
 

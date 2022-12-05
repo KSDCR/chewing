@@ -9,6 +9,7 @@ import io.web.chewing.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -17,13 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 @Getter
 @Slf4j
-@AllArgsConstructor
 public abstract class AbstractOAuth2UserService {
 
+    @Autowired
+    private MemberRepository memberRepository;
 
-    private final MemberRepository memberRepository;
-
-    private final MemberService memberService;
+    @Autowired
+    private MemberService memberService;
 
     protected ProviderUser providerUser(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
         String registrationId = clientRegistration.getRegistrationId();

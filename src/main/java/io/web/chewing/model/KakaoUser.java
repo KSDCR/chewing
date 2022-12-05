@@ -37,4 +37,9 @@ public class KakaoUser extends OAuth2ProviderUser {
     public String getNickName() {
         return null;
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
 }
