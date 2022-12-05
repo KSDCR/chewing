@@ -1,9 +1,12 @@
 package io.web.chewing.service;
 
+import io.web.chewing.Entity.Member;
 import io.web.chewing.model.GoogleUser;
 import io.web.chewing.model.KakaoUser;
 import io.web.chewing.model.NaverUser;
 import io.web.chewing.model.ProviderUser;
+import io.web.chewing.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -14,9 +17,18 @@ import org.springframework.stereotype.Service;
 @Service
 @Getter
 @Slf4j
+@AllArgsConstructor
 public abstract class AbstractOAuth2UserService {
+
+
+    private final MemberRepository memberRepository;
+
+    private final MemberService memberService;
+
     protected ProviderUser providerUser(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
         String registrationId = clientRegistration.getRegistrationId();
+
+
 
         return switch (registrationId){
             case "google" -> new GoogleUser(oAuth2User,clientRegistration);
@@ -27,6 +39,19 @@ public abstract class AbstractOAuth2UserService {
     }
 
     protected void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+        Member member = saveMember(providerUser, userRequest);
+    }
+
+    private Member saveMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+        return memberRepository.findByEmail(providerUser.getUsername()).orElseGet(() -> RegisterMember(providerUser,userRequest));
 
     }
+
+    private Member RegisterMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+        return memberService.register(userRequest.getClientRegistration().getRegistrationId(),providerUser);
+    }
+
+
+
+
 }
