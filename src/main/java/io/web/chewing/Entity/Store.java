@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 @Table
 public class Store extends BaseEntity {
@@ -48,4 +50,13 @@ public class Store extends BaseEntity {
         this.categoriesSet.clear();
     }
 
+    public void change(String name, String detail, String address, String phone, String file, Time openTime, Time closeTime) {
+        this.name = name;
+        this.detail = detail;
+        this.address = address;
+        this.phone = phone;
+        this.file = file;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+    }
 }
