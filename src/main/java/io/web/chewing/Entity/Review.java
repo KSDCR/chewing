@@ -29,7 +29,7 @@ public class Review extends BaseEntity {
     private String title;
 
     @OneToOne
-    @JoinColumn(name = "member_nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(length = 500)

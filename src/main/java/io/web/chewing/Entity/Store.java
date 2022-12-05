@@ -25,9 +25,9 @@ public class Store extends BaseEntity {
 
     private String detail;
 
-    private Time openTime;
+    private String open_Time;
 
-    private Time closeTime;
+    private String close_Time;
 
     private String address;
 
