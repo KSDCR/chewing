@@ -2,19 +2,20 @@ package io.web.chewing.service;
 
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
-import io.web.chewing.domain.MemberDto;
+import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,10 +66,9 @@ public class ReviewService {
 //    return dtos;
 
 
-
 //    }
 
-    public PageResponseDto<ReviewDto> list(Long store,Long member_id, PageRequestDto pageRequestDto) {
+    public PageResponseDto<ReviewDto> list(Long store, Long member_id, PageRequestDto pageRequestDto) {
 
         Pageable pageable = pageRequestDto.getPageable("store");
 
@@ -76,13 +76,13 @@ public class ReviewService {
 
 
         List<ReviewDto> dtoList = result.getContent().stream()
-                .map(review -> modelMapper.map(review,ReviewDto.class)).collect(Collectors.toList());
+                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
 
 
         return PageResponseDto.<ReviewDto>withAll()
                 .pageRequestDto(pageRequestDto)
                 .dtoList(dtoList)
-                .total((int)result.getTotalElements())
+                .total((int) result.getTotalElements())
                 .build();
 
     }
@@ -145,14 +145,26 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto) {
-
-        Review review = modelMapper.map(reviewDto, Review.class);
-
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
+        log.info("dd" + String.valueOf(reviewDto));
+        Review review = reviewDto.toEntity();
+        Member loadMember = Member.builder()
+                .id(authMemberDTO.getId())
+                .nickname(authMemberDTO.getNickname())
+                .password(authMemberDTO.getPassword())
+                .delete_yn('0')
+                .email(authMemberDTO.getEmail())
+                .provider(authMemberDTO.getProvider())
+                .build();
+        review.assignUser(loadMember);
         log.info("===========================ls");
         Long id = reviewRepository.save(review).getId();
 
         return id;
+    }
+
+    public Member memberBuild(AuthMemberDTO authMemberDTO) {
+        return modelMapper.map(authMemberDTO, Member.class);
     }
 
 //    public Long register(ReviewDto reviewDto /*,MemberDto memberDto/*, Long id, MultipartFile[] files*/) {
@@ -263,7 +275,6 @@ public class ReviewService {
 //    }
 
 
-
     public void modify(ReviewDto reviewDto) {
 
         Optional<Review> result = reviewRepository.findById(reviewDto.getId());
@@ -289,13 +300,13 @@ public class ReviewService {
         Page<Review> result = reviewRepository.findReviewByMember(member, pageable);
 
         List<ReviewDto> dtoList = result.getContent().stream()
-                .map(review -> modelMapper.map(review,ReviewDto.class)).collect(Collectors.toList());
+                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
 
 
         return PageResponseDto.<ReviewDto>withAll()
                 .pageRequestDto(pageRequestDto)
                 .dtoList(dtoList)
-                .total((int)result.getTotalElements())
+                .total((int) result.getTotalElements())
                 .build();
     }
 
@@ -320,7 +331,7 @@ public class ReviewService {
     }
 
     public PageResponseDto<ReviewDto> getList(Long store, PageRequestDto pageRequestDto) {
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage() <=0? 0: pageRequestDto.getPage() -1,
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage() <= 0 ? 0 : pageRequestDto.getPage() - 1,
                 pageRequestDto.getSize(),
                 Sort.by("id").ascending());
 
@@ -333,7 +344,7 @@ public class ReviewService {
         return PageResponseDto.<ReviewDto>withAll()
                 .pageRequestDto(pageRequestDto)
                 .dtoList(dtoList)
-                .total((int)result.getTotalElements())
+                .total((int) result.getTotalElements())
                 .build();
 
     }

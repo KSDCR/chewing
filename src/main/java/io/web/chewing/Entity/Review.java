@@ -1,8 +1,11 @@
 package io.web.chewing.Entity;
 
+import io.web.chewing.config.security.dto.AuthMemberDTO;
 import lombok.*;
+import org.apache.ibatis.javassist.NotFoundException;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -24,12 +27,8 @@ public class Review extends BaseEntity {
     @NonNull
     private double rate;
 
-    @NonNull
-    @Column(length = 50)
-    private String title;
-
     @OneToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
     private Member member_id;
 
     @Column(length = 500)
@@ -37,5 +36,11 @@ public class Review extends BaseEntity {
 
     public void change(String content) {
         this.content = content;
+    }
+
+    public void assignUser(Member member) throws NotFoundException {
+
+
+        this.member_id = member;
     }
 }

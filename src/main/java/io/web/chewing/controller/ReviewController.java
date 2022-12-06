@@ -1,12 +1,14 @@
 package io.web.chewing.controller;
 
-import io.web.chewing.Entity.Store;
+import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,14 +66,13 @@ public class ReviewController {
 //    }
 
     @GetMapping("/myList")
-    public void myList(Long member, PageRequestDto pageRequestDto, Model model){
+    public void myList(Long member, PageRequestDto pageRequestDto, Model model) {
 
         PageResponseDto<ReviewDto> responseDto = reviewService.myList(member, pageRequestDto);
 
         log.info(responseDto);
 
         model.addAttribute("responseDto", responseDto);
-
 
 
     }
@@ -91,7 +92,7 @@ public class ReviewController {
 //    }
 
     @GetMapping("/list")
-    public void list(Long store, Long member_id,PageRequestDto pageRequestDto, Model model){
+    public void list(Long store, Long member_id, PageRequestDto pageRequestDto, Model model) {
 
         String member = "";
 
@@ -107,13 +108,13 @@ public class ReviewController {
 
 
     @GetMapping("getList")
-    public PageResponseDto<ReviewDto> getList( Long store,
-                                             PageRequestDto pageRequestDto){
+    public PageResponseDto<ReviewDto> getList(Long store,
+                                              PageRequestDto pageRequestDto) {
 
         PageResponseDto<ReviewDto> responseDto = reviewService.getList(store, pageRequestDto);
 
 
-        log.info("=========================="+String.valueOf(responseDto));
+        log.info("==========================" + String.valueOf(responseDto));
 
         return responseDto;
     }
@@ -170,7 +171,7 @@ public class ReviewController {
 //
 //    }
 
-//    @RequestMapping("/list")
+    //    @RequestMapping("/list")
 //    public void list(Model model) {
 //
 //        List<ReviewDto> list = ReviewService.list();
@@ -180,26 +181,29 @@ public class ReviewController {
 //    }
 //
     @GetMapping("register")
-    public void register(){
-
+    public void register(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        log.info("객체가 있나요?"+ authMemberDTO);
     }
-//
+
+    //
     @PostMapping("register")
-    public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,MultipartFile[] files){
+    public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
 
         log.info("POST register.......");
+        log.info("인증객체는?" + authMemberDTO);
 
-        if(bindingResult.hasErrors()) {
-            log.info("has errors......."+bindingResult.getAllErrors());
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+        if (bindingResult.hasErrors()) {
+            log.info("has errors......." + bindingResult.getAllErrors());
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/review/register";
         }
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto);
+        Long id = reviewService.register(reviewDto, authMemberDTO);
 
-        log.info("id"+id);
+        log.info("id" + id);
 
         redirectAttributes.addFlashAttribute("result", id);
 
@@ -207,7 +211,7 @@ public class ReviewController {
     }
 
     @GetMapping({"remove", "modify"})
-    public void findReviewById(Long id, PageRequestDto pageRequestDto, Model model){
+    public void findReviewById(Long id, PageRequestDto pageRequestDto, Model model) {
 
         ReviewDto reviewDto = reviewService.get(id);
 
@@ -217,7 +221,7 @@ public class ReviewController {
 
     }
 
-//    @GetMapping({"modify", "delete"})
+    //    @GetMapping({"modify", "delete"})
 //    public void findReviewById(long id, Model model ) {
 //
 //        ReviewDto reviewDto = ReviewService.findById(id);
@@ -226,7 +230,7 @@ public class ReviewController {
 //    }
 //
     @PostMapping("modify")
-    public  String updateReview(
+    public String updateReview(
             PageRequestDto pageRequestDto,
             @Validated ReviewDto reviewDto,
             BindingResult bindingResult,
@@ -235,16 +239,16 @@ public class ReviewController {
             @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
 
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
 
             String link = pageRequestDto.getLink();
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
             redirectAttributes.addAttribute("id", reviewDto.getId());
 
-            return "redirect:/list/modify?"+link;
+            return "redirect:/list/modify?" + link;
         }
 
         reviewService.modify(reviewDto);
@@ -259,7 +263,8 @@ public class ReviewController {
 
         return "redirect:/review/list";
     }
-//
+
+    //
     @PostMapping("remove")
     public String deleteReview(long id, RedirectAttributes redirectAttributes) {
 
@@ -271,9 +276,6 @@ public class ReviewController {
 
         return "redirect:/review/list";
     }
-
-
-
 
 
 }

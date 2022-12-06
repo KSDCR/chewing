@@ -1,7 +1,9 @@
 package io.web.chewing.domain;
 
 import io.web.chewing.Entity.Member;
+import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
+import io.web.chewing.config.security.dto.AuthMemberDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,10 +18,14 @@ public class ReviewDto {
     private Long id;
     private Long store;
     private double rate;
-    private Long member_id;
+    private Member member_nickname;
     private String content;
     private String create_time;
 
-
+    public Review toEntity(){
+        return Review.builder()
+                .rate(rate)
+                .content(content).build();
+    }
 
 }

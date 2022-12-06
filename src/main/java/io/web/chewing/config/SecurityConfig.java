@@ -55,7 +55,7 @@ public class SecurityConfig {
         http.authorizeRequests().antMatchers("/api/main").hasRole("USER");
         http.authorizeRequests().antMatchers("api/admin").hasRole("ADMIN");*/
 
-
+        http.authorizeRequests().antMatchers("/**").permitAll();
         http.formLogin();
         http.csrf().disable();
         http.logout();
