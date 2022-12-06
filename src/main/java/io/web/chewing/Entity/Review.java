@@ -29,10 +29,13 @@ public class Review extends BaseEntity {
     private String title;
 
     @OneToOne
-    @JoinColumn(name = "member_nickname")
-    private Member member;
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member_id;
 
     @Column(length = 500)
     private String content;
 
+    public void change(String content) {
+        this.content = content;
+    }
 }
