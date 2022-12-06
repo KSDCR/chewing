@@ -34,7 +34,8 @@ public class AuthUserDetailsService implements UserDetailsService {
                 member.getEmail(),
                 member.getPassword(),
                 member.getNickname(),
-                member.getClient_gb(),
+                member.getProvider(),
+                member.getName(),
                 member.getDelete_yn(),
                 member.isVerify(),
                 member.getRoleSet().stream()

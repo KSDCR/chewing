@@ -54,14 +54,15 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
         log.info("===============================");
         log.info(email);
         log.info("===============================");
-        Member member = saveSocialMember(email);
+        Member member = saveSocialMember(email,paramMap);
 
         log.info(member);
 
         AuthMemberDTO authMemberDTO = new AuthMemberDTO(member.getEmail(),
                 member.getPassword(),
                 member.getNickname(),
-                member.getClient_gb(),
+                member.getProvider(),
+                member.getName(),
                 member.getDelete_yn(),
                 member.isVerify(),
                 List.of(new SimpleGrantedAuthority("USER")));
@@ -112,18 +113,22 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
     }
 
 
-    private Member saveSocialMember(String email) {
+    private Member saveSocialMember(String email, Map<String, Object> paramMap) {
         // 기존에 동일한 이메일로 가입한 회원은 그대로 조회만
         return memberRepository.findByEmail(email)
-                .orElseGet(() -> getNewMember(email));
+                .orElseGet(() -> getNewMember(email,paramMap));
     }
 
-    private Member getNewMember(String email) {
+    private Member getNewMember(String email, Map<String, Object> paramMap) {
         // 없다면 회원 추가 소셜 아이디라서 패스워드를 사용할일이 없음 그러니 임의로 1111지정 이메일은 연동한 이메일
         Member newMember = Member.builder()
                 .email(email)
                 .password(passwordEncoder.encode("1111"))
                 .nickname(email)
+                .name(email)
+                .provider("test")
+                .phone("test")
+                .gender("t")
                 .delete_yn('0')
                 .build();
 

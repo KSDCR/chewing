@@ -20,7 +20,9 @@ public class AuthMemberDTO extends User implements OAuth2User {
     private String email;
     private String password;
     private String nickname;
-    private String client_gb;
+
+    private String name;
+    private String provider;
 
     private char delete_yn;
     private boolean verify;
@@ -30,7 +32,8 @@ public class AuthMemberDTO extends User implements OAuth2User {
     public AuthMemberDTO(String username,
                          String password,
                          String nickname,
-                         String client_gb,
+                         String provider,
+                         String name,
                          char delete_yn,
                          boolean verify,
                          Collection<? extends GrantedAuthority> authorities) {
@@ -38,7 +41,8 @@ public class AuthMemberDTO extends User implements OAuth2User {
         this.email = username;
         this.password = password;
         this.nickname = nickname;
-        this.client_gb = client_gb;
+        this.provider = provider;
+        this.name = name;
         this.verify = verify;
     }
 
