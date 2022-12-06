@@ -39,8 +39,10 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 //
 //    @Query("select r FROM Review r WHERE r.store.id=:store")
 //    Page<Review> findReviewByStore(Long store);
+
     @Query("select r FROM Review r WHERE r.member_id=:member_id ORDER BY r.id")
     Page<Review> findReviewByMember(Long member_id, Pageable pageable);
+
 
 //    @Query("select r FROM Review r WHERE r.store=:store")
 //    List<ReviewDto> reviewList(Store store);
@@ -56,6 +58,9 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 
     @Query("select r FROM Review r WHERE r.store.id=:store")
     List<ReviewDto> reviewList(Long store);
+
+    @Query("select r FROM Review r WHERE r.member_id=:member_id ORDER BY r.id")
+    List<ReviewDto> ReviewByMember(Long member_id);
 
 
 //    @Query("select r FROM Review r WHERE r.store.id=:store")

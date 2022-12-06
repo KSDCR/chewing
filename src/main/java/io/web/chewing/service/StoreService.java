@@ -29,8 +29,8 @@ public class StoreService {
                 .address(dto.getAddress())
                 .phone(dto.getPhone())
                 .detail(dto.getDetail())
-                .openTime(LocalDateTime.now())
-                .closeTime(LocalDateTime.now())
+                .openTime(String.valueOf(LocalDateTime.now()))
+                .closeTime(String.valueOf(LocalDateTime.now()))
                 .file("fileNotFound")
                 .build();
 

@@ -28,7 +28,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotNull
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -38,7 +37,7 @@ public class Member extends BaseEntity {
     private String password;
 
     @NotNull
-    private String client_gb;
+    private String provider;
 
     private String phone;
 
@@ -47,14 +46,16 @@ public class Member extends BaseEntity {
     @ColumnDefault("0")
     private char delete_yn;
     
-    private char gender;
+    private String gender;
 
     private boolean verify;
 
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();

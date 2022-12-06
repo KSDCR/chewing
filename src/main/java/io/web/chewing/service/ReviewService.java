@@ -1,6 +1,8 @@
 package io.web.chewing.service;
 
+import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
+import io.web.chewing.domain.MemberDto;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.ReviewDto;
@@ -38,6 +40,11 @@ public class ReviewService {
 //
 
 //    private final MemberRepository memberRepository;
+
+    public List<ReviewDto> myReviewList(Long member_id) {
+
+        return reviewRepository.ReviewByMember(member_id);
+    }
 
 //    public List<ReviewDto> list(Long store) {
 //
@@ -138,30 +145,42 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto/*, Long id, MultipartFile[] files*/) {
-
-
-//        Optional<Member> member = memberRepository.findById(id);
-//        log.info("이게 뭐냐구우"+String.valueOf(member));
-//
-//        Review review = Review.builder()
-//                .rate(reviewDto.getRate())
-//                .content(reviewDto.getContent())
-//                .member_nickname(reviewDto.getMember())
-//
-//                .build();
-//
-//
-//        review.getStore();
+    public Long register(ReviewDto reviewDto) {
 
         Review review = modelMapper.map(reviewDto, Review.class);
 
-        Long id =reviewRepository.save(review).getId();
-
         log.info("===========================ls");
+        Long id = reviewRepository.save(review).getId();
 
         return id;
     }
+
+//    public Long register(ReviewDto reviewDto /*,MemberDto memberDto/*, Long id, MultipartFile[] files*/) {
+//
+//
+////        Optional<Member> member = memberRepository.findById(id);
+////        log.info("이게 뭐냐구우"+String.valueOf(member));
+////
+////        Review review = Review.builder()
+////                .rate(reviewDto.getRate())
+////                .content(reviewDto.getContent())
+////                .member_nickname(reviewDto.getMember())
+////
+////                .build();
+////
+////
+////        review.getStore();
+//
+//        Review review = modelMapper.map(reviewDto, Review.class);
+//
+//
+//
+//        Long id =reviewRepository.save(review).getId();
+//
+//        log.info("===========================ls");
+//
+//        return id;
+//    }
 
 //    @Value("${aws.s3.bucket}")
 //    private String bucketName;
@@ -318,4 +337,6 @@ public class ReviewService {
                 .build();
 
     }
+
+
 }
