@@ -22,7 +22,7 @@ import java.util.Set;
 @Getter
 @ToString
 @Table
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,4 @@
-package io.web.chewing.config.security.dto.controller;
+package io.web.chewing.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

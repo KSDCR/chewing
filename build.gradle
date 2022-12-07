@@ -26,10 +26,9 @@ repositories {
 
 dependencies {
 
-    /* 시큐리티 의존성 먼저 적용시 불편해짐
+
      implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
-     */
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-security'

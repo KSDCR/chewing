@@ -2,6 +2,7 @@ package io.web.chewing.service;
 
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
+import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
@@ -68,15 +69,19 @@ public class ReviewService {
 
 //    }
 
-    public PageResponseDto<ReviewDto> list(Long store, Long member_id, PageRequestDto pageRequestDto) {
+    public PageResponseDto<ReviewDto> list(Store store, Long member_id, PageRequestDto pageRequestDto) {
 
         Pageable pageable = pageRequestDto.getPageable("store");
 
         Page<Review> result = reviewRepository.findReviewByStore(store, pageable);
 
+        log.info("====================="+result.getContent());
 
         List<ReviewDto> dtoList = result.getContent().stream()
                 .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
+
+        dtoList.forEach(reviewDto -> log.info("12"+ reviewDto));
+
 
 
         return PageResponseDto.<ReviewDto>withAll()
@@ -337,6 +342,7 @@ public class ReviewService {
 
         Page<Review> result = reviewRepository.listOfStore(store, pageable);
 
+
         List<ReviewDto> dtoList =
                 result.getContent().stream().map(reply -> modelMapper.map(reply, ReviewDto.class))
                         .collect(Collectors.toList());
@@ -350,4 +356,47 @@ public class ReviewService {
     }
 
 
+
+
+    public List<ReviewDto> listReviewByStore(Store store) {
+
+
+
+        return reviewRepository.findStoreReview(store);
+    }
+
+//    public List<ReviewDto> getListOfStore(Long store, ReviewDto reviewDto, AuthMemberDTO authMemberDTO) throws NotFoundException {
+//
+//        Review review = reviewDto.toEntity();
+//
+//        Member loadMember = Member.builder()
+//            .id(authMemberDTO.getId())
+//            .nickname(authMemberDTO.getNickname())
+//            .password(authMemberDTO.getPassword())
+//            .delete_yn('0')
+//            .email(authMemberDTO.getEmail())
+//            .provider(authMemberDTO.getProvider())
+//            .build();
+//        review.assignUser(loadMember);
+//
+//        return reviewRepository.listOfBoard(store, review.getMember_id());
+//
+//
+//    }
+//
+//        log.info("dd" + String.valueOf(reviewDto));
+//    Review review = reviewDto.toEntity();
+//    Member loadMember = Member.builder()
+//            .id(authMemberDTO.getId())
+//            .nickname(authMemberDTO.getNickname())
+//            .password(authMemberDTO.getPassword())
+//            .delete_yn('0')
+//            .email(authMemberDTO.getEmail())
+//            .provider(authMemberDTO.getProvider())
+//            .build();
+//        review.assignUser(loadMember);
+//        log.info("===========================ls");
+//    Long id = reviewRepository.save(review).getId();
+//
+//        return id;
 }

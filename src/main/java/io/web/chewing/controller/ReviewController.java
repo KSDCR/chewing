@@ -1,5 +1,6 @@
 package io.web.chewing.controller;
 
+import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
@@ -92,9 +93,7 @@ public class ReviewController {
 //    }
 
     @GetMapping("/list")
-    public void list(Long store, Long member_id, PageRequestDto pageRequestDto, Model model) {
-
-        String member = "";
+    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
 
 //
         PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
@@ -107,17 +106,17 @@ public class ReviewController {
     }
 
 
-    @GetMapping("getList")
-    public PageResponseDto<ReviewDto> getList(Long store,
-                                              PageRequestDto pageRequestDto) {
-
-        PageResponseDto<ReviewDto> responseDto = reviewService.getList(store, pageRequestDto);
-
-
-        log.info("==========================" + String.valueOf(responseDto));
-
-        return responseDto;
-    }
+//    @GetMapping("getList")
+//    public PageResponseDto<ReviewDto> getList(Long store,
+//                                              PageRequestDto pageRequestDto) {
+//
+//        PageResponseDto<ReviewDto> responseDto = reviewService.getList(store, pageRequestDto);
+//
+//
+//        log.info("==========================" + String.valueOf(responseDto));
+//
+//        return responseDto;
+//    }
 //
 //    @GetMapping("/list")
 //    public void list(Long store, PageRequestDto pageRequestDto, Model model){
@@ -157,11 +156,11 @@ public class ReviewController {
 //    }
 
 //    @GetMapping("/list/{store}")
-//    public List<ReviewDto> list(@PathVariable Store store) {
-//        String username = "";
+//    public List<ReviewDto> getList(@PathVariable("store") Long store){
 //
-//        return reviewService.listReviewByStore(store, username);
+//        return null;
 //    }
+
 
     //    @GetMapping("/list")
 //    public void list(PageRequestDto pageRequestDto, Model model) {

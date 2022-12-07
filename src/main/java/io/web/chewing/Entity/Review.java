@@ -5,6 +5,7 @@ import lombok.*;
 import org.apache.ibatis.javassist.NotFoundException;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Getter
 @ToString
 @Table
-public class Review extends BaseEntity {
+public class Review extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
