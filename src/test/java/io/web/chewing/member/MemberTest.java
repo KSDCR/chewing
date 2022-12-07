@@ -3,19 +3,23 @@ package io.web.chewing.member;
 import io.web.chewing.Entity.Categories;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.MemberRole;
+import io.web.chewing.mapper.review.Mapper;
 import io.web.chewing.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.stream.IntStream;
 
+
 @SpringBootTest
 @Slf4j
 public class MemberTest {
 
-    @Autowired
+     @Autowired
     private MemberRepository memberRepository;
+
 
 
     @Test
@@ -27,9 +31,9 @@ public class MemberTest {
                     .password("1234")
                     .delete_yn('0')
                     .nickname("user"+i)
-                    .client_gb("test")
+                    .provider("test")
                     .name("name")
-                    .gender('u')
+                    .gender("s")
                     .phone("01012345678")
                     .verify(true)
                     .profile("냥냥펀치url")
@@ -46,7 +50,9 @@ public class MemberTest {
         });
     }
 
+    @Test
     public void testRead(){
+
 
     }
 

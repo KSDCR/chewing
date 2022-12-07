@@ -1,4 +1,4 @@
-package io.web.chewing.config.security.dto.controller;
+package io.web.chewing.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

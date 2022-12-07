@@ -11,9 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +28,7 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest)  {
 
         log.info("userRequest.....");
         log.info(userRequest);
@@ -41,6 +41,7 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
         log.info("NAME: " + clientName);
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        log.info("oAuth2User:"+oAuth2User);
         Map<String, Object> paramMap = oAuth2User.getAttributes();
 
         paramMap.forEach((s, o) -> {
@@ -56,9 +57,10 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
         log.info("===============================");
         Member member = saveSocialMember(email,paramMap);
 
-        log.info(member);
 
-        AuthMemberDTO authMemberDTO = new AuthMemberDTO(member.getEmail(),
+        AuthMemberDTO authMemberDTO = new AuthMemberDTO(
+                member.getId(),
+                member.getEmail(),
                 member.getPassword(),
                 member.getNickname(),
                 member.getProvider(),
@@ -67,6 +69,8 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
                 member.isVerify(),
                 List.of(new SimpleGrantedAuthority("USER")));
         authMemberDTO.setAttr(paramMap);
+        log.info("Member:" + member);
+        log.info("authMemberDTO:"+authMemberDTO);
 
         return authMemberDTO;
     }
@@ -103,6 +107,7 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
         return email;
     }
 
+
     private String injectKey(String clientName) {
 
         return switch (clientName) {
@@ -112,8 +117,8 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
         };
     }
 
-
-    private Member saveSocialMember(String email, Map<String, Object> paramMap) {
+    @Transactional
+    Member saveSocialMember(String email, Map<String, Object> paramMap) {
         // 기존에 동일한 이메일로 가입한 회원은 그대로 조회만
         return memberRepository.findByEmail(email)
                 .orElseGet(() -> getNewMember(email,paramMap));

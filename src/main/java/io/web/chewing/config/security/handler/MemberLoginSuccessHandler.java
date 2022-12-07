@@ -1,5 +1,6 @@
 package io.web.chewing.config.security.handler;
 
+import io.web.chewing.Entity.Member;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
@@ -29,15 +30,17 @@ public class MemberLoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info("--------------------------------------------");
         log.info("onAuthenticationSuccess");
 
-        AuthMemberDTO authMember = (AuthMemberDTO) authentication.getPrincipal();
+        log.info("객체 확인요옹"+authentication);
+        AuthMemberDTO authMemberDTO = (AuthMemberDTO) authentication.getPrincipal();
 
 
-        boolean passwprdResult = passwordEncoder.matches("1111", authMember.getPassword());
+        boolean passwprdResult = passwordEncoder.matches("1111", authMemberDTO.getPassword());
         //소셜 여부와 비밀번호를 확인후 회원정보 수정페이지로 보냄 지금은 비밀번호가 고정이지만 나중에 입력받는걸로 매칭
-        if (authMember.isVerify()) {
+        if (authMemberDTO.isVerify()) {
             redirectStrategy.sendRedirect(request, response, "/api/member/modifyInfo");
         }else {
             redirectStrategy.sendRedirect(request,response,  "/api/main");
         }
+
     }
 }

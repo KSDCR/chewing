@@ -5,9 +5,13 @@ import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.NotFound;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -18,7 +22,7 @@ import java.util.Set;
 @Getter
 @ToString
 @Table
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +53,7 @@ public class Member extends BaseEntity {
 
     private boolean verify;
 
+
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
@@ -74,6 +79,5 @@ public class Member extends BaseEntity {
     public void clearCategories() {
         this.categoriesSet.clear();
     }
-
 
 }

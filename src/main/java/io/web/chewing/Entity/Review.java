@@ -1,8 +1,12 @@
 package io.web.chewing.Entity;
 
+import io.web.chewing.config.security.dto.AuthMemberDTO;
 import lombok.*;
+import org.apache.ibatis.javassist.NotFoundException;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -11,7 +15,7 @@ import javax.persistence.*;
 @Getter
 @ToString
 @Table
-public class Review extends BaseEntity {
+public class Review extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +28,20 @@ public class Review extends BaseEntity {
     @NonNull
     private double rate;
 
-    @NonNull
-    @Column(length = 50)
-    private String title;
-
     @OneToOne
-    @JoinColumn(name = "member_nickname")
-    private Member member;
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
+    private Member member_id;
 
     @Column(length = 500)
     private String content;
 
+    public void change(String content) {
+        this.content = content;
+    }
+
+    public void assignUser(Member member) throws NotFoundException {
+
+
+        this.member_id = member;
+    }
 }

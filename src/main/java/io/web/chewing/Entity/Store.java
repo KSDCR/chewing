@@ -3,6 +3,7 @@ package io.web.chewing.Entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,9 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 @Table
-public class Store extends BaseEntity {
+public class Store extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +28,9 @@ public class Store extends BaseEntity {
 
     private String detail;
 
-    private Time openTime;
+    private String openTime;
 
-    private Time closeTime;
+    private String closeTime;
 
     private String address;
 

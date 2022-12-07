@@ -31,7 +31,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         log.info("냥냥펀치확인");
 
         AuthMemberDTO dto = new AuthMemberDTO(
-                member.getEmail(),
+                member.getId(), member.getEmail(),
                 member.getPassword(),
                 member.getNickname(),
                 member.getProvider(),
