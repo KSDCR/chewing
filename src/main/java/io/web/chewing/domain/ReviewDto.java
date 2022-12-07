@@ -2,11 +2,10 @@ package io.web.chewing.domain;
 
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
-import io.web.chewing.Entity.Store;
-import io.web.chewing.config.security.dto.AuthMemberDTO;
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
