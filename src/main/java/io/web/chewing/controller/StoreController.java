@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +57,13 @@ public class StoreController {
     }
 
     @PostMapping("/register")
-    public String register(StoreDto storeDto) {
-        storeService.register(storeDto);
-        log.info("===========> " + storeDto);
-        return "redirect:/store/get";
+    public String register(StoreDto storeDto, MultipartFile multipartFile, RedirectAttributes rttr) {
+        long id = storeService.register(storeDto, multipartFile);
+        log.info("register ===========> " + storeDto);
+//        if (id != null) {
+            rttr.addFlashAttribute("message", "새 매장이 등록되었습니다.");
+//        }
+        return "redirect:/store/list";
     }
     
     /*매장 정보 수정 (admin) - 추가 예정*/

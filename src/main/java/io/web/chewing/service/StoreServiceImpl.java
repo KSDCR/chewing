@@ -7,8 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -59,10 +62,33 @@ public class StoreServiceImpl implements StoreService {
 //    }
 
     @Override
-    public Long register(StoreDto storeDto) {
+    @Transactional
+    public Long register(StoreDto storeDto, MultipartFile multipartFile) {
+        log.info("============> " + multipartFile);
         Store store = modelMapper.map(storeDto, Store.class);
         log.info(String.valueOf(storeDto));
-        return storeRepository.save(store).getId();
+
+        if (multipartFile != null && multipartFile.getSize() > 0) {
+            // DB에 파일 정보 저장
+            log.info("============> " + multipartFile.getOriginalFilename());
+            //store.setFile(file.getOriginalFilename());
+
+            // 파일 저장
+//            File folder = new File("C:\\Users\\dlfma\\Desktop\\2022\\chewing\\upload\\store" + storeDto.getId());
+//            folder.mkdirs();
+//            File dest = new File(folder, file.getOriginalFilename());
+//
+//            try {
+//                file.transferTo(dest);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                throw new RuntimeException(e);
+//            }
+        }
+
+        // DB에 매장 정보 저장
+        Long id = storeRepository.save(store).getId();
+        return id;
     }
 
     @Override

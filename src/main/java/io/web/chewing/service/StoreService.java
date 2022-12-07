@@ -8,6 +8,7 @@ import io.web.chewing.domain.StoreDto;
 import io.web.chewing.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface StoreService {
 
     //PageResponseDto<StoreDto> list(PageRequestDto pageRequestDto);
     List<StoreDto> list();
-    Long register(StoreDto storeDto);
+    Long register(StoreDto storeDto, MultipartFile multipartFile);
 
     void update(StoreDto storeDto);
 

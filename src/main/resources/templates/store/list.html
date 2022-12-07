@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    .list {
+        height: 100px;
+        width: 390px;
+/*        margin: 30px;
+        padding: 10px;*/
+        background-color: #f2f2f2;
+        border-radius: 10px;
+    }
+    .image {
+        width: 90px;
+        height: 90px;
+        align-content: center;
+        float: left;
+    }
+    /*.list div {
+        display: inline;
+    }*/
+</style>
 <body>
+<div>
+    <th:block th:replace="fragments/header :: headerFragment"></th:block>
+</div>
   <h1>매장 리스트</h1>
-
+    <div class="list" th:each="dto:${storeList}">
+        <div class="image">
+            매장 사진
+        </div>
+        <div class="text">
+            <h4>
+                <a th:href="@{/store/get(id=${dto.id})}">[[${dto.name}]]</a>
+            </h4>
+            <div>[[${dto.address}]]</div>
+            <div>[[${dto.detail}]]</div>
+        </div>
+    </div>
 </body>
 </html>
