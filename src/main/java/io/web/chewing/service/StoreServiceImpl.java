@@ -1,20 +1,23 @@
 package io.web.chewing.service;
 
 import io.web.chewing.Entity.Store;
+import io.web.chewing.domain.PageDto;
+import io.web.chewing.domain.PageRequestDto;
+import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
-import java.io.File;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,13 +35,88 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreDto> list() {
-        List<Store> result = storeRepository.findAll();
-        List<StoreDto> dtoList = result.stream()
-                .map(store -> modelMapper.map(store, StoreDto.class)).collect(Collectors.toList());
+    public Page<StoreDto> list(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Store> stores = storeRepository.findAllStores(pageRequest);
 
-        return dtoList;
+        return stores.map(store -> StoreDto.builder()
+                .id(store.getId())
+                .name(store.getName())
+                .address(store.getAddress())
+                .phone(store.getPhone())
+                .detail(store.getDetail())
+                .open_time(store.getOpen_time())
+                .close_time(store.getClose_time())
+                .build());
     }
+
+    @Override
+    public Page<StoreDto> listByKeyword(int page, int size, String keyword) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Store> stores = storeRepository.findAllByKeyword(keyword,pageRequest);
+
+        return stores.map(store -> StoreDto.builder()
+                .id(store.getId())
+                .name(store.getName())
+                .address(store.getAddress())
+                .phone(store.getPhone())
+                .detail(store.getDetail())
+                .open_time(store.getOpen_time())
+                .close_time(store.getClose_time())
+                .build());
+    }
+
+   /* @Override
+    public Page<StoreDto> listByCategory(int page, int size, String category) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Store> stores = storeRepository.findAllByCategory(category,pageRequest);
+
+        return stores.map(store -> StoreDto.builder()
+                .id(store.getId())
+                .name(store.getName())
+                .address(store.getAddress())
+                .phone(store.getPhone())
+                .detail(store.getDetail())
+                .open_time(store.getOpen_time())
+                .close_time(store.getClose_time())
+                .build());
+    }*/
+
+    @Override
+    public PageDto page(Page<StoreDto> stores, String keyword, String category) {
+        return PageDto.builder()
+                .total(stores.getTotalPages())
+                .number(stores.getNumber())
+                .keyword(keyword)
+                .category(category)
+                .build();
+    }
+
+//    @Override
+//    public List<StoreDto> list() {
+//        List<Store> result = storeRepository.findAll();
+//        List<StoreDto> dtoList = result.stream()
+//                .map(store -> modelMapper.map(store, StoreDto.class)).collect(Collectors.toList());
+//
+//        return dtoList;
+//    }
+
+//    @Override
+//    public Page<Store> list(Pageable pageable) {
+//        return storeRepository.findAll(pageable);
+//    }
+//    @Override
+//    public Page<StoreDto> page(int page, int size) {
+//    PageRequest pageRequest = PageRequest.of(page,size);
+//    Page<Store> stores = storeRepository.findAll(pageRequest);
+//    return stores.map(store -> new StoreDto(store));
+//}
+
+//    @Override
+//    public Page<Store> listBySearch(String keyword, Pageable pageable) {
+//        Page<Store> storeList = storeRepository.findByTitleContaining(keyword, pageable);
+//        return storeList;
+//    }
 
 //    @Override
 //    public PageResponseDto<StoreDto> list(PageRequestDto pageRequestDto) {

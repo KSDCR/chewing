@@ -1,25 +1,24 @@
 package io.web.chewing.service;
 
-import io.web.chewing.Entity.Categories;
-import io.web.chewing.Entity.Store;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
+import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
-import io.web.chewing.repository.StoreRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 public interface StoreService {
 
     StoreDto get(Long id);
 
-    //PageResponseDto<StoreDto> list(PageRequestDto pageRequestDto);
-    List<StoreDto> list();
+    Page<StoreDto> list(int page, int size);
+    Page<StoreDto> listByKeyword(int page, int size, String keyword);
+    //Page<StoreDto> listByCategory(int page, int size, String category);
+    PageDto page(Page<StoreDto> stores, String keyword, String category);
+    //Page<StoreDto> page(int page, int size);
+    //Page<Store> list(Pageable pageable);
+
+   // PageResponseDto<StoreDto> list(PageRequestDto pageRequestDto);
+    //List<StoreDto> list();
+    //Page<StoreDto> list(Pageable);
     Long register(StoreDto storeDto, MultipartFile multipartFile);
 
     void update(StoreDto storeDto);

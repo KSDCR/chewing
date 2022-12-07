@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <style>
     .list {
@@ -27,18 +29,24 @@
 <div>
     <th:block th:replace="fragments/header :: headerFragment"></th:block>
 </div>
-  <h1>매장 리스트</h1>
-    <div class="list" th:each="dto:${storeList}">
-        <div class="image">
-            매장 사진
-        </div>
-        <div class="text">
-            <h4>
-                <a th:href="@{/store/get(id=${dto.id})}">[[${dto.name}]]</a>
-            </h4>
-            <div>[[${dto.address}]]</div>
-            <div>[[${dto.detail}]]</div>
-        </div>
+<h1>매장 리스트</h1>
+<div class="list" th:each="store:${stores}">
+    <div class="image">
+        매장 사진
     </div>
+    <div class="text">
+        <h4>
+            <a th:href="@{/store/get(id=${store.id})}">[[${store.name}]]</a>
+        </h4>
+        <div>[[${store.address}]]</div>
+        <div>[[${store.detail}]]</div>
+    </div>
+</div>
+
+<!-- 페이징 -->
+
+<script th:inline="javascript">
+
+</script>
 </body>
 </html>
