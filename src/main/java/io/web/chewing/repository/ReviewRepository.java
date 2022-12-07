@@ -72,6 +72,9 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
     List<ReviewDto> findStoreReview(Store store);
 
 
+
+
+
 //    @Query("select r FROM Review r WHERE r.store.id=:store")
 //    List<ReviewDto> listOfBoard(Long store, Member nickname);
 

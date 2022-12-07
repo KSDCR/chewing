@@ -7,6 +7,7 @@ import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.ReviewDto;
+import io.web.chewing.mapper.review.Mapper;
 import io.web.chewing.repository.ReviewRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,15 @@ public class ReviewService {
     private final ModelMapper modelMapper;
 
     private final ReviewRepository reviewRepository;
+
+    private final Mapper mapper;
+
+    public ReviewDto test(){
+        log.info("======="+mapper.select());
+        return mapper.select();
+    }
+
+
 
 //    private ReviewDto convertToReviewDto(Review review) {
 //        modelMapper.getConfiguration()
@@ -293,6 +303,7 @@ public class ReviewService {
     }
 
     public void remove(Long id) {
+
 
         reviewRepository.deleteById(id);
 

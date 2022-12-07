@@ -277,6 +277,11 @@ public class ReviewController {
     }
 
 
+    @GetMapping("test")
+    public ReviewDto test(){
+        ReviewDto dto = reviewService.test();
+        return dto;
+    }
 }
 
 
