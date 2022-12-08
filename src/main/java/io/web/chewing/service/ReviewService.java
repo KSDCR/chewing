@@ -313,7 +313,7 @@ public class ReviewService {
 
 
     public void modify(ReviewDto reviewDto) {
-        log.info(String.valueOf(reviewDto.getId()));
+        log.info("id값은?" +reviewDto.getId());
         Optional<Review> result = reviewRepository.findById(reviewDto.getId());
         log.info("Optional<Review>:"+String.valueOf(result));
         Review review = result.orElseThrow();

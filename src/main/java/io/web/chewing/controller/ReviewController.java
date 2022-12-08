@@ -73,14 +73,12 @@ public class ReviewController {
                        String member_nickname,
                        Model model) {
 
-
-
         List<ReviewDto> list = reviewService.listReviewByMember(member_nickname, page, pageInfo);
 
         model.addAttribute("myReviewList", list);
 
-
     }
+
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,

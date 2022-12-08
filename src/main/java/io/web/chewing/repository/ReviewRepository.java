@@ -73,7 +73,7 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
     @Query("select r FROM Review r WHERE r.store.id=:store")
     List<ReviewDto> findStoreReview(Long store);
 
-    @EntityGraph(attributePaths = {"roleSet","categoriesSet"}, type = EntityGraph.EntityGraphType.LOAD)
+
     Optional<Review> findById(Long id);
 
     //    @Query("select r FROM Review r WHERE r.store.id=:store")

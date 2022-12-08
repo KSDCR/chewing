@@ -17,4 +17,6 @@ public interface MemberRepository extends JpaRepository<Member,Object> {
 
     @EntityGraph(attributePaths = {"roleSet","categoriesSet"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Member> findByEmail(String email);
+
+
 }

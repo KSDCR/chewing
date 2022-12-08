@@ -3,13 +3,12 @@ package io.web.chewing.member;
 import io.web.chewing.Entity.Categories;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.MemberRole;
-import io.web.chewing.mapper.review.Mapper;
 import io.web.chewing.repository.MemberRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.stream.IntStream;
 
 
