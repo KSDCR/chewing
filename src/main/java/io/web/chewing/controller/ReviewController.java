@@ -88,7 +88,7 @@ public class ReviewController {
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,
-                     String store,
+                     Long store,
                      Model model) {
 
 
@@ -210,7 +210,7 @@ public class ReviewController {
     //
     @PostMapping("register")
     public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
+                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, Long store) throws NotFoundException {
 
         log.info("POST register.......");
         log.info("인증객체는?" + authMemberDTO);

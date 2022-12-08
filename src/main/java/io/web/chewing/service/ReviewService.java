@@ -12,7 +12,6 @@ import io.web.chewing.mapper.review.ReviewMapper;
 import io.web.chewing.repository.ReviewRepository;
 import io.web.chewing.repository.StoreRepository;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -196,8 +195,10 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,Long store) throws NotFoundException {
         log.info("dd" + String.valueOf(reviewDto));
+        Optional<Store> getStore = storeRepository.findById(store);
+        log.info("ff"+String.valueOf(getStore));
         Review review = reviewDto.toEntity(store);
         Member loadMember = Member.builder()
                 .id(authMemberDTO.getId())
@@ -415,7 +416,7 @@ public class ReviewService {
 
 
 
-    public List<ReviewDto> listReviewByStore(String store, int page, PageInfo pageInfo) {
+    public List<ReviewDto> listReviewByStore(Long store, int page, PageInfo pageInfo) {
         int records = 10;
         int offset = (page - 1) * records;
 

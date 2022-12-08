@@ -17,19 +17,20 @@ public class ReviewDto {
 
 
     private Long id;
-    private String store;
+    private Long store;
+    private String Store_name;
     private double rate;
     private String member_nickname;
     private String content;
     private String create_time;
     private String modify_time;
 
-    public Review toEntity(String store){
+    public Review toEntity(Long store){
 
         return Review.builder()
                 .store(Store.builder()
-                        .id(1L)
-                        .name(store).build())
+                        .id(store)
+                        .name(String.valueOf(store)).build())
                 .rate(rate)
                 .content(content).build();
     }

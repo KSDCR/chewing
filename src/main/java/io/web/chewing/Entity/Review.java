@@ -26,7 +26,7 @@ public class Review implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "store_name", referencedColumnName = "name")
+    @JoinColumn(name = "store_id", referencedColumnName = "id")
     private Store store;
 
     @NonNull
