@@ -2,10 +2,7 @@ package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.PageInfo;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
-import io.web.chewing.domain.ReviewDto;
+import io.web.chewing.domain.*;
 import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -88,7 +85,7 @@ public class ReviewController {
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,
-                     Long store,
+                     String store,
                      Model model) {
 
 
@@ -103,7 +100,7 @@ public class ReviewController {
 
 
     @GetMapping("/listbefore")
-    public void list(Long store, PageRequestDto pageRequestDto, Model model){
+    public void list(String store, PageRequestDto pageRequestDto, Model model){
 
         String member = "";
 
@@ -210,7 +207,7 @@ public class ReviewController {
     //
     @PostMapping("register")
     public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, Long store) throws NotFoundException {
+                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
 
         log.info("POST register.......");
         log.info("인증객체는?" + authMemberDTO);

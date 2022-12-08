@@ -61,10 +61,10 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 //    List<ReviewDto> reviewList(Long store);
 
     @Query("select r FROM Review r WHERE r.store.id=:store")
-    Page<Review> listOfStore(Long store, Pageable pageable);
+    Page<Review> listOfStore(String store, Pageable pageable);
 
-    @Query("select r FROM Review r WHERE r.store.id=:store")
-    List<ReviewDto> reviewList(Long store);
+    @Query("select r FROM Review r WHERE r.store.name=:store")
+    List<ReviewDto> reviewList(String store);
 
     @Query("select r FROM Review r WHERE r.member_id=:member_id ORDER BY r.id")
     List<ReviewDto> ReviewByMember(Long member_id);

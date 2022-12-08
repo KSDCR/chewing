@@ -4,10 +4,7 @@ import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.PageInfo;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
-import io.web.chewing.domain.ReviewDto;
+import io.web.chewing.domain.*;
 import io.web.chewing.mapper.review.ReviewMapper;
 import io.web.chewing.repository.ReviewRepository;
 import io.web.chewing.repository.StoreRepository;
@@ -130,9 +127,9 @@ public class ReviewService {
 //
 //    }
 
-    public PageResponseDto<ReviewDto> list(Long store/*String member,*/ ,PageRequestDto pageRequestDto) {
+    public PageResponseDto<ReviewDto> list(String store/*String member,*/ ,PageRequestDto pageRequestDto) {
 
-        Optional<Store> store1 = storeRepository.findById(store);
+        Optional<Store> store1 = storeRepository.findByName(store);
 
         Store store2 = Store.builder()
                 .id(store1.get().getId()).build();
@@ -195,12 +192,24 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,Long store) throws NotFoundException {
-        log.info("dd" + String.valueOf(reviewDto));
-        Optional<Store> getStore = storeRepository.findById(store);
-        log.info("ff"+String.valueOf(getStore));
-        Review review = reviewDto.toEntity(store);
-        Member loadMember = Member.builder()
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
+        Optional<Store> getStore = storeRepository.findByName(store);
+        Store findStore = getStore.orElseThrow();
+
+        log.info(findStore.getName());
+
+        Review review = reviewDto.toEntity(findStore);
+        Member loadMember = getBuild(authMemberDTO);
+        review.assignUser(loadMember);
+
+        log.info("===========================ls");
+        Long id = reviewRepository.save(review).getId();
+
+        return id;
+    }
+
+    private static Member getBuild(AuthMemberDTO authMemberDTO) {
+        return Member.builder()
                 .id(authMemberDTO.getId())
                 .nickname(authMemberDTO.getNickname())
                 .password(authMemberDTO.getPassword())
@@ -208,11 +217,6 @@ public class ReviewService {
                 .email(authMemberDTO.getEmail())
                 .provider(authMemberDTO.getProvider())
                 .build();
-        review.assignUser(loadMember);
-        log.info("===========================ls");
-        Long id = reviewRepository.save(review).getId();
-
-        return id;
     }
 
     public Member memberBuild(AuthMemberDTO authMemberDTO) {
@@ -379,7 +383,7 @@ public class ReviewService {
 //
 
 
-    public List<ReviewDto> reviewList(Long store) {
+    public List<ReviewDto> reviewList(String store) {
         return reviewRepository.reviewList(store);
     }
 
@@ -393,7 +397,7 @@ public class ReviewService {
         return reviewDto;
     }
 
-    public PageResponseDto<ReviewDto> getList(Long store, PageRequestDto pageRequestDto) {
+    public PageResponseDto<ReviewDto> getList(String store, PageRequestDto pageRequestDto) {
         Pageable pageable = PageRequest.of(pageRequestDto.getPage() <= 0 ? 0 : pageRequestDto.getPage() - 1,
                 pageRequestDto.getSize(),
                 Sort.by("id").ascending());
@@ -416,7 +420,7 @@ public class ReviewService {
 
 
 
-    public List<ReviewDto> listReviewByStore(Long store, int page, PageInfo pageInfo) {
+    public List<ReviewDto> listReviewByStore(String store, int page, PageInfo pageInfo) {
         int records = 10;
         int offset = (page - 1) * records;
 

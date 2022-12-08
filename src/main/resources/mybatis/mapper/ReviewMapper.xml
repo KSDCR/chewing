@@ -13,24 +13,24 @@
     <select id="findReviewByStore" resultType="io.web.chewing.domain.ReviewDto">
         SELECT
         r.id,
-        r.store_id,
+        r.store_name,
         r.rate,
         r.member_nickname,
         r.content
-        FROM review r LEFT JOIN store s ON r.store_id = s.id
-        WHERE r.store_id = #{store};
+        FROM review r LEFT JOIN store s ON r.store_name = s.name
+        WHERE r.store_name = #{store};
     </select>
 
     <select id="countReviewByStore" resultType="int">
         SELECT COUNT(*)
-        FROM review r LEFT JOIN store s ON r.store_id = s.id
-        WHERE r.store_id = #{store};
+        FROM review r LEFT JOIN store s ON r.store_name = s.name
+        WHERE r.store_name = #{store};
     </select>
 
     <select id="findReviewByMember" resultType="io.web.chewing.domain.ReviewDto">
         SELECT
         r.id,
-        r.store_id,
+        r.store_name,
         r.rate,
         r.member_nickname,
         r.content

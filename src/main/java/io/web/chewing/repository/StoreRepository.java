@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface StoreRepository extends JpaRepository<Store,Object> {
 
     @Query(value = "select distinct s from Store s ",
@@ -17,6 +19,8 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
             "where s.name like %:keyword%",
             countQuery = "select count(s) from Store s where s.name like %:keyword%")
     Page<Store> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    Optional<Store> findByName(String name);
 
 //    @Query(value = "select distinct s from Store s " +
 //            "left join fetch s.category c " +
