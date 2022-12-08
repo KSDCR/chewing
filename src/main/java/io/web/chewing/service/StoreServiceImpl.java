@@ -2,8 +2,6 @@ package io.web.chewing.service;
 
 import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -83,15 +79,11 @@ public class StoreServiceImpl implements StoreService {
     }*/
 
     @Override
-    public PageDto page(Page<StoreDto> stores, String keyword, String category) {
-
-        //
-
-
+    public PageDto page(Page<StoreDto> page, String keyword, String category) {
 
         return PageDto.builder()
-                .total(stores.getTotalPages())
-                .number(stores.getNumber())
+                .total(page.getTotalPages())
+                .number(page.getNumber())
                 .keyword(keyword)
                 .category(category)
                 .build();

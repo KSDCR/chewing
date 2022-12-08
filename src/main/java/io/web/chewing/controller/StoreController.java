@@ -1,25 +1,20 @@
 package io.web.chewing.controller;
 
-import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.service.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -45,17 +40,17 @@ public class StoreController {
 
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
         log.info("pageable ================> {}", pageable);
-        
+        log.info("keyword ================> {}", keyword);
         // 전체 매장 리스트
         Page<StoreDto> stores = storeService.list(page, 5);
         
         // 키워드 검색 매장 리스트
-        if (keyword != null) {
+        if (keyword != null && keyword != "") {
             stores = storeService.listByKeyword(page, 5, keyword);
         }
         
         // 카테고리별 매장 리스트
-        /*if (category != null) {
+        /*if (category != null && category != "") {
             stores = storeService.listByCategory(page, 5, category);
         }*/
 
@@ -77,22 +72,6 @@ public class StoreController {
 //        model.addAttribute("hasNext", list.hasNext());
 //        model.addAttribute("hasPrev", list.hasPrevious());
 //
-//    }
-
-
-
-
-//    @GetMapping("/list")
-//    public void list(Model model) {
-//        List<StoreDto> storeList = storeService.list();
-//        log.info("===========> " + storeList);
-//        model.addAttribute("storeList", storeList);
-//    }
-//    public void list(PageRequestDto pageRequestDto, Model model) {
-//        PageResponseDto<StoreDto> responseDto = storeService.list(pageRequestDto);
-//        log.info("===========> " + responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
 //    }
 
 
