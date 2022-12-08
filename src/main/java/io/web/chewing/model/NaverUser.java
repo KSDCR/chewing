@@ -28,8 +28,8 @@ public class NaverUser extends OAuth2ProviderUser {
     }
 
     @Override
-    public String getGender() {
-        return null;
+    public char getGender() {
+        return 't';
     }
 
     @Override

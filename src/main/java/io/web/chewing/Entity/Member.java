@@ -20,7 +20,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
 @Table
 public class Member extends BaseEntity implements Serializable{
 
@@ -49,10 +48,9 @@ public class Member extends BaseEntity implements Serializable{
     @ColumnDefault("0")
     private char delete_yn;
     
-    private String gender;
+    private char gender;
 
     private boolean verify;
-
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)

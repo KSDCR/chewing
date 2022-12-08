@@ -11,7 +11,6 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
 @Table
 public class Store_Like extends BaseEntity{
 

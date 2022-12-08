@@ -1,46 +1,67 @@
 package io.web.chewing.service;
 
-import io.web.chewing.Entity.Categories;
-import io.web.chewing.Entity.Store;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
+import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
-import io.web.chewing.repository.StoreRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+public interface StoreService {
 
-@Service
-public class StoreService {
+    StoreDto get(Long id);
 
-    @Autowired
-    private StoreRepository repo;
+    Page<StoreDto> list(int page, int size);
+    Page<StoreDto> listByKeyword(int page, int size, String keyword);
+    //Page<StoreDto> listByCategory(int page, int size, String category);
+    PageDto page(Page<StoreDto> stores, String keyword, String category);
+    //Page<StoreDto> page(int page, int size);
+    //Page<Store> list(Pageable pageable);
 
-    public Optional<Store> get(Long id) {
-        return repo.findById(id);
-    }
+   // PageResponseDto<StoreDto> list(PageRequestDto pageRequestDto);
+    //List<StoreDto> list();
+    //Page<StoreDto> list(Pageable);
+    Long register(StoreDto storeDto, MultipartFile multipartFile);
 
-    public void register(StoreDto dto) {
+    void update(StoreDto storeDto);
 
-        Store store = Store.builder()
-                .name(dto.getName())
-                .address(dto.getAddress())
-                .phone(dto.getPhone())
-                .detail(dto.getDetail())
-                .openTime(String.valueOf(LocalDateTime.now()))
-                .closeTime(String.valueOf(LocalDateTime.now()))
-                .file("fileNotFound")
-                .build();
-
-        store.addCategories(Categories.Korean);
-
-        /*Store result = repo.save(store);*/
+    void remove(Long id);
 
 
-        repo.save(store);
-    }
 
 
+//    @Autowired
+//    private StoreRepository repo;
+//
+//    public Optional<Store> get(Long id) {
+//        return repo.findById(id);
+//    }
+//
+////    public StoreDto get(Long id) {
+////        return repo.findById(id);
+////    }
+//
+//    public List<Store> getList() {
+//        return repo.findAll();
+//    }
+//
+//    public void register(StoreDto storeDto) {
+//
+//        Store store = Store.builder()
+//                .name(storeDto.getName())
+//                .address(storeDto.getAddress())
+//                .phone(storeDto.getPhone())
+//                .detail(storeDto.getDetail())
+//                .openTime(LocalDateTime.now())
+//                .closeTime(LocalDateTime.now())
+//                .file("NotFound")
+//                .build();
+//
+//        store.addCategories(Categories.Chinese);
+//
+//        repo.save(store);
+//    }
+//
+//    public void update(StoreDto storeDto) {
+//
+//
+//    }
 }

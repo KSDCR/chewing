@@ -4,11 +4,10 @@ import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
-import io.web.chewing.domain.ReviewDto;
-import io.web.chewing.mapper.review.Mapper;
+import io.web.chewing.domain.*;
+import io.web.chewing.mapper.review.ReviewMapper;
 import io.web.chewing.repository.ReviewRepository;
+import io.web.chewing.repository.StoreRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -33,11 +32,15 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
 
-    private final Mapper mapper;
+    private final StoreRepository storeRepository;
+    private final ReviewMapper reviewMapper;
+//
+//    @Value("${aws.s3.bucket}")
+//    private String bucketName;
 
     public ReviewDto test(){
-        log.info("======="+mapper.select());
-        return mapper.select();
+        log.info("======="+reviewMapper.select());
+        return reviewMapper.select();
     }
 
 
@@ -79,48 +82,77 @@ public class ReviewService {
 
 //    }
 
-    public PageResponseDto<ReviewDto> list(Store store, Long member_id, PageRequestDto pageRequestDto) {
+//    public PageResponseDto<ReviewDto> list(Store store, Long member_id, PageRequestDto pageRequestDto) {
+//
+//        Pageable pageable = pageRequestDto.getPageable("store");
+//
+//        Page<Review> result = reviewRepository.findReviewByStore(store, pageable);
+//
+//        log.info("====================="+result.getContent());
+//
+//        List<ReviewDto> dtoList = result.getContent().stream()
+//                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
+//
+//        dtoList.forEach(reviewDto -> log.info("12"+ reviewDto));
+//
+//
+//
+//        return PageResponseDto.<ReviewDto>withAll()
+//                .pageRequestDto(pageRequestDto)
+//                .dtoList(dtoList)
+//                .total((int) result.getTotalElements())
+//                .build();
+//
+//    }
+//    public PageResponseDto<ReviewDto> list(Store store, Long member_id, PageRequestDto pageRequestDto) {
+//
+//        Pageable pageable = pageRequestDto.getPageable("store");
+//
+//        Page<Review> result = reviewRepository.findReviewByStore(store, pageable);
+//
+//        log.info("====================="+result.getContent());
+//
+//        List<ReviewDto> dtoList = result.getContent().stream()
+//                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
+//
+//        dtoList.forEach(reviewDto -> log.info("12"+ reviewDto));
+//
+//
+//
+//        return PageResponseDto.<ReviewDto>withAll()
+//                .pageRequestDto(pageRequestDto)
+//                .dtoList(dtoList)
+//                .total((int) result.getTotalElements())
+//                .build();
+//
+//    }
+
+    public PageResponseDto<ReviewDto> list(String store/*String member,*/ ,PageRequestDto pageRequestDto) {
+
+        Optional<Store> store1 = storeRepository.findByName(store);
+
+        Store store2 = Store.builder()
+                .id(store1.get().getId()).build();
+
 
         Pageable pageable = pageRequestDto.getPageable("store");
 
-        Page<Review> result = reviewRepository.findReviewByStore(store, pageable);
+        Page<Review> result = reviewRepository.findReviewByStore(store2, pageable);
 
-        log.info("====================="+result.getContent());
+//        Page<Review> result = reviewRepository.findReviewByStore(store);
 
         List<ReviewDto> dtoList = result.getContent().stream()
-                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
-
-        dtoList.forEach(reviewDto -> log.info("12"+ reviewDto));
-
+                .map(review -> modelMapper.map(review,ReviewDto.class)).collect(Collectors.toList());
 
 
         return PageResponseDto.<ReviewDto>withAll()
                 .pageRequestDto(pageRequestDto)
                 .dtoList(dtoList)
-                .total((int) result.getTotalElements())
+                .total((int)result.getTotalElements())
                 .build();
 
     }
-
-//    public PageResponseDto<ReviewDto> list(Long store/*String member,*/ /*PageRequestDto pageRequestDto*/) {
-//
-////        Pageable pageable = pageRequestDto.getPageable("store");
-//
-////        Page<Review> result = reviewRepository.findReviewByStore(store,/* member,*/ pageable);
-//
-//        Page<Review> result = reviewRepository.findReviewByStore(store);
-//
-//        List<ReviewDto> dtoList = result.getContent().stream()
-//                .map(review -> modelMapper.map(review,ReviewDto.class)).collect(Collectors.toList());
-//
-//
-//        return PageResponseDto.<ReviewDto>withAll()
-////                .pageRequestDto(pageRequestDto)
-//                .dtoList(dtoList)
-//                .total((int)result.getTotalElements())
-//                .build();
-//
-//    }
+    /*before*/
 
 //    public List<ReviewDto> list(Long store, int page, PageInfo pageInfo) {
 //
@@ -160,10 +192,24 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
-        log.info("dd" + String.valueOf(reviewDto));
-        Review review = reviewDto.toEntity();
-        Member loadMember = Member.builder()
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
+        Optional<Store> getStore = storeRepository.findByName(store);
+        Store findStore = getStore.orElseThrow();
+
+        log.info(findStore.getName());
+
+        Review review = reviewDto.toEntity(findStore);
+        Member loadMember = getBuild(authMemberDTO);
+        review.assignUser(loadMember);
+
+        log.info("===========================ls");
+        Long id = reviewRepository.save(review).getId();
+
+        return id;
+    }
+
+    private static Member getBuild(AuthMemberDTO authMemberDTO) {
+        return Member.builder()
                 .id(authMemberDTO.getId())
                 .nickname(authMemberDTO.getNickname())
                 .password(authMemberDTO.getPassword())
@@ -171,11 +217,6 @@ public class ReviewService {
                 .email(authMemberDTO.getEmail())
                 .provider(authMemberDTO.getProvider())
                 .build();
-        review.assignUser(loadMember);
-        log.info("===========================ls");
-        Long id = reviewRepository.save(review).getId();
-
-        return id;
     }
 
     public Member memberBuild(AuthMemberDTO authMemberDTO) {
@@ -291,15 +332,25 @@ public class ReviewService {
 
 
     public void modify(ReviewDto reviewDto) {
-
+        log.info("id값은?" +reviewDto.getId());
         Optional<Review> result = reviewRepository.findById(reviewDto.getId());
-
+        log.info("Optional<Review>:"+String.valueOf(result));
         Review review = result.orElseThrow();
+
+        log.info("modify"+review);
 
         review.change(reviewDto.getContent());
 
         reviewRepository.save(review);
 
+    }
+
+    public void modifybefore(ReviewDto reviewDto) {
+        log.info(String.valueOf(reviewDto.getId()));
+
+//        reviewRepository.save(review);
+
+        reviewMapper.update(reviewDto);
     }
 
     public void remove(Long id) {
@@ -332,7 +383,7 @@ public class ReviewService {
 //
 
 
-    public List<ReviewDto> reviewList(Long store) {
+    public List<ReviewDto> reviewList(String store) {
         return reviewRepository.reviewList(store);
     }
 
@@ -346,7 +397,7 @@ public class ReviewService {
         return reviewDto;
     }
 
-    public PageResponseDto<ReviewDto> getList(Long store, PageRequestDto pageRequestDto) {
+    public PageResponseDto<ReviewDto> getList(String store, PageRequestDto pageRequestDto) {
         Pageable pageable = PageRequest.of(pageRequestDto.getPage() <= 0 ? 0 : pageRequestDto.getPage() - 1,
                 pageRequestDto.getSize(),
                 Sort.by("id").ascending());
@@ -369,12 +420,56 @@ public class ReviewService {
 
 
 
-    public List<ReviewDto> listReviewByStore(Store store) {
+    public List<ReviewDto> listReviewByStore(String store, int page, PageInfo pageInfo) {
+        int records = 10;
+        int offset = (page - 1) * records;
 
 
+        int countAll = reviewMapper.countReviewByStore(store);
+        int lastPage = (countAll - 1) / records + 1;
 
-        return reviewRepository.findStoreReview(store);
+        log.info("==========="+countAll);
+
+        int leftPageNumber = (page - 1) / 10 * 10 + 1;
+        int rightPageNumber = leftPageNumber + 9;
+        int currentPageNumber = page;
+        rightPageNumber = Math.min(rightPageNumber, lastPage);
+        boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
+
+        pageInfo.setHasNextPageNumber(hasNextPageNumber);
+        pageInfo.setCurrentPageNumber(currentPageNumber);
+        pageInfo.setLeftPageNumber(leftPageNumber);
+        pageInfo.setRightPageNumber(rightPageNumber);
+        pageInfo.setLastPageNumber(lastPage);
+
+        log.info("FFF"+reviewMapper.findReviewByStore(store,offset,records).toString());
+        return reviewMapper.findReviewByStore(store, offset, records);
     }
+
+    public List<ReviewDto> listReviewByMember(String member_nickname, int page, PageInfo pageInfo) {
+        int records = 10;
+        int offset = (page - 1) * records;
+
+        int countAll = reviewMapper.countReviewByMember(member_nickname);
+        int lastPage = (countAll - 1) / records + 1;
+
+        log.info("==========="+countAll);
+
+        int leftPageNumber = (page - 1) / 10 * 10 + 1;
+        int rightPageNumber = leftPageNumber + 9;
+        int currentPageNumber = page;
+        rightPageNumber = Math.min(rightPageNumber, lastPage);
+        boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
+
+        pageInfo.setHasNextPageNumber(hasNextPageNumber);
+        pageInfo.setCurrentPageNumber(currentPageNumber);
+        pageInfo.setLeftPageNumber(leftPageNumber);
+        pageInfo.setRightPageNumber(rightPageNumber);
+        pageInfo.setLastPageNumber(lastPage);
+
+        return reviewMapper.findReviewByMember(member_nickname, offset, records);
+    }
+
 
 //    public List<ReviewDto> getListOfStore(Long store, ReviewDto reviewDto, AuthMemberDTO authMemberDTO) throws NotFoundException {
 //

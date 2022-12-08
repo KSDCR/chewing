@@ -3,6 +3,7 @@ import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.ReviewDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review,Object> {
 
@@ -18,6 +20,7 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 
 
     int save(ReviewDto review);
+
 
 
 
@@ -38,7 +41,8 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 //    Page<Review> selectReviewByStoreId(Pageable pageable);
 
 
-    Page<Review> findReviewByStore(Store store, Pageable pageable);
+    @Query("select r FROM Review r WHERE r.store.id=:store")
+    Page<Review> findReviewByStore(@Param("1") Store store, Pageable pageable);
 //
 //    @Query("select r FROM Review r WHERE r.store.id=:store")
 //    Page<Review> findReviewByStore(Long store);
@@ -57,10 +61,10 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 //    List<ReviewDto> reviewList(Long store);
 
     @Query("select r FROM Review r WHERE r.store.id=:store")
-    Page<Review> listOfStore(Long store, Pageable pageable);
+    Page<Review> listOfStore(String store, Pageable pageable);
 
-    @Query("select r FROM Review r WHERE r.store.id=:store")
-    List<ReviewDto> reviewList(Long store);
+    @Query("select r FROM Review r WHERE r.store.name=:store")
+    List<ReviewDto> reviewList(String store);
 
     @Query("select r FROM Review r WHERE r.member_id=:member_id ORDER BY r.id")
     List<ReviewDto> ReviewByMember(Long member_id);
@@ -69,13 +73,13 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
     List<ReviewDto> findReviewByStore(Store store);
 
     @Query("select r FROM Review r WHERE r.store.id=:store")
-    List<ReviewDto> findStoreReview(Store store);
+    List<ReviewDto> findStoreReview(Long store);
 
 
 
+    Optional<Review> findById(Long id);
 
-
-//    @Query("select r FROM Review r WHERE r.store.id=:store")
+    //    @Query("select r FROM Review r WHERE r.store.id=:store")
 //    List<ReviewDto> listOfBoard(Long store, Member nickname);
 
 

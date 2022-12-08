@@ -2,9 +2,7 @@ package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
-import io.web.chewing.domain.ReviewDto;
+import io.web.chewing.domain.*;
 import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("review")
@@ -67,43 +66,64 @@ public class ReviewController {
 //    }
 
     @GetMapping("/myList")
-    public void myList(Long member, PageRequestDto pageRequestDto, Model model) {
+    public void myList(@RequestParam(name="page", defaultValue = "1") int page,
+                       PageInfo pageInfo,
+                       String member_nickname,
+                       Model model) {
 
-        PageResponseDto<ReviewDto> responseDto = reviewService.myList(member, pageRequestDto);
+
+
+        List<ReviewDto> list = reviewService.listReviewByMember(member_nickname, page, pageInfo);
+
+        model.addAttribute("myReviewList", list);
+
+        log.info(list);
+
+
+    }
+
+    @GetMapping("list")
+    public void list(@RequestParam(name="page", defaultValue = "1") int page,
+                     PageInfo pageInfo,
+                     String store,
+                     Model model) {
+
+
+
+        List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
+        list.forEach(reviewDto -> log.info(reviewDto));
+
+        model.addAttribute("reviewList", list);
+
+    }
+    /*complete*/
+
+
+    @GetMapping("/listbefore")
+    public void list(String store, PageRequestDto pageRequestDto, Model model){
+
+        String member = "";
+
+        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
 
         log.info(responseDto);
 
         model.addAttribute("responseDto", responseDto);
 
-
     }
 
-
 //    @GetMapping("/list")
-//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
+//    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
 //
-//        String member = "";
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
+////
+//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
 //
 //        log.info(responseDto);
 //
 //        model.addAttribute("responseDto", responseDto);
 //
-//    }
-
-    @GetMapping("/list")
-    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
-
 //
-        PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
-
-        log.info(responseDto);
-
-        model.addAttribute("responseDto", responseDto);
-
-
-    }
+//    }
 
 
 //    @GetMapping("getList")
@@ -187,7 +207,7 @@ public class ReviewController {
     //
     @PostMapping("register")
     public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
+                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
 
         log.info("POST register.......");
         log.info("인증객체는?" + authMemberDTO);
@@ -200,7 +220,7 @@ public class ReviewController {
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, authMemberDTO);
+        Long id = reviewService.register(reviewDto, authMemberDTO, store);
 
         log.info("id" + id);
 
@@ -256,7 +276,7 @@ public class ReviewController {
 
         redirectAttributes.addAttribute("id", reviewDto.getId());
 
-//        return "redirect:/board/read";
+//        return "redirect:/review/read";
 
 //        reviewService.update(review, files, removeFiles);
 
