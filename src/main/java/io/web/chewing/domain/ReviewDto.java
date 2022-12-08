@@ -21,6 +21,7 @@ public class ReviewDto {
     private Member member_nickname;
     private String content;
     private String create_time;
+    private String modify_time;
 
     public Review toEntity(){
         return Review.builder()

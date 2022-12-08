@@ -44,4 +44,10 @@
         WHERE r.member_nickname = #{member_nickname};
     </select>
 
+    <update id="update">
+        UPDATE review
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
 </mapper>

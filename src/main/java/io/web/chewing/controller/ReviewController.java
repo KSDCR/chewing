@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("review")
@@ -94,20 +95,21 @@ public class ReviewController {
         model.addAttribute("reviewList", list);
 
     }
+    /*complete*/
 
 
-//    @GetMapping("/list")
-//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
-//
-//        String member = "";
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
-//
-//        log.info(responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//
-//    }
+    @GetMapping("/listbefore")
+    public void list(Long store, PageRequestDto pageRequestDto, Model model){
+
+        String member = "";
+
+        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
+
+        log.info(responseDto);
+
+        model.addAttribute("responseDto", responseDto);
+
+    }
 
 //    @GetMapping("/list")
 //    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
@@ -245,6 +247,7 @@ public class ReviewController {
 ////        model.addAttribute("review",review);
 //    }
 //
+
     @PostMapping("modify")
     public String updateReview(
             PageRequestDto pageRequestDto,
@@ -280,15 +283,50 @@ public class ReviewController {
         return "redirect:/review/list";
     }
 
+    @PostMapping("modifybefore")
+    public String updateReviewbefore(
+            PageRequestDto pageRequestDto,
+            ReviewDto reviewDto,
+            BindingResult bindingResult,
+            RedirectAttributes rttr,
+            MultipartFile[] files,
+            @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
+
+
+        if (bindingResult.hasErrors()) {
+            log.info("has errors.......");
+
+            String link = pageRequestDto.getLink();
+
+            rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+            rttr.addAttribute("id", reviewDto.getId());
+
+            return "redirect:/list/modify?" + link;
+        }
+
+        reviewService.modify(reviewDto);
+
+        rttr.addFlashAttribute("result", "modified");
+
+        rttr.addAttribute("id", reviewDto.getId());
+
+//        return "redirect:/review/read";
+
+//        reviewService.update(review, files, removeFiles);
+
+        return "redirect:/review/list";
+    }
+
     //
     @PostMapping("remove")
-    public String deleteReview(long id, RedirectAttributes redirectAttributes) {
+    public String deleteReview(long id, RedirectAttributes rttr) {
 
         log.info("remove post.. " + id);
 
         reviewService.remove(id);
 
-        redirectAttributes.addFlashAttribute("result", "removed");
+        rttr.addFlashAttribute("result", "removed");
 
         return "redirect:/review/list";
     }

@@ -12,7 +12,7 @@ public interface ReviewMapper {
 
     ReviewDto select();
 
-    List<ReviewDto> findReviewByStore(Long store, int offset, int records);
+    List<ReviewDto> findReviewByStore(Long store,int offset, int records);
 
     int countReviewByStore(Long store);
 
@@ -21,4 +21,5 @@ public interface ReviewMapper {
     int countReviewByMember(String member_nickname);
 
 
+    int update(ReviewDto review);
 }
