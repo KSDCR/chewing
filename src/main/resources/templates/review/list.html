@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-  listaa
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">content</th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="list:${reviewList}"  >
+        <th scope="row">[[${list.id}]]</th>
+        <td>[[${list.content}]]</td>
+    </tr>
+  </tbody>
+sadsad
+
+</table>
 </body>
 </html>

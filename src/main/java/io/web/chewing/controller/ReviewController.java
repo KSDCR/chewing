@@ -2,6 +2,7 @@ package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
+import io.web.chewing.domain.PageInfo;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.ReviewDto;
@@ -67,14 +68,30 @@ public class ReviewController {
 //    }
 
     @GetMapping("/myList")
-    public void myList(Long member, PageRequestDto pageRequestDto, Model model) {
+    public void myList(@RequestParam(name="page", defaultValue = "1") int page,
+                       PageInfo pageInfo,
+                       String member_nickname,
+                       Model model) {
 
-        PageResponseDto<ReviewDto> responseDto = reviewService.myList(member, pageRequestDto);
 
-        log.info(responseDto);
 
-        model.addAttribute("responseDto", responseDto);
+        List<ReviewDto> list = reviewService.listReviewByMember(member_nickname, page, pageInfo);
 
+        model.addAttribute("myReviewList", list);
+
+
+    }
+    @GetMapping("list")
+    public void list(@RequestParam(name="page", defaultValue = "1") int page,
+                     PageInfo pageInfo,
+                     Long store,
+                     Model model) {
+
+
+
+        List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
+
+        model.addAttribute("reviewList", list);
 
     }
 
@@ -92,18 +109,18 @@ public class ReviewController {
 //
 //    }
 
-    @GetMapping("/list")
-    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
-
+//    @GetMapping("/list")
+//    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
 //
-        PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
-
-        log.info(responseDto);
-
-        model.addAttribute("responseDto", responseDto);
-
-
-    }
+////
+//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
+//
+//        log.info(responseDto);
+//
+//        model.addAttribute("responseDto", responseDto);
+//
+//
+//    }
 
 
 //    @GetMapping("getList")
@@ -256,7 +273,7 @@ public class ReviewController {
 
         redirectAttributes.addAttribute("id", reviewDto.getId());
 
-//        return "redirect:/board/read";
+//        return "redirect:/review/read";
 
 //        reviewService.update(review, files, removeFiles);
 
