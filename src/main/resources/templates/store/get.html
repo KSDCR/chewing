@@ -1,13 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <!-- <th:block layout:fragment="css"></th:block>-->
 </head>
-
 <body>
-hello
-</body>
+<div>
+    <th:block th:replace="fragments/header :: headerFragment"></th:block>
+</div>
+<div id="storeImage" style="width: 390px;height: 270px; padding: 20px; ">
+    <div id="image" style="width: 343px; height: 240px; margin:auto; background-color: #C5CEE0; border-radius: 10px;">
+<!--        <img th:src="@{upload} + ${store.id}/${store.file}" alt="">-->
+        사진
+    </div>
+</div>
 
+<div id="store" style="width: 390px; height: 150px; padding-left: 30px; padding-top: 10px;">
+    <h2 th:text="${store.name}"></h2>
+    <div>
+        ⭐⭐⭐⭐⭐ 5.0
+        <div>리뷰수 111</div>
+    </div>
+    <span th:text="${store.detail}">가게설명....</span>
+</div>
+
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group" role="group me-2" style="padding-left: 20px;">
+        <button type="button" class="btn btn" style="width: 100px; background-color: #FF8900;">정보</button>
+<!--        th:onclick="|index.replyDelete(${store.id})|"-->
+        <button th:onclick="|location.href='@{/review/list(store=${store.name})}'|"
+                id="review" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">리뷰</button>
+    </div>
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn" style="margin-left: 20px; width: 120px; background-color: #FF8900;">예약하기</button>
+    </div>
+</div>
+
+<div id="btn-info" style="width: 390px; height: 260px;padding: 20px;">
+    <div style="display: flex;">
+        운영시간 : <p th:text="${store.open_time}"></p> ~ <p th:text="${store.close_time}"></p>
+    </div>
+    <div style="display: flex;">
+        매장주소 : <p th:text="${store.address}"></p>
+    </div>
+    <div style="display: flex;">
+        전화번호 : <p th:text="${store.phone}"></p>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+</script>
+</body>
 </html>

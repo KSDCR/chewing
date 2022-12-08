@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("review")
@@ -73,39 +74,46 @@ public class ReviewController {
                        String member_nickname,
                        Model model) {
 
+
+
         List<ReviewDto> list = reviewService.listReviewByMember(member_nickname, page, pageInfo);
 
         model.addAttribute("myReviewList", list);
+
+        log.info(list);
+
 
     }
 
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,
-                     Long store,
+                     String store,
                      Model model) {
 
 
 
         List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
+        list.forEach(reviewDto -> log.info(reviewDto));
 
         model.addAttribute("reviewList", list);
 
     }
+    /*complete*/
 
 
-//    @GetMapping("/list")
-//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
-//
-//        String member = "";
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
-//
-//        log.info(responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//
-//    }
+    @GetMapping("/listbefore")
+    public void list(Long store, PageRequestDto pageRequestDto, Model model){
+
+        String member = "";
+
+        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
+
+        log.info(responseDto);
+
+        model.addAttribute("responseDto", responseDto);
+
+    }
 
 //    @GetMapping("/list")
 //    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
@@ -202,7 +210,7 @@ public class ReviewController {
     //
     @PostMapping("register")
     public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
+                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
 
         log.info("POST register.......");
         log.info("인증객체는?" + authMemberDTO);
@@ -215,7 +223,7 @@ public class ReviewController {
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, authMemberDTO);
+        Long id = reviewService.register(reviewDto, authMemberDTO, store);
 
         log.info("id" + id);
 

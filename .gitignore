@@ -39,3 +39,4 @@ out/
 ### Custom
 develop.log
 apptest.log
+.gz

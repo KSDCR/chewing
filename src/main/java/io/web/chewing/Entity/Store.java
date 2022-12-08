@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,9 +25,9 @@ public class Store extends BaseEntity implements Serializable {
 
     private String detail;
 
-    private String openTime;
+    private String open_time;
 
-    private String closeTime;
+    private String close_time;
 
     private String address;
 
@@ -50,4 +48,13 @@ public class Store extends BaseEntity implements Serializable {
         this.categoriesSet.clear();
     }
 
+    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time) {
+        this.name = name;
+        this.detail = detail;
+        this.address = address;
+        this.phone = phone;
+        this.file = file;
+        this.open_time = open_time;
+        this.close_time = close_time;
+    }
 }
