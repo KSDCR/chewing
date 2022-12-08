@@ -80,17 +80,20 @@ public class ReviewController {
 
         model.addAttribute("myReviewList", list);
 
+        log.info(list);
+
 
     }
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,
-                     Long store,
+                     String store,
                      Model model) {
 
 
 
         List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
+        list.forEach(reviewDto -> log.info(reviewDto));
 
         model.addAttribute("reviewList", list);
 
@@ -206,7 +209,7 @@ public class ReviewController {
     //
     @PostMapping("register")
     public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
+                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
 
         log.info("POST register.......");
         log.info("인증객체는?" + authMemberDTO);
@@ -219,7 +222,7 @@ public class ReviewController {
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, authMemberDTO);
+        Long id = reviewService.register(reviewDto, authMemberDTO, store);
 
         log.info("id" + id);
 

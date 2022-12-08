@@ -74,33 +74,6 @@ public class StoreController {
     }
 
 
-//    public void list(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-//        Page<Store> list = storeService.list(pageable);
-//        log.info("list ===========> " + list);
-//        model.addAttribute("stores", list);
-//        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
-//        model.addAttribute("next", pageable.next().getPageNumber());
-//        model.addAttribute("hasNext", list.hasNext());
-//        model.addAttribute("hasPrev", list.hasPrevious());
-//
-//    }
-
-
-
-
-//    @GetMapping("/list")
-//    public void list(Model model) {
-//        List<StoreDto> storeList = storeService.list();
-//        log.info("===========> " + storeList);
-//        model.addAttribute("storeList", storeList);
-//    }
-//    public void list(PageRequestDto pageRequestDto, Model model) {
-//        PageResponseDto<StoreDto> responseDto = storeService.list(pageRequestDto);
-//        log.info("===========> " + responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//    }
-
 
     /*매장 등록 (admin) - 추가 예정*/
     @GetMapping("/register")

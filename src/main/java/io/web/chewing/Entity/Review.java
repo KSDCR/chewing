@@ -26,7 +26,7 @@ public class Review implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_name", referencedColumnName = "name")
     private Store store;
 
     @NonNull
@@ -39,4 +39,20 @@ public class Review implements Serializable {
     @Column(length = 500)
     private String content;
 
+    @CreatedDate
+    @Column(name = "creat_time", updatable = false)
+    private LocalDateTime created_at;
+
+    @LastModifiedDate
+    @Column(name = "modify_time")
+    private LocalDateTime modified_at;
+
+    public void change(String content) {
+        this.content = content;
+    }
+
+    public void assignUser(Member member) {
+
+        this.member_id = member;
+    }
 }

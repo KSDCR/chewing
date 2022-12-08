@@ -31,7 +31,7 @@
     <div class="btn-group" role="group me-2" style="padding-left: 20px;">
         <button type="button" class="btn btn" style="width: 100px; background-color: #FF8900;">정보</button>
 <!--        th:onclick="|index.replyDelete(${store.id})|"-->
-        <button th:onclick="|location.href='@{/review/list(store=${store.id})}'|"
+        <button th:onclick="|location.href='@{/review/list(store=${store.name})}'|"
                 id="review" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">리뷰</button>
     </div>
     <div class="btn-group" role="group">

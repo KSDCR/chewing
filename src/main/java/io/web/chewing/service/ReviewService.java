@@ -196,9 +196,9 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) throws NotFoundException {
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
         log.info("dd" + String.valueOf(reviewDto));
-        Review review = reviewDto.toEntity();
+        Review review = reviewDto.toEntity(store);
         Member loadMember = Member.builder()
                 .id(authMemberDTO.getId())
                 .nickname(authMemberDTO.getNickname())
@@ -415,7 +415,7 @@ public class ReviewService {
 
 
 
-    public List<ReviewDto> listReviewByStore(Long store, int page, PageInfo pageInfo) {
+    public List<ReviewDto> listReviewByStore(String store, int page, PageInfo pageInfo) {
         int records = 10;
         int offset = (page - 1) * records;
 
@@ -437,6 +437,7 @@ public class ReviewService {
         pageInfo.setRightPageNumber(rightPageNumber);
         pageInfo.setLastPageNumber(lastPage);
 
+        log.info("FFF"+reviewMapper.findReviewByStore(store,offset,records).toString());
         return reviewMapper.findReviewByStore(store, offset, records);
     }
 

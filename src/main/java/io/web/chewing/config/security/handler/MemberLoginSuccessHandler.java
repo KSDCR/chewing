@@ -39,7 +39,7 @@ public class MemberLoginSuccessHandler implements AuthenticationSuccessHandler {
         if (authMemberDTO.isVerify()) {
             redirectStrategy.sendRedirect(request, response, "/api/member/modifyInfo");
         }else {
-            redirectStrategy.sendRedirect(request,response,  "/review/listbefore");
+            redirectStrategy.sendRedirect(request,response,  "/store/list");
         }
 
     }
