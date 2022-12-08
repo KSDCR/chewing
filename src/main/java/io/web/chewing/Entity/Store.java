@@ -15,7 +15,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table
 public class Store extends BaseEntity {
 

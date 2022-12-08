@@ -84,6 +84,11 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public PageDto page(Page<StoreDto> stores, String keyword, String category) {
+
+        //
+
+
+
         return PageDto.builder()
                 .total(stores.getTotalPages())
                 .number(stores.getNumber())

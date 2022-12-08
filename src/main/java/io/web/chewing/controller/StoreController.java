@@ -60,7 +60,8 @@ public class StoreController {
         }*/
 
         PageDto paging = storeService.page(stores, keyword, category);
-        log.info("stores ================> {}", stores);
+        log.info("stores ================> {}", stores.stream().toList());
+        log.info("paging ================> {}", paging);
 
         model.addAttribute("stores", stores);
         model.addAttribute("paging", paging);
