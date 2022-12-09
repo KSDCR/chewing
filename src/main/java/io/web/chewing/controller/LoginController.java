@@ -8,6 +8,8 @@ public class LoginController {
 
     @GetMapping("/loginPage")
     public String loginPage(){
+
+        System.out.printf("dd");
         return "loginPage";
     }
 }
