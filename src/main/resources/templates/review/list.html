@@ -7,51 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <header style="background-color: #FF8900; display: flex; justify-content: space-between; align-items: center; padding: 20px;">
-        <!--            <h1 class="profile_icon">-->
-        <!--                <img src="./img/flog.jpg" alt="프로필사진">-->
-        <!--            </h1>-->
-        <!--            <a class="title">CHEWING</a>-->
-        <div class="title" style="color: white; position:absolute; right : 50%;">CHEWING</div>
+<table class="table">
+    <thead>
+    <tr>
+<!--        <th scope="col">id</th>-->
+        <th scope="col">content</th>
+        <th scope="col">nickname</th>
+        <th scope="col">store</th>
 
-        <!--   <button class="main_menu">
-               <img src="img/menu_icon.png" alt="메뉴">
-           </button>-->
-    </header>
+    </tr>
+    </thead>
 
+    <tbody>
+        <tr th:each="list:${reviewList}"  >
+            <!--<th scope="row">[[${list.id}]]</th>-->
+            <td>[[${list.content}]]</td>
+            <td>[[${list.member_nickname}]]</td>
+            <td>[[${list.store}]]</td>
 
-    <div class="page" th:each="list:${reviewList}">
-
-
-        <table class="table">
-            <thead>
-            <tr>
-        <!--        <th scope="col">id</th>-->
-                <th scope="col">content</th>
-                <th scope="col">nickname</th>
-                <th scope="col">store_name</th>
-
-            </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <!--<th scope="row">[[${list.id}]]</th>-->
-                    <td>[[${list.content}]]</td>
-                    <td>[[${list.member_nickname}]]</td>
-                    <td>[[${list.store_name}]]</td>
-
-    <!--                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">-->
-    <!--                    <div class="btn-group" role="group">-->
-    <!--                    </div>-->
-    <!--                </div>-->
-                </tr>
-            </tbody>
-        </table>
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group" role="group">
+                    <button th:onclick="|location.href='@{/review/register(store=${list.store})}'|"
+                            id="review" type="button" class="btn btn" style="background-color: #FF8900">리뷰등록</button>
+                </div>
+            </div>
+        </tr>
+    </tbody>
 
 
-    </div>
-    <button th:onclick="|location.href='@{/review/register(store_name=${store})}'|"
-            id="review" type="button" class="btn" style="background-color: #FF8900">리뷰등록</button>
+
+</table>
+
+
 </body>
 </html>
