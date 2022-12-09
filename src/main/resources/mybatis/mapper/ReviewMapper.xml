@@ -45,6 +45,7 @@
 <!--        r.create_time;-->
 <!--        r.modify_time;-->
         FROM review r LEFT JOIN store s ON r.store_name = s.name
+                      LEFT JOIN review_file f ON r.id = f.review_id
         WHERE r.store_name = #{store_name};
     </select>
 
