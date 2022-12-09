@@ -59,6 +59,9 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 
+    // aws s3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.360'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
 
     //Jwt 오류(io.jsonwebtoken.lang.UnknownClassException 해결을 위해 추가한 의존성
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-gson

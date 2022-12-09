@@ -1,5 +1,8 @@
 package io.web.chewing.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
@@ -11,41 +14,49 @@ import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.mapper.review.ReviewMapper;
 import io.web.chewing.repository.ReviewRepository;
 import io.web.chewing.repository.StoreRepository;
-import lombok.AllArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class ReviewService {
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private  ModelMapper modelMapper;
+    @Autowired
+    private  ReviewRepository reviewRepository;
+    @Autowired
+    private  StoreRepository storeRepository;
+    @Autowired
+    private  ReviewMapper reviewMapper;
 
-    private final ReviewRepository reviewRepository;
+    @Autowired
+    private AmazonS3Client s3Client;
 
-    private final StoreRepository storeRepository;
-    private final ReviewMapper reviewMapper;
+    @Value("${aws.s3.bucket}")
+    private  String bucketName;
+
+
+//    public ReviewDto test(){
+//        log.info(bucketName);
 //
-//    @Value("${aws.s3.bucket}")
-//    private String bucketName;
-
-    public ReviewDto test(){
-        log.info("======="+reviewMapper.select());
-        return reviewMapper.select();
-    }
+//        return reviewMapper.select();
+//    }
 
 
 
@@ -58,7 +69,7 @@ public class ReviewService {
 //    }
 //
 
-//    private final MemberRepository memberRepository;
+//    private  MemberRepository memberRepository;
 
     public List<ReviewDto> myReviewList(Long member_id) {
 
@@ -196,7 +207,7 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store, MultipartFile[] files) throws NotFoundException {
         log.info("dd" + String.valueOf(reviewDto));
         Review review = reviewDto.toEntity(store);
         Member loadMember = Member.builder()
@@ -211,7 +222,38 @@ public class ReviewService {
         log.info("===========================ls");
         Long id = reviewRepository.save(review).getId();
 
+        for (MultipartFile file : files) {
+
+            if (file != null && file.getSize() > 0) {
+                reviewMapper.insertFile(reviewDto.getId(), file.getOriginalFilename());
+
+                uploadFile(reviewDto.getId(), file);
+            }
+        }
+
         return id;
+    }
+
+
+    private void uploadFile(Long id, MultipartFile file) {
+        try {
+            // S3에 파일 저장
+            // 키 생성
+            String key = "chewing/review/" + id + "/" + file.getOriginalFilename();
+
+            // putObjectRequest
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,key);
+
+            // requestBody
+            RequestBody requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
+
+            // object(파일) 올리기
+            s3Client.putObject(putObjectRequest, requestBody);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public Member memberBuild(AuthMemberDTO authMemberDTO) {
@@ -326,7 +368,7 @@ public class ReviewService {
 //    }
 
 
-    public void modify(ReviewDto reviewDto) {
+    public void modify(ReviewDto reviewDto, MultipartFile[] addFiles, List<String> removeFiles) {
         log.info(String.valueOf(reviewDto.getId()));
         Optional<Review> result = reviewRepository.findById(reviewDto.getId());
         log.info("Optional<Review>:"+String.valueOf(result));
@@ -336,9 +378,37 @@ public class ReviewService {
 
         review.change(reviewDto.getContent());
 
+        if (removeFiles != null)
+            for (String fileName : removeFiles) {
+
+
+                reviewMapper.deleteFileByReviewIdAndFileName(reviewDto.getId(), fileName);
+
+                deleteFile(reviewDto.getId(), fileName);
+
+            };
+
+        for (MultipartFile file : addFiles) {
+
+            reviewMapper.deleteFileByReviewIdAndFileName(reviewDto.getId(), file.getOriginalFilename());
+
+
+            if (file != null && file.getSize() > 0) {
+
+                reviewMapper.insertFile(reviewDto.getId(), file.getOriginalFilename());
+
+                uploadFile(reviewDto.getId(), file);
+
+
+            }
+        }
+
+
         reviewRepository.save(review);
 
     }
+
+
 
     public void modifybefore(ReviewDto reviewDto) {
         log.info(String.valueOf(reviewDto.getId()));
@@ -349,11 +419,62 @@ public class ReviewService {
     }
 
     public void remove(Long id) {
+        ReviewDto review = reviewMapper.select(id);
+        List<String> fileNames = review.getFileNames();
+
+        if (fileNames != null) {
+            for (String fileName : fileNames) {
+                deleteFile(id, fileName);
+            }
+        }
+
+//        reviewMapper.deleteLikeByReviewId(id);
+//
+//        reviewMapper.deleteFileByReviewId(id);
+//
+//        reviewMapper.deleteByReviewId(id);
+//
 
 
         reviewRepository.deleteById(id);
 
     }
+
+    private void deleteFile(Long id, String fileName) {
+        String key = "chewing/review/" + id + "/" + fileName;
+
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName,key);
+/*        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+        .deleteObject(deleteObjectRequest);*/
+        s3Client.deleteObject(deleteObjectRequest);
+    }
+//
+//    public Map<String, Object> updateLike(String boardId, String memberId) {
+//
+//        Map<String, Object> map = new HashMap<>();
+//
+//        int cnt = boardMapper.getLikeByBoardIdAndMemberId(boardId, memberId);
+//
+//        if(cnt == 1) {
+//            boardMapper.deleteLike(boardId, memberId);
+//            map.put("current", "not liked");
+//        }else {
+//            boardMapper.insertLike(boardId, memberId);
+//            map.put("current", "liked");
+//        }
+//
+//        int countAll = boardMapper.countLikeByBoardId(boardId);
+//        map.put("count", countAll);
+//
+//        return map;
+//    }
+//
+//    public BoardDto get(int id) {
+//        return get(id, null);
+//    }
 
     public PageResponseDto<ReviewDto> myList(Long member, PageRequestDto pageRequestDto) {
 
@@ -415,12 +536,12 @@ public class ReviewService {
 
 
 
-    public List<ReviewDto> listReviewByStore(String store, int page, PageInfo pageInfo) {
+    public List<ReviewDto> listReviewByStore(String store_name, int page, PageInfo pageInfo) {
         int records = 10;
         int offset = (page - 1) * records;
 
 
-        int countAll = reviewMapper.countReviewByStore(store);
+        int countAll = reviewMapper.countReviewByStore(store_name);
         int lastPage = (countAll - 1) / records + 1;
 
         log.info("==========="+countAll);
@@ -437,8 +558,8 @@ public class ReviewService {
         pageInfo.setRightPageNumber(rightPageNumber);
         pageInfo.setLastPageNumber(lastPage);
 
-        log.info("FFF"+reviewMapper.findReviewByStore(store,offset,records).toString());
-        return reviewMapper.findReviewByStore(store, offset, records);
+        log.info("FFF"+reviewMapper.findReviewByStore(store_name,offset,records).toString());
+        return reviewMapper.findReviewByStore(store_name, offset, records);
     }
 
     public List<ReviewDto> listReviewByMember(String member_nickname, int page, PageInfo pageInfo) {
