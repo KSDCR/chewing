@@ -26,7 +26,7 @@ public class GoogleUser extends OAuth2ProviderUser{
 
     @Override
     public char getGender() {
-        return 't';
+        return 'g';
     }
 
     @Override
@@ -36,11 +36,11 @@ public class GoogleUser extends OAuth2ProviderUser{
 
     @Override
     public String getNickName() {
-        return null;
+        return (String) (getAttributes().get("name"));
     }
 
     @Override
     public String getName() {
-        return null;
+        return (String) getAttributes().get("name");
     }
 }
