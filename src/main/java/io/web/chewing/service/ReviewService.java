@@ -2,6 +2,7 @@ package io.web.chewing.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -242,13 +244,15 @@ public class ReviewService {
             String key = "chewing/review/" + id + "/" + file.getOriginalFilename();
 
             // putObjectRequest
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,key);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,key, (File) file);
 
-            // requestBody
-            RequestBody requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
+            ObjectMetadata objMeta = new ObjectMetadata();
+            objMeta.setContentLength(file.getInputStream().available());
 
-            // object(파일) 올리기
-            s3Client.putObject(putObjectRequest, requestBody);
+            s3Client.putObject(bucketName, key, file.getInputStream(), objMeta);
+
+            /*return s3Client.getUrl(bucketName, key).toString();*/
+
 
         } catch (Exception e) {
             e.printStackTrace();
