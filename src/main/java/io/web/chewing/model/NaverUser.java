@@ -24,26 +24,26 @@ public class NaverUser extends OAuth2ProviderUser {
 
     @Override
     public String getProfile() {
-        return (String) getAttributes().get("nickname");
+        return (String) getAttributes().get("profile_image");
     }
 
     @Override
     public char getGender() {
-        return 't';
+        return (char) getAttributes().get("gender");
     }
 
     @Override
     public String getPhone() {
-        return null;
+        return (String) getAttributes().get("phone");
     }
 
     @Override
     public String getNickName() {
-        return null;
+        return (String) getAttributes().get("nickname");
     }
 
     @Override
     public String getName() {
-        return null;
+        return (String) getAttributes().get("name");
     }
 }

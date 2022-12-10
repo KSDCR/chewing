@@ -3,10 +3,16 @@ package io.web.chewing.model;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.Map;
+
 public class KakaoUser extends OAuth2ProviderUser {
     public KakaoUser(OAuth2User oAuth2User, ClientRegistration clientRegistration) {
-        super(oAuth2User.getAttributes(), oAuth2User, clientRegistration);
+        super((Map<String, Object>) oAuth2User.getAttributes().get("kakao_account"),
+                oAuth2User,
+                clientRegistration);
     }
+
+    Map<String,Object> profile = (Map<String, Object>) getAttributes().get("profile");
 
     @Override
     public String getId() {
@@ -15,17 +21,17 @@ public class KakaoUser extends OAuth2ProviderUser {
 
     @Override
     public String getUsername() {
-        return null;
+        return (String) getAttributes().get("email");
     }
 
     @Override
     public String getProfile() {
-        return null;
+        return (String) profile.get("image");
     }
 
     @Override
     public char getGender() {
-        return 't';
+        return 'k';
     }
 
     @Override
@@ -35,11 +41,12 @@ public class KakaoUser extends OAuth2ProviderUser {
 
     @Override
     public String getNickName() {
-        return null;
+
+        return (String) profile.get("nickname");
     }
 
     @Override
     public String getName() {
-        return null;
+        return (String) profile.get("nickname");
     }
 }
