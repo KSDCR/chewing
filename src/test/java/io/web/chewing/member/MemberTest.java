@@ -32,7 +32,7 @@ public class MemberTest {
                     .nickname("user"+i)
                     .provider("test")
                     .name("name")
-                    .gender("s")
+                    .gender('s')
                     .phone("01012345678")
                     .verify(true)
                     .profile("냥냥펀치url")

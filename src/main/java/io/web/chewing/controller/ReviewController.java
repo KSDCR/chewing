@@ -77,23 +77,25 @@ public class ReviewController {
 
         model.addAttribute("myReviewList", list);
 
-        log.info(list);
+        log.info("myReviewList: "+list);
 
 
     }
+
 
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,
                      String store,
                      Model model) {
-
+        log.info("store: " + store);
 
 
         List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
-        list.forEach(reviewDto -> log.info(reviewDto));
+        list.forEach(reviewDto -> log.info("list:"+reviewDto));
 
         model.addAttribute("reviewList", list);
+        model.addAttribute("store_name", store);
 
     }
     /*complete*/
@@ -220,13 +222,16 @@ public class ReviewController {
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, authMemberDTO, store);
+        String id = reviewService.register(reviewDto, authMemberDTO, store);
 
         log.info("id" + id);
 
         redirectAttributes.addFlashAttribute("result", id);
-
-        return "redirect:/review/list";
+        
+        //일단 딱히 생각나는 방법도 없고 테스트할때도 귀찬아서
+        // 이렇게 메서드 파라미터로 리다이렉트 걸어둠
+        // redirectAttributes 사용해서 바꿀수있음 바꿔줘  -민종-
+        return "redirect:/review/list?store="+store;
     }
 
     @GetMapping({"remove", "modify"})

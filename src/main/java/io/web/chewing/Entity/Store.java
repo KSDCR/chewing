@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +22,6 @@ public class Store extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(nullable = false, unique = true)
     private String name;

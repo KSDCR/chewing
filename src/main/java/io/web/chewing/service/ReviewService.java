@@ -129,15 +129,13 @@ public class ReviewService {
 
     public PageResponseDto<ReviewDto> list(String store/*String member,*/ ,PageRequestDto pageRequestDto) {
 
-        Optional<Store> store1 = storeRepository.findByName(store);
-
-        Store store2 = Store.builder()
-                .id(store1.get().getId()).build();
+        Optional<Store> getStore = storeRepository.findByName(store);
+        Store findStore = getStore.orElseThrow();
 
 
         Pageable pageable = pageRequestDto.getPageable("store");
 
-        Page<Review> result = reviewRepository.findReviewByStore(store2, pageable);
+        Page<Review> result = reviewRepository.findReviewByStore(findStore, pageable);
 
 //        Page<Review> result = reviewRepository.findReviewByStore(store);
 
@@ -192,7 +190,7 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
+    public String register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
         Optional<Store> getStore = storeRepository.findByName(store);
         Store findStore = getStore.orElseThrow();
 
@@ -203,9 +201,9 @@ public class ReviewService {
         review.assignUser(loadMember);
 
         log.info("===========================ls");
-        Long id = reviewRepository.save(review).getId();
+        String storeSave = reviewRepository.save(review).getStore().getName();
 
-        return id;
+        return storeSave;
     }
 
     private static Member getBuild(AuthMemberDTO authMemberDTO) {

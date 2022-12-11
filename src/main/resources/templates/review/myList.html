@@ -1,30 +1,37 @@
+<!-- 예전 html 지웠음 필요하면 다시 말해줘 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-  myList
 
-  <table class="table">
-      <thead>
-      <tr>
-          <!--        <th scope="col">id</th>-->
-          <th scope="col">content</th>
-          <th scope="col">nickname</th>
+<table class="table">
 
-      </tr>
-      </thead>
+    <thead>
+    <tr>
+        <!--        <th scope="col">id</th>-->
+        <th scope="col">content</th>
+        <th scope="col">nickname</th>
+        <th scope="col">store</th>
 
-      <tbody>
-      <tr th:each="list:${myReviewList}"  >
-          <!--<th scope="row">[[${list.id}]]</th>-->
-          <td>[[${list.content}]]</td>
-          <td>[[${list.member_nickname}]]</td>
-      </tr>
-      </tbody>
+    </tr>
+    </thead>
 
-  </table>
+    <tbody>
+    <tr th:each="list:${myReviewList}"  >
+        <!--<th scope="row">[[${list.id}]]</th>-->
+        <td>[[${list.content}]]</td>
+        <td>[[${list.member_nickname}]]</td>
+        <!-- 스토어 이름 필요없음 지워 -->
+        <td>[[${list.store_name}]]</td>
+    </tr>
+    </tbody>
+
+</table>
 </body>
 </html>
+

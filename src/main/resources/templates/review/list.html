@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+<!-- store 이름  list에서 뽑으려면 힘들꺼 같아서 Controller에서
+메서드 파라미터 담아서 가져와서 표현함 -->
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group" role="group">
+        <button th:onclick="|location.href='@{/review/register(store=${store_name})}'|"
+                id="review" type="button" class="btn btn" style="background-color: #FF8900">리뷰등록</button>
+    </div>
+</div>
+
 <table class="table">
     <thead>
     <tr>
@@ -23,14 +32,8 @@
             <!--<th scope="row">[[${list.id}]]</th>-->
             <td>[[${list.content}]]</td>
             <td>[[${list.member_nickname}]]</td>
-            <td>[[${list.store}]]</td>
-
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group" role="group">
-                    <button th:onclick="|location.href='@{/review/register(store=${list.store})}'|"
-                            id="review" type="button" class="btn btn" style="background-color: #FF8900">리뷰등록</button>
-                </div>
-            </div>
+            <!-- 스토어 이름 필요없음 지워 -->
+            <td>[[${list.store_name}]]</td>
         </tr>
     </tbody>
 

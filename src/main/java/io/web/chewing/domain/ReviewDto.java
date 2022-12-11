@@ -17,8 +17,7 @@ public class ReviewDto {
 
 
     private Long id;
-    private Long store_id;
-    private String Store;
+    private String store_name;
     private double rate;
     private String member_nickname;
     private String content;
