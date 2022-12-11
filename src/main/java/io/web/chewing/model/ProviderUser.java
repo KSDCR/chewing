@@ -21,7 +21,7 @@ public interface ProviderUser {
 
     String getProfile();
 
-    char getGender();
+    String getGender();
 
     String getPhone();
 

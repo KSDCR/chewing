@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
 
+@Service
 @Getter
 @Slf4j
 public abstract class AbstractOAuth2UserService {
@@ -29,6 +31,8 @@ public abstract class AbstractOAuth2UserService {
 
     protected ProviderUser providerUser(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
         String registrationId = clientRegistration.getRegistrationId();
+        log.info("registrationId:"+registrationId);
+
 
 
         return switch (registrationId) {
@@ -40,7 +44,8 @@ public abstract class AbstractOAuth2UserService {
     }
 
     protected void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
-        Member member = saveMember(providerUser, userRequest);
+        log.info(String.valueOf(saveMember(providerUser, userRequest)));
+
     }
 
     private Member saveMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {

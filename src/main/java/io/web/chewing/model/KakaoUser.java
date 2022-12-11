@@ -30,8 +30,8 @@ public class KakaoUser extends OAuth2ProviderUser {
     }
 
     @Override
-    public char getGender() {
-        return 'k';
+    public String getGender() {
+        return (String) profile.get("gender");
     }
 
     @Override

@@ -3,13 +3,18 @@ package io.web.chewing.service;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.MemberRole;
 import io.web.chewing.model.ProviderUser;
+import io.web.chewing.repository.MemberRepository;
 import io.web.chewing.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
+@Slf4j
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
     public Member register(ProviderUser providerUser){
         Member  member = Member.builder().email(providerUser.getEmail())
@@ -25,7 +30,7 @@ public class UserService {
                 .verify(true).build();
             member.addMemberRole(MemberRole.USER);
 
-            userRepository.register(member);
+            memberRepository.save(member);
         return member;
     }
 }

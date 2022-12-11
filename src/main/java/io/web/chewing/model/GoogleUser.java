@@ -3,6 +3,7 @@ package io.web.chewing.model;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+
 public class GoogleUser extends OAuth2ProviderUser{
 
     public GoogleUser(OAuth2User oAuth2User, ClientRegistration clientRegistration){
@@ -25,13 +26,13 @@ public class GoogleUser extends OAuth2ProviderUser{
     }
 
     @Override
-    public char getGender() {
-        return 'g';
+    public String getGender() {
+        return (String) getAttributes().get("gender");
     }
 
     @Override
     public String getPhone() {
-        return null;
+        return (String) getAttributes().get("phone");
     }
 
     @Override

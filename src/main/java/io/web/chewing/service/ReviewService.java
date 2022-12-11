@@ -129,15 +129,13 @@ public class ReviewService {
 
     public PageResponseDto<ReviewDto> list(String store/*String member,*/ ,PageRequestDto pageRequestDto) {
 
-        Optional<Store> store1 = storeRepository.findByName(store);
-
-        Store store2 = Store.builder()
-                .id(store1.get().getId()).build();
+        Optional<Store> getStore = storeRepository.findByName(store);
+        Store findStore = getStore.orElseThrow();
 
 
         Pageable pageable = pageRequestDto.getPageable("store");
 
-        Page<Review> result = reviewRepository.findReviewByStore(store2, pageable);
+        Page<Review> result = reviewRepository.findReviewByStore(findStore, pageable);
 
 //        Page<Review> result = reviewRepository.findReviewByStore(store);
 
