@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class OAuth2ClientConfig {
 
     @Autowired
@@ -44,7 +43,7 @@ public class OAuth2ClientConfig {
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
-        http.oauth2Login().defaultSuccessUrl("/").permitAll();
+
         http.logout().logoutSuccessUrl("/");
         return http.build();
     }
