@@ -26,15 +26,15 @@ public class OAuth2ClientConfig {
     @Autowired
     CustomOidcUserService customOidcUserService;
 
-    @Bean
+/*    @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return (web) -> web.ignoring().antMatchers("/static/js/**","/static/images/**","/static/css/**","/static/scss/**");
-    }
+    }*/
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authRequest -> authRequest
-                .antMatchers("/api/user").access("hasAnyRole('SCOPE_profile','SCOPE_profile_image', 'SCOPE_email')")
+                .antMatchers("/api/user").access("hasAnyRole('SCOPE_profile','SCOPE_profile_image', 'SCOPE_email','ROLE_USER')")
                 .antMatchers("/api/oidc").access("hasRole('SCOPE_openid')")
                 .antMatchers("/").permitAll().anyRequest().authenticated());
 
@@ -44,7 +44,8 @@ public class OAuth2ClientConfig {
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
 
-        http.logout().logoutSuccessUrl("/");
+        http.logout().logoutSuccessUrl("/login");
+
         return http.build();
     }
 

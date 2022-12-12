@@ -15,7 +15,7 @@ public class HomeController {
     // 그래서 필터링 하는 작업을 해주는 CustomAuthorityMapper필요함
     @GetMapping("/api/user")
     public Authentication user(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2User){
-        log.info("authentication = " + authentication + ", oAuth2User = " + oAuth2User);
+        log.info("Controller authentication = " + authentication + ", oAuth2User = " + oAuth2User);
         return authentication;
     }
 

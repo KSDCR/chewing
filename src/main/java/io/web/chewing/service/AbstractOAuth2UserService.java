@@ -29,7 +29,7 @@ public abstract class AbstractOAuth2UserService {
     @Autowired
     private UserService userService;
 
-    protected ProviderUser providerUser(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
+    public ProviderUser providerUser(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
         String registrationId = clientRegistration.getRegistrationId();
         log.info("registrationId:"+registrationId);
 
@@ -43,17 +43,17 @@ public abstract class AbstractOAuth2UserService {
         };
     }
 
-    protected void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+    public void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
         log.info(String.valueOf(saveMember(providerUser, userRequest)));
 
     }
 
-    private Member saveMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+    public Member saveMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
         return memberRepository.findByEmail(providerUser.getUsername()).orElseGet(() -> RegisterMember(providerUser, userRequest));
 
     }
 
-    private Member RegisterMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
+    public Member RegisterMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
         return userService.register(providerUser);
     }
 

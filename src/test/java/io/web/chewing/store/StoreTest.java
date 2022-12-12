@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -24,8 +27,8 @@ public class StoreTest {
                     .name("TestStore"+i)
                     .address("TestStore"+i)
                     .file("TestStore"+i)
-                    .closeTime("TestStore"+i)
-                    .openTime("TestStore"+i)
+                    .close_time("TestStore"+i)
+                    .open_time("TestStore"+i)
                     .detail("TestStore"+i)
                     .phone("TestStore"+i)
             .build();
@@ -34,4 +37,6 @@ public class StoreTest {
             storeRepository.save(store);
         } );
     }
+
+
 }

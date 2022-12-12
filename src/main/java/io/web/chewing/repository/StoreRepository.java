@@ -1,13 +1,16 @@
 package io.web.chewing.repository;
 
+import io.web.chewing.Entity.Categories;
 import io.web.chewing.Entity.Store;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface StoreRepository extends JpaRepository<Store,Object> {
 
@@ -20,7 +23,10 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
             countQuery = "select count(s) from Store s where s.name like %:keyword%")
     Page<Store> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"categoriesSet"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Store> findByName(String name);
+
+
 
 //    @Query(value = "select distinct s from Store s " +
 //            "left join fetch s.category c " +
@@ -36,4 +42,6 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
 
 //    @Query("")
 //    void insertFile(Long id, String fileName);
+
+
 }
