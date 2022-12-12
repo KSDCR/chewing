@@ -37,18 +37,6 @@ public class Store extends BaseEntity {
 
     private String file;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<Categories> categoriesSet = new HashSet<>();
-
-    public void addCategories(Categories categories) {
-        categoriesSet.add(categories);
-    }
-
-    public void clearCategories() {
-        this.categoriesSet.clear();
-    }
 
     public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time) {
         this.name = name;

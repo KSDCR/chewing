@@ -3,6 +3,7 @@ package io.web.chewing.service;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
+import io.web.chewing.mapper.StoreMapper;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class StoreServiceImpl implements StoreService {
     private final ModelMapper modelMapper;
     private final StoreRepository storeRepository;
+    //private final StoreMapper storeMapper;
 
     @Override
     public StoreDto get(Long id) {
@@ -62,7 +64,7 @@ public class StoreServiceImpl implements StoreService {
                 .build());
     }
 
-   /* @Override
+    @Override
     public Page<StoreDto> listByCategory(int page, int size, String category) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Store> stores = storeRepository.findAllByCategory(category,pageRequest);
@@ -76,7 +78,7 @@ public class StoreServiceImpl implements StoreService {
                 .open_time(store.getOpen_time())
                 .close_time(store.getClose_time())
                 .build());
-    }*/
+    }
 
     @Override
     public PageDto page(Page<StoreDto> page, String keyword, String category) {
@@ -88,53 +90,6 @@ public class StoreServiceImpl implements StoreService {
                 .category(category)
                 .build();
     }
-
-//    @Override
-//    public List<StoreDto> list() {
-//        List<Store> result = storeRepository.findAll();
-//        List<StoreDto> dtoList = result.stream()
-//                .map(store -> modelMapper.map(store, StoreDto.class)).collect(Collectors.toList());
-//
-//        return dtoList;
-//    }
-
-//    @Override
-//    public Page<Store> list(Pageable pageable) {
-//        return storeRepository.findAll(pageable);
-//    }
-//    @Override
-//    public Page<StoreDto> page(int page, int size) {
-//    PageRequest pageRequest = PageRequest.of(page,size);
-//    Page<Store> stores = storeRepository.findAll(pageRequest);
-//    return stores.map(store -> new StoreDto(store));
-//}
-
-//    @Override
-//    public Page<Store> listBySearch(String keyword, Pageable pageable) {
-//        Page<Store> storeList = storeRepository.findByTitleContaining(keyword, pageable);
-//        return storeList;
-//    }
-
-//    @Override
-//    public PageResponseDto<StoreDto> list(PageRequestDto pageRequestDto) {
-//
-//        String[] types = pageRequestDto.getTypes();
-//        String keyword = pageRequestDto.getKeyword();
-//        Pageable pageable = pageRequestDto.getPageable("id");
-//
-//        Page<Store> result = storeRepository.searchAll(types, keyword, pageable);
-//
-//        List<StoreDto> dtoList = result.getContent().stream()
-//                .map(store -> modelMapper.map(store, StoreDto.class)).collect(Collectors.toList());
-//
-//
-//        return PageResponseDto.<StoreDto>withAll()
-//                .pageRequestDto(pageRequestDto)
-//                .dtoList(dtoList)
-//                .total((int)result.getTotalElements())
-//                .build();
-//
-//    }
 
     @Override
     @Transactional

@@ -20,6 +20,8 @@ public class StoreDto {
     private String open_time;
     private String close_time;
 
+    private String category;
+
     public StoreDto(Store store) {
         this.id = store.getId();
         this.name = store.getName();

@@ -41,6 +41,7 @@ public class StoreController {
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
         log.info("pageable ================> {}", pageable);
         log.info("keyword ================> {}", keyword);
+        log.info("category ================> {}", category);
         // 전체 매장 리스트
         Page<StoreDto> stores = storeService.list(page, 5);
         
@@ -50,9 +51,9 @@ public class StoreController {
         }
         
         // 카테고리별 매장 리스트
-        /*if (category != null && category != "") {
+        if (category != null && category != "") {
             stores = storeService.listByCategory(page, 5, category);
-        }*/
+        }
 
         PageDto paging = storeService.page(stores, keyword, category);
         log.info("stores ================> {}", stores.stream().toList());
@@ -94,7 +95,9 @@ public class StoreController {
     /*매장 정보 수정 (admin) - 추가 예정*/
     @GetMapping("/modify")
     public void modify(Long id, Model model) {
+
         StoreDto storeDto = storeService.get(id);
+        log.info("==== modify ====> " + id);
     }
 
     @PostMapping("/modify")

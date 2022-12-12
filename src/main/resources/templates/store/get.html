@@ -19,7 +19,12 @@
 </div>
 
 <div id="store" style="width: 390px; height: 150px; padding-left: 30px; padding-top: 10px;">
-    <h2 th:text="${store.name}"></h2>
+    <h2 th:text="${store.name}">
+        <!-- <수정버튼> admin일 경우만 보여줌-->
+
+    </h2>
+    <button th:onclick="|location.href='@{/store/modify(store=${store.id})}'|"
+            id="modify" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">수정</button>
     <div>
         ⭐⭐⭐⭐⭐ 5.0
         <div>리뷰수 111</div>
