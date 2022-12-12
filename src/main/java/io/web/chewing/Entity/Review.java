@@ -27,7 +27,7 @@ public class Review implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "store_name", referencedColumnName = "name")
-    private Store store;
+    private Store store_name;
 
     @NonNull
     private double rate;

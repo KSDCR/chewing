@@ -21,10 +21,15 @@
                     <textarea required="required" rows="5" class="form-control" name="content"></textarea>
                 </div>
 
-  <!--              <div class="mb-3">
+                <div class="mb-3">
+                    <label class="form-label">평점</label>
+                    <input type="number" required="required" rows="1" class="form-control" name="rate">
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">파일</label>
-                    <input multiple="multiple" type="file" accept="image/*" class="form-control" name="files"></input>
-                </div>-->
+                    <input multiple="multiple" type="file" accept="image/*" class="form-control" name="files">
+                </div>
 
                 <input class="btn btn-primary" type="submit" value="등록">
 
@@ -34,20 +39,153 @@
     </div>
 </div>
 
+<!--<!—- 첨부 파일 섬네일을 보여줄 부분 &ndash;&gt;-->
+<!--<div class="row mt-3">-->
+<!--    <div class="col ">-->
+<!--        <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<!—- 첨부파일 추가를 위한 모달창 &ndash;&gt;-->
+<!--<div class="modal uploadModal" tabindex="-1">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title">Upload File</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="input-group mb-3">-->
+<!--                    <input type="file" name="files" class="form-control" multiple >-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-primary uploadBtn">Upload</button>-->
+<!--                <button type="button" class="btn btn-outline-dark closeUploadBtn" >Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>&lt;!&ndash; register modal &ndash;&gt;-->
+
+
 
 <script layout:fragment="script" th:inline="javascript">
 
-    const errors = [[${errors}]]
-    console.log(errors)
-
-    let errorMsg = ''
-
-    if(errors){
-        for (let i = 0; i < errors.length; i++) {
-            errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
-        }
-        alert(errorMsg)
-    }
+    // const auth = [[${#authentication.principal}]]
+    //
+    //
+    //
+    // const errors = [[${errors}]]
+    // console.log(errors)
+    //
+    // let errorMsg = ''
+    //
+    // if(errors){
+    //     for (let i = 0; i < errors.length; i++) {
+    //         errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+    //     }
+    //     alert(errorMsg)
+    // }
+    //
+    // //업로드 모달
+    // const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+    //
+    // document.querySelector(".uploadFileBtn").addEventListener("click", function(e){
+    //
+    //     e.stopPropagation()
+    //     e.preventDefault()
+    //     uploadModal.show()
+    //
+    // }, false)
+    //
+    //
+    // document.querySelector(".uploadBtn").addEventListener("click", function(e){
+    //
+    //     const formObj = new FormData();
+    //
+    //     const fileInput = document.querySelector("input[name='files']")
+    //
+    //     console.log(fileInput.files)
+    //
+    //     const files = fileInput.files
+    //
+    //     for (let i = 0; i < files.length; i++) {
+    //         formObj.append("files", files[i]);
+    //     }
+    //
+    //
+    //     uploadToServer(formObj).then(result => {
+    //         console.log(result)
+    //         //console.log(result)
+    //         for (const uploadResult of result) {
+    //             showUploadFile(uploadResult)
+    //         }
+    //         uploadModal.hide()
+    //     }).catch(e => {
+    //         uploadModal.hide()
+    //     })
+    //
+    // },false)
+    //
+    // const uploadResult = document.querySelector(".uploadResult")
+    //
+    // function showUploadFile({uuid, fileName, link}){
+    //
+    //     const str =`<div class="card col-4">
+    //         <div class="card-header d-flex justify-content-center">
+    //             ${fileName}
+    //             <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
+    //         </div>
+    //         <div class="card-body">
+    //              <img src="/view/${link}" data-src="${uuid+"_"+fileName}" >
+    //         </div>
+    //     </div><!-- card -->`
+    //
+    //     uploadResult.innerHTML += str
+    // }
+    //
+    //
+    // function removeFile(uuid,fileName, obj){
+    //
+    //     console.log(uuid)
+    //     console.log(fileName)
+    //
+    //     console.log(obj)
+    //
+    //     const targetDiv = obj.closest(".card")
+    //
+    //     removeFileToServer(uuid, fileName).then(data => {
+    //         targetDiv.remove()
+    //     })
+    // }
+    //
+    // document.querySelector(".submitBtn").addEventListener("click", function(e){
+    //
+    //     e.preventDefault()
+    //     e.stopPropagation()
+    //
+    //     const target = document.querySelector(".uploadHidden")
+    //
+    //     const uploadFiles = uploadResult.querySelectorAll("img")
+    //
+    //     let str = ''
+    //
+    //     for (let i = 0; i < uploadFiles.length ; i++) {
+    //         const uploadFile = uploadFiles[i]
+    //         const imgLink = uploadFile.getAttribute("data-src")
+    //
+    //         str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+    //     }
+    //
+    //     target.innerHTML = str;
+    //
+    //     const formObj = document.querySelector("form");
+    //
+    //     formObj.submit();
+    //     formObj.reset();
+    //
+    // }, false)
 
 </script>
 </body>

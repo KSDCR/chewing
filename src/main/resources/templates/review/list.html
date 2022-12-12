@@ -7,37 +7,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-<table class="table">
-    <thead>
-    <tr>
-<!--        <th scope="col">id</th>-->
-        <th scope="col">content</th>
-        <th scope="col">nickname</th>
-        <th scope="col">store</th>
 
-    </tr>
-    </thead>
 
-    <tbody>
-        <tr th:each="list:${reviewList}"  >
-            <!--<th scope="row">[[${list.id}]]</th>-->
-            <td>[[${list.content}]]</td>
-            <td>[[${list.member_nickname}]]</td>
-            <td>[[${list.store}]]</td>
+<div th:each="list:${reviewList}">
+        <h4>[[${list.member_nickname}]]</h4>
+        <d>[[${list.content}]]</d>
 
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group" role="group">
-                    <button th:onclick="|location.href='@{/review/register(store=${list.store})}'|"
-                            id="review" type="button" class="btn btn" style="background-color: #FF8900">리뷰등록</button>
-                </div>
-            </div>
-        </tr>
-    </tbody>
+    </div>
 
 
 
-</table>
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group" role="group">
+            <button th:onclick="|location.href='@{/review/register(store_name=${store_name})}'|"
+                    id="review" type="button" class="btn btn" style="background-color: #FF8900">리뷰등록</button>
+        </div>
+    </div>
+
+
 
 
 </body>
 </html>
+

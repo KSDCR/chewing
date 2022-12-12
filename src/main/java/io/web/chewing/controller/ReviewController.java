@@ -30,44 +30,6 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-//    @GetMapping("/get")
-//    public List<ReviewDto> myReviewList(String member, PageRequestDto pageRequestDto, Model model){
-//
-//        ReviewDto reviewDto = ReviewService.get(member);
-//
-//        model.addAttribute("reviewDto", reviewDto);
-////        List<ReviewDto> list = ReviewService.myReviewList(member, pageRequestDto);
-////
-////        model.addAttribute("myReviewList", list);
-//
-//    }
-
-//    @PostMapping("/get")
-//    public String myReviewList(ReviewDto reviewDto) {
-//        ReviewDto oldmember = service.get(member.getId());
-//
-//        rttr.addAttribute("id", member.getId());
-//        boolean passwordMatch = passwordEncoder.matches(oldPassword, oldmember.getPassword());
-//        if (passwordMatch) {
-//            return "redirect:/member/modify";
-//        } else {
-//            rttr.addFlashAttribute("message", "암호가 일치하지 않습니다.");
-//            return "redirect:/member/information";
-//        }
-//
-//    }
-
-//    @GetMapping("/myList")
-//    public void myList(String member, PageRequestDto pageRequestDto, Model model){
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.myList(member, pageRequestDto);
-//
-//        log.info(responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//
-//    }
-
     @GetMapping("/myList")
     public void myList(@RequestParam(name="page", defaultValue = "1") int page,
                        PageInfo pageInfo,
@@ -87,120 +49,37 @@ public class ReviewController {
     @GetMapping("list")
     public void list(@RequestParam(name="page", defaultValue = "1") int page,
                      PageInfo pageInfo,
-                     String store,
-                     Model model) {
+                     String store_name,
+                     Model model,
+                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
 
+        log.info("인증객체는?" + authMemberDTO);
 
-
-        List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
+        List<ReviewDto> list = reviewService.listReviewByStore(store_name, page, pageInfo);
         list.forEach(reviewDto -> log.info(reviewDto));
 
         model.addAttribute("reviewList", list);
+        model.addAttribute("store_name", store_name);
+
+        log.info(":::::::::::::"+store_name);
 
     }
     /*complete*/
 
 
-    @GetMapping("/listbefore")
-    public void list(Long store, PageRequestDto pageRequestDto, Model model){
-
-        String member = "";
-
-        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
-
-        log.info(responseDto);
-
-        model.addAttribute("responseDto", responseDto);
-
-    }
-
-//    @GetMapping("/list")
-//    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
+//    @GetMapping("/listbefore")
+//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
 //
-////
-//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
+//        String member = "";
+//
+//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
 //
 //        log.info(responseDto);
 //
 //        model.addAttribute("responseDto", responseDto);
 //
-//
 //    }
 
-
-//    @GetMapping("getList")
-//    public PageResponseDto<ReviewDto> getList(Long store,
-//                                              PageRequestDto pageRequestDto) {
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.getList(store, pageRequestDto);
-//
-//
-//        log.info("==========================" + String.valueOf(responseDto));
-//
-//        return responseDto;
-//    }
-//
-//    @GetMapping("/list")
-//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
-//
-//        String member = "";
-//
-//        List<ReviewDto> list = reviewService.list(store);
-//
-//        model.addAttribute("ReviewList", list);
-//
-//        log.info("================================"+list);
-//
-//
-//    }
-
-
-//    pub
-
-
-//    @GetMapping("/reviewList")
-//    public void store(Long store) {
-//        Optional<Review> review = reviewService.reviewList(store);
-//        log.info("review");
-//
-//    }
-
-//    @GetMapping("/list")
-//    public void list(Long store, Model model){
-//
-//        List<ReviewDto> list = reviewService.reviewList(store);
-//
-//         log.info(list);
-//
-//        model.addAttribute("ReviewList", list);
-//
-//
-//    }
-
-//    @GetMapping("/list/{store}")
-//    public List<ReviewDto> getList(@PathVariable("store") Long store){
-//
-//        return null;
-//    }
-
-
-    //    @GetMapping("/list")
-//    public void list(PageRequestDto pageRequestDto, Model model) {
-//
-//        List<ReviewDto> list = ReviewService.list(pageRequestDto);
-//
-//
-//    }
-
-    //    @RequestMapping("/list")
-//    public void list(Model model) {
-//
-//        List<ReviewDto> list = ReviewService.list();
-//
-//
-//        model.addAttribute("ReviewList", list);
-//    }
-//
     @GetMapping("register")
     public void register(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         log.info("객체가 있나요?"+ authMemberDTO);
@@ -208,27 +87,32 @@ public class ReviewController {
 
     //
     @PostMapping("register")
-    public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
+    public String register(@Validated ReviewDto reviewDto,
+                           BindingResult bindingResult,
+                           RedirectAttributes rttr,
+                           MultipartFile[] files,
+                           @AuthenticationPrincipal AuthMemberDTO authMemberDTO,
+                           String store_name) throws NotFoundException {
 
         log.info("POST register.......");
         log.info("인증객체는?" + authMemberDTO);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors......." + bindingResult.getAllErrors());
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/review/register";
         }
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, authMemberDTO, store);
+        String id = reviewService.register(reviewDto, authMemberDTO, store_name, files);
 
         log.info("id" + id);
 
-        redirectAttributes.addFlashAttribute("result", id);
+        rttr.addFlashAttribute("result", id);
+        rttr.addFlashAttribute("store_name", store_name);
 
-        return "redirect:/review/list";
+        return "redirect:/review/list?store_name="+store_name;
     }
 
     @GetMapping({"remove", "modify"})
@@ -242,21 +126,13 @@ public class ReviewController {
 
     }
 
-    //    @GetMapping({"modify", "delete"})
-//    public void findReviewById(long id, Model model ) {
-//
-//        ReviewDto reviewDto = ReviewService.findById(id);
-//
-////        model.addAttribute("review",review);
-//    }
-//
 
     @PostMapping("modify")
     public String updateReview(
             PageRequestDto pageRequestDto,
             @Validated ReviewDto reviewDto,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes,
+            RedirectAttributes rttr,
             MultipartFile[] files,
             @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
 
@@ -266,18 +142,24 @@ public class ReviewController {
 
             String link = pageRequestDto.getLink();
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
 
-            redirectAttributes.addAttribute("id", reviewDto.getId());
+            rttr.addAttribute("id", reviewDto.getId());
 
             return "redirect:/list/modify?" + link;
         }
 
-        reviewService.modify(reviewDto);
+        if (removeFiles != null) {
+            for (String name : removeFiles) {
+                System.out.println(name);
+            }
+        }
 
-        redirectAttributes.addFlashAttribute("result", "modified");
+        reviewService.modify(reviewDto, files, removeFiles);
 
-        redirectAttributes.addAttribute("id", reviewDto.getId());
+        rttr.addFlashAttribute("result", "modified");
+
+        rttr.addAttribute("id", reviewDto.getId());
 
 //        return "redirect:/review/read";
 
@@ -308,7 +190,7 @@ public class ReviewController {
             return "redirect:/list/modify?" + link;
         }
 
-        reviewService.modify(reviewDto);
+        reviewService.modify(reviewDto, files, removeFiles);
 
         rttr.addFlashAttribute("result", "modified");
 
@@ -333,13 +215,7 @@ public class ReviewController {
 
         return "redirect:/review/list";
     }
-
-
-    @GetMapping("test")
-    public ReviewDto test(){
-        ReviewDto dto = reviewService.test();
-        return dto;
-    }
 }
+
 
 

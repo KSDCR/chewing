@@ -7,6 +7,7 @@ import io.web.chewing.config.security.dto.AuthMemberDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -17,19 +18,19 @@ public class ReviewDto {
 
 
     private Long id;
-    private String store;
+    private String store_name;
     private double rate;
     private String member_nickname;
     private String content;
     private String create_time;
     private String modify_time;
 
-    public Review toEntity(String store){
+    private List<String> fileName;
+
+    public Review toEntity(Store store){
 
         return Review.builder()
-                .store(Store.builder()
-                        .id(1L)
-                        .name(store).build())
+                .store_name(store)
                 .rate(rate)
                 .content(content).build();
     }

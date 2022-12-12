@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,101 +52,18 @@ public class ReviewService {
     @Autowired
     private AmazonS3Client s3Client;
 
+
     @Value("${aws.s3.bucket}")
     private  String bucketName;
 
 
-//    public ReviewDto test(){
-//        log.info(bucketName);
-//
-//        return reviewMapper.select();
-//    }
+    public List<ReviewDto> myReviewList(String member_nickname) {
 
-
-
-//    private ReviewDto convertToReviewDto(Review review) {
-//        modelMapper.getConfiguration()
-//                .setMatchingStrategy(MatchingStrategies.LOOSE);
-//        ReviewDto reviewDto = modelMapper
-//                .map(review, ReviewDto.class);
-//        return reviewDto;
-//    }
-//
-
-//    private  MemberRepository memberRepository;
-
-    public List<ReviewDto> myReviewList(Long member_id) {
-
-        return reviewRepository.ReviewByMember(member_id);
+        return reviewRepository.ReviewByMember(member_nickname);
     }
 
-//    public List<ReviewDto> list(Long store) {
-//
-//        List<ReviewDto> result = reviewRepository.findByStore(store);
-//
-//        List<ReviewDto> dtos = result.stream()
-//                .map(review -> modelMapper.map(review, ReviewDto.class))
-//                .collect(Collectors.toList());
 
-//        return reviewRepository.findByStore(store);
-
-//        return reviewRepository
-//                .findByStore(store)
-//                .stream()
-//                .map(review -> modelMapper.)
-//                .collect(Collectors.toList());
-
-//    return dtos;
-
-
-//    }
-
-//    public PageResponseDto<ReviewDto> list(Store store, Long member_id, PageRequestDto pageRequestDto) {
-//
-//        Pageable pageable = pageRequestDto.getPageable("store");
-//
-//        Page<Review> result = reviewRepository.findReviewByStore(store, pageable);
-//
-//        log.info("====================="+result.getContent());
-//
-//        List<ReviewDto> dtoList = result.getContent().stream()
-//                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
-//
-//        dtoList.forEach(reviewDto -> log.info("12"+ reviewDto));
-//
-//
-//
-//        return PageResponseDto.<ReviewDto>withAll()
-//                .pageRequestDto(pageRequestDto)
-//                .dtoList(dtoList)
-//                .total((int) result.getTotalElements())
-//                .build();
-//
-//    }
-//    public PageResponseDto<ReviewDto> list(Store store, Long member_id, PageRequestDto pageRequestDto) {
-//
-//        Pageable pageable = pageRequestDto.getPageable("store");
-//
-//        Page<Review> result = reviewRepository.findReviewByStore(store, pageable);
-//
-//        log.info("====================="+result.getContent());
-//
-//        List<ReviewDto> dtoList = result.getContent().stream()
-//                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
-//
-//        dtoList.forEach(reviewDto -> log.info("12"+ reviewDto));
-//
-//
-//
-//        return PageResponseDto.<ReviewDto>withAll()
-//                .pageRequestDto(pageRequestDto)
-//                .dtoList(dtoList)
-//                .total((int) result.getTotalElements())
-//                .build();
-//
-//    }
-
-    public PageResponseDto<ReviewDto> list(Long store/*String member,*/ ,PageRequestDto pageRequestDto) {
+    public PageResponseDto<ReviewDto> listbefore(Long store/*String member,*/ ,PageRequestDto pageRequestDto) {
 
         Optional<Store> store1 = storeRepository.findById(store);
 
@@ -169,37 +88,36 @@ public class ReviewService {
                 .build();
 
     }
-    /*before*/
 
-//    public List<ReviewDto> list(Long store, int page, PageInfo pageInfo) {
-//
-//        int records = 10;
-//        int offset = (page - 1) * records;
-//
-//
-//        int countAll = reviewRepository.countAll(store);
-//        int lastPage = (countAll - 1) / records + 1;
-//
-//
-//        int leftPageNumber = (page - 1) / 10 * 10 + 1;
-//        int rightPageNumber = leftPageNumber + 9;
-//        int currentPageNumber = page;
-//        rightPageNumber = Math.min(rightPageNumber, lastPage);
-//        boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
-//
-//        pageInfo.setHasNextPageNumber(hasNextPageNumber);
-//        pageInfo.setCurrentPageNumber(currentPageNumber);
-//        pageInfo.setLeftPageNumber(leftPageNumber);
-//        pageInfo.setRightPageNumber(rightPageNumber);
-//        pageInfo.setLastPageNumber(lastPage);
+
+    public List<ReviewDto> list(String store_name, int page, PageInfo pageInfo) {
+
+        int records = 10;
+        int offset = (page - 1) * records;
+
+
+        int countAll = reviewRepository.countAll(store_name);
+        int lastPage = (countAll - 1) / records + 1;
+
+
+        int leftPageNumber = (page - 1) / 10 * 10 + 1;
+        int rightPageNumber = leftPageNumber + 9;
+        int currentPageNumber = page;
+        rightPageNumber = Math.min(rightPageNumber, lastPage);
+        boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
+
+        pageInfo.setHasNextPageNumber(hasNextPageNumber);
+        pageInfo.setCurrentPageNumber(currentPageNumber);
+        pageInfo.setLeftPageNumber(leftPageNumber);
+        pageInfo.setRightPageNumber(rightPageNumber);
+        pageInfo.setLastPageNumber(lastPage);
 ////        Pageable pageable = pageRequestDto.getPageable("id");
 ////
+////        Page<Review> result = reviewRepository.findReviewByStore(store,/* member,*/ pageable);
 ////        Page<Review> result = reviewRepository.findReviewByStore(store,/* member,*/ pageable);
 ////
 ////        List<ReviewDto> dtoList = result.getContent().stream()
 ////                .map(review -> modelMapper.map(review,ReviewDto.class)).collect(Collectors.toList());
-//
-//
 ////        return PageResponseDto.<ReviewDto>withAll()
 ////                .pageRequestDto(pageRequestDto)
 ////                .dtoList(dtoList)
@@ -209,10 +127,45 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store, MultipartFile[] files) throws NotFoundException {
-        log.info("dd" + String.valueOf(reviewDto));
-        Review review = reviewDto.toEntity(store);
-        Member loadMember = Member.builder()
+        return reviewRepository.listByStore(store_name);
+    }
+
+    public String register(ReviewDto reviewDto,
+                           @AuthenticationPrincipal AuthMemberDTO authMemberDTO,
+                           String store_name,
+                           MultipartFile[] files) throws NotFoundException {
+
+        Optional<Store> getStore = storeRepository.findByName(store_name);
+        Store findStore = getStore.orElseThrow();
+
+        log.info(findStore.getName());
+
+        Review review = reviewDto.toEntity(findStore);
+        Member loadMember = getBuild(authMemberDTO);
+        review.assignUser(loadMember);
+
+        log.info("===========================ls");
+        String storeSave = reviewRepository.save(review).getStore_name().getName();
+
+        log.info(String.valueOf(review.getId()));
+
+        for (MultipartFile file : files) {
+            log.info("abcd"+file.getOriginalFilename());
+
+            if (file != null && file.getSize() > 0) {
+                reviewMapper.insertFile(review.getId(), file.getOriginalFilename());
+
+
+                uploadFile(review.getId(), file);
+            }
+        }
+
+        return storeSave;
+    }
+
+
+    private static Member getBuild(AuthMemberDTO authMemberDTO) {
+        return Member.builder()
                 .id(authMemberDTO.getId())
                 .nickname(authMemberDTO.getNickname())
                 .password(authMemberDTO.getPassword())
@@ -220,21 +173,21 @@ public class ReviewService {
                 .email(authMemberDTO.getEmail())
                 .provider(authMemberDTO.getProvider())
                 .build();
-        review.assignUser(loadMember);
-        log.info("===========================ls");
-        Long id = reviewRepository.save(review).getId();
-
-        for (MultipartFile file : files) {
-
-            if (file != null && file.getSize() > 0) {
-                reviewMapper.insertFile(reviewDto.getId(), file.getOriginalFilename());
-
-                uploadFile(reviewDto.getId(), file);
-            }
-        }
-
-        return id;
     }
+
+    public Member memberBuild(AuthMemberDTO authMemberDTO) {
+        return modelMapper.map(authMemberDTO, Member.class);
+    }
+
+
+//            ObjectMetadata objMeta = new ObjectMetadata();
+//            objMeta.setContentLength(file.getInputStream().available());
+//
+//            s3Client.putObject(bucketName, key, file.getInputStream(), objMeta);
+
+            /*return s3Client.getUrl(bucketName, key).toString();*/
+
+
 
 
     private void uploadFile(Long id, MultipartFile file) {
@@ -244,132 +197,20 @@ public class ReviewService {
             String key = "chewing/review/" + id + "/" + file.getOriginalFilename();
 
             // putObjectRequest
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,key, (File) file);
+            /*File file1 = multipartToFile(file);*/
+//            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file1);
 
-            ObjectMetadata objMeta = new ObjectMetadata();
-            objMeta.setContentLength(file.getInputStream().available());
-
-            s3Client.putObject(bucketName, key, file.getInputStream(), objMeta);
-
-            /*return s3Client.getUrl(bucketName, key).toString();*/
-
+            InputStream inputStream = file.getInputStream();
+            // object(파일) 올리기
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            s3Client.putObject(bucketName, key, inputStream,metadata);
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
-
-    public Member memberBuild(AuthMemberDTO authMemberDTO) {
-        return modelMapper.map(authMemberDTO, Member.class);
-    }
-
-//    public Long register(ReviewDto reviewDto /*,MemberDto memberDto/*, Long id, MultipartFile[] files*/) {
-//
-//
-////        Optional<Member> member = memberRepository.findById(id);
-////        log.info("이게 뭐냐구우"+String.valueOf(member));
-////
-////        Review review = Review.builder()
-////                .rate(reviewDto.getRate())
-////                .content(reviewDto.getContent())
-////                .member_nickname(reviewDto.getMember())
-////
-////                .build();
-////
-////
-////        review.getStore();
-//
-//        Review review = modelMapper.map(reviewDto, Review.class);
-//
-//
-//
-//        Long id =reviewRepository.save(review).getId();
-//
-//        log.info("===========================ls");
-//
-//        return id;
-//    }
-
-//    @Value("${aws.s3.bucket}")
-//    private String bucketName;
-
-//    public List<ReviewDto> findByStore(StoreDto store) {
-//
-//        return reviewRepository.findByStore(store);
-//    }
-
-//    public ReviewDto get(Long member_id) {
-//
-//        Optional<Review> result = reviewRepository.findByMember(member_id);
-//
-//        Review review = result.orElseThrow();
-//
-//        ReviewDto reviewDto = modelMapper.map(review, ReviewDto.class);
-//
-//        return reviewDto;
-//    }
-
-//    public ReviewDto findById(long id) {
-//
-//        Optional<Review> result = reviewRepository.findById(id);
-//
-//        Review review = result.orElseThrow();
-//
-//        ReviewDto reviewDTO = modelMapper.map(review, ReviewDto.class);
-//
-//        return reviewDTO;
-//    }
-//
-//    public int register(ReviewDto review, MultipartFile[] files) {
-//        int cnt = reviewRepository.save(review);
-//
-//        for (MultipartFile file : files) {
-//
-//            if (file != null && file.getSize() > 0) {
-//                reviewRepository.saveFile(review.getId(), file.getOriginalFilename());
-//
-//                uploadFile(review.getId(), file);
-//            }
-//        }
-//
-//        return cnt;
-//    }
-
-//    private void uploadFile(int id, MultipartFile file) {
-//        try {
-//            // S3에 파일 저장
-//            // 키 생성
-//            String key = "chewing/review/" + id + "/" + file.getOriginalFilename();
-//
-//            // putObjectRequest
-//            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-//                    .bucket(bucketName)
-//                    .key(key)
-//                    .acl(ObjectCannedACL.PUBLIC_READ)
-//                    .build();
-//
-//            // requestBody
-//            RequestBody requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
-//
-//            // object(파일) 올리기
-//            s3Client.putObject(putObjectRequest, requestBody);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    public int update(Review review, MultipartFile[] files, List<String> removeFiles) {
-//
-//        return reviewRepository.update(review);
-//    }
-//
-//    public int deleteById(long id) {
-//
-//        return reviewRepository.deleteById(id);
-//    }
 
 
     public void modify(ReviewDto reviewDto, MultipartFile[] addFiles, List<String> removeFiles) {
@@ -424,7 +265,7 @@ public class ReviewService {
 
     public void remove(Long id) {
         ReviewDto review = reviewMapper.select(id);
-        List<String> fileNames = review.getFileNames();
+        List<String> fileNames = review.getFileName();
 
         if (fileNames != null) {
             for (String fileName : fileNames) {
@@ -475,11 +316,6 @@ public class ReviewService {
 //
 //        return map;
 //    }
-//
-//    public BoardDto get(int id) {
-//        return get(id, null);
-//    }
-
     public PageResponseDto<ReviewDto> myList(Long member, PageRequestDto pageRequestDto) {
 
         Pageable pageable = pageRequestDto.getPageable("id");
@@ -497,14 +333,9 @@ public class ReviewService {
                 .build();
     }
 
-//    public Optional<Review> reviewList(Long store) {
-//        return reviewRepository.findByStore(store);
-//    }
-//
 
-
-    public List<ReviewDto> reviewList(Long store) {
-        return reviewRepository.reviewList(store);
+    public List<ReviewDto> reviewList(String store_name) {
+        return reviewRepository.reviewList(store_name);
     }
 
     public ReviewDto get(Long id) {
@@ -516,28 +347,6 @@ public class ReviewService {
 
         return reviewDto;
     }
-
-    public PageResponseDto<ReviewDto> getList(Long store, PageRequestDto pageRequestDto) {
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage() <= 0 ? 0 : pageRequestDto.getPage() - 1,
-                pageRequestDto.getSize(),
-                Sort.by("id").ascending());
-
-        Page<Review> result = reviewRepository.listOfStore(store, pageable);
-
-
-        List<ReviewDto> dtoList =
-                result.getContent().stream().map(reply -> modelMapper.map(reply, ReviewDto.class))
-                        .collect(Collectors.toList());
-
-        return PageResponseDto.<ReviewDto>withAll()
-                .pageRequestDto(pageRequestDto)
-                .dtoList(dtoList)
-                .total((int) result.getTotalElements())
-                .build();
-
-    }
-
-
 
 
     public List<ReviewDto> listReviewByStore(String store_name, int page, PageInfo pageInfo) {
@@ -625,4 +434,9 @@ public class ReviewService {
 //    Long id = reviewRepository.save(review).getId();
 //
 //        return id;
+        public File multipartToFile(MultipartFile mfile) throws IllegalStateException, IOException{
+            File file = new File(mfile.getOriginalFilename());
+            mfile.transferTo(file);
+            return file;
+        }
 }

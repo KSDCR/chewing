@@ -57,13 +57,13 @@
     </select>
 
     <insert id="insertFile">
-        INSERT INTO File (review_id, name)
+        INSERT INTO review_file (review_id, name)
         VALUES (#{id}, #{fileName})
     </insert>
 
     <delete id="deleteFileByBoardIdAndFileName">
         DELETE FROM review_file
-        WHERE boardId = #{id} AND name = #{fileName}
+        WHERE review_id = #{id} AND name = #{fileName}
     </delete>
 
     <select id="findReviewByMember" resultType="io.web.chewing.domain.ReviewDto">
