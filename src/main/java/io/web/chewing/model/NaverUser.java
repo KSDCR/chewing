@@ -34,12 +34,12 @@ public class NaverUser extends OAuth2ProviderUser {
 
     @Override
     public String getPhone() {
-        return (String) getAttributes().get("phone");
+        return (String) getAttributes().get("mobile");
     }
 
     @Override
     public String getNickName() {
-        return (String) getAttributes().get("nickname");
+        return "N_"+(String) getAttributes().get("nickname");
     }
 
     @Override

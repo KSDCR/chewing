@@ -26,7 +26,7 @@ public class KakaoUser extends OAuth2ProviderUser {
 
     @Override
     public String getProfile() {
-        return (String) profile.get("image");
+        return (String) profile.get("profile_image_url");
     }
 
     @Override
@@ -42,7 +42,7 @@ public class KakaoUser extends OAuth2ProviderUser {
     @Override
     public String getNickName() {
 
-        return (String) profile.get("nickname");
+        return "K_"+(String) profile.get("nickname");
     }
 
     @Override

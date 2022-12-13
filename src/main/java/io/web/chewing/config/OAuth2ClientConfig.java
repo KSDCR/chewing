@@ -45,7 +45,7 @@ public class OAuth2ClientConfig {
                         .oidcUserService(customOidcUserService)));
 
         http.logout().logoutSuccessUrl("/login");
-
+        http.formLogin().successForwardUrl("/");
         return http.build();
     }
 

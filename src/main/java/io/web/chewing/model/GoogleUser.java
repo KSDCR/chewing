@@ -4,11 +4,13 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 
-public class GoogleUser extends OAuth2ProviderUser{
+public class GoogleUser extends OAuth2ProviderUser {
 
-    public GoogleUser(OAuth2User oAuth2User, ClientRegistration clientRegistration){
-        super(oAuth2User.getAttributes(),oAuth2User,clientRegistration);
+    public GoogleUser(OAuth2User oAuth2User, ClientRegistration clientRegistration) {
+        super(oAuth2User.getAttributes(), oAuth2User, clientRegistration);
     }
+
+    private final String name = ((String) getAttributes().get("name")).replace(" ", "");
 
     @Override
     public String getId() {
@@ -37,11 +39,11 @@ public class GoogleUser extends OAuth2ProviderUser{
 
     @Override
     public String getNickName() {
-        return (String) (getAttributes().get("name"));
+        return "G_"+name;
     }
 
     @Override
     public String getName() {
-        return (String) getAttributes().get("name");
+        return name;
     }
 }
