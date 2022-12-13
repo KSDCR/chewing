@@ -18,7 +18,7 @@
         background-color: #f2f2f2;
         border-radius: 10px;
     }
-    .image {
+    #img {
         width: 90px;
         height: 90px;
         align-content: center;
@@ -51,7 +51,15 @@
 
 <div class="list" th:each="store:${stores}">
     <div class="image">
-        매장 사진
+        <!--매장 사진-->
+        <!--th:src="@{/img/{id}_{name}.png(id=${players.id},name=${players.name})}"-->
+       <!--<img id="imgId" th:src="${imgUrl}" + "/${store.name}"/${store.file}" alt="첨부이미지" th:if="${imgUrl != null}" />-->
+        <img id="img"
+             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${store.name},fileName=${store.file})}"
+             alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
+        <!--<img id="imgId"
+             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${UrlEncoder.encod(store.name,'utf-8')},fileName=${{UrlEncoder.encod(store.file,'utf-8')})}"
+             alt="첨부이미지" th:if="${store.file != ''}" />-->
     </div>
     <div class="text">
         <h4>

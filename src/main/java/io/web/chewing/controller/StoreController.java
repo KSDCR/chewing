@@ -24,11 +24,15 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
+    private final String imgUrl = "https://study-2022-08-02-343566579.s3.ap-northeast-2.amazonaws.com/chewing/store";
+
     /*매장 정보 조회*/
     @GetMapping("/get")
     public void get(Long id, Model model) {
         StoreDto storeDto = storeService.get(id);
         log.info("===========> " + storeDto);
+
+        model.addAttribute("imgUrl", imgUrl);
         model.addAttribute("store", storeDto);
     }
 
@@ -58,9 +62,15 @@ public class StoreController {
         PageDto paging = storeService.page(stores, keyword, category);
         log.info("stores ================> {}", stores.stream().toList());
         log.info("paging ================> {}", paging);
+        
+        // 매장 이미지 없을 경우 -> 기본이미지
+        //String imgUrl = "https://study-2022-08-02-343566579.s3.ap-northeast-2.amazonaws.com/chewing/store/noStore/noStore.jfif";
+        
+        log.info("imgUrl ================> {}", imgUrl);
 
         model.addAttribute("stores", stores);
         model.addAttribute("paging", paging);
+        model.addAttribute("imgUrl", imgUrl);
     }
 
 
@@ -83,8 +93,9 @@ public class StoreController {
     }
 
     @PostMapping("/register")
-    public String register(StoreDto storeDto, MultipartFile multipartFile, RedirectAttributes rttr) {
-        long id = storeService.register(storeDto, multipartFile);
+    public String register(StoreDto storeDto, MultipartFile image, RedirectAttributes rttr) {
+        long id = storeService.register(storeDto, image);
+        log.info("register file ===========> " + image);
         log.info("register ===========> " + storeDto);
 //        if (id != null) {
             rttr.addFlashAttribute("message", "새 매장이 등록되었습니다.");
@@ -97,7 +108,8 @@ public class StoreController {
     public void modify(Long id, Model model) {
 
         StoreDto storeDto = storeService.get(id);
-        log.info("==== modify ====> " + id);
+        log.info("==== modify ====> " + storeDto);
+        model.addAttribute("store", storeDto);
     }
 
     @PostMapping("/modify")

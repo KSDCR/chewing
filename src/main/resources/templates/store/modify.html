@@ -4,22 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ModifyStore</title>
-    <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/common.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--<link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/common.css">-->
 </head>
 <body>
-<!--  <h1>가게 정보 수정 페이지</h1>-->
-  <header>
-      <h1 class="profile_icon">
-          <img src="/static/img/flog.jpg" alt="프로필사진">
-      </h1>
-      <a class="title">CHEWING</a>
 
-      <button class="main_menu">
-          <img src="/static/img/menu_icon.png" alt="메뉴">
-      </button>
-  </header>
+<div>
+    <th:block th:replace="fragments/header :: headerFragment"></th:block>
+</div>
+<h1>매장 수정 페이지</h1>
 
+<form class="modifyForm" th:action="@{/store/modify}" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <input class="form-control" type="hidden" name="id" th:text="${store.id}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">매장명</label>
+        <input class="form-control" type="text" name="name" th:text="${store.name}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">상세내용</label>
+        <input class="form-control" type="text" name="detail" th:text="${store.detail}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">전화번호</label>
+        <input class="form-control" type="text" name="phone" th:text="${store.phone}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">주소</label>
+        <input class="form-control" type="text" name="address" th:text="${store.address}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">오픈시간</label>
+        <input class="form-control" type="time" name="open_time" th:text="${store.open_time}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">마감시간</label>
+        <input class="form-control" type="time" name="close_time" th:text="${store.close_time}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">사진 파일</label>
+        <input class="form-control" type="file" name="image" accept="image/*">
+    </div>
+    <input class="btn" type="submit" value="등록">
+</form>
 
 </body>
 </html>

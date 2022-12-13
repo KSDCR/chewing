@@ -32,9 +32,9 @@ public class StoreDto {
         this.close_time = store.getClose_time();
 
         this.file = store.getFile();
-        if(store.getFile()!=null){
-            //this.file = store.getFile().getName();
-        }
+//        if(store.getFile()!=null){
+//            this.file = store.getFile().getName();
+//        }
 
     }
 
