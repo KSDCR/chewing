@@ -5,9 +5,13 @@ import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.NotFound;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -16,9 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
 @Table
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +30,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotNull
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -37,7 +39,7 @@ public class Member extends BaseEntity {
     private String password;
 
     @NotNull
-    private String client_gb;
+    private String provider;
 
     private String phone;
 
@@ -50,10 +52,12 @@ public class Member extends BaseEntity {
 
     private boolean verify;
 
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();
@@ -73,6 +77,5 @@ public class Member extends BaseEntity {
     public void clearCategories() {
         this.categoriesSet.clear();
     }
-
 
 }
