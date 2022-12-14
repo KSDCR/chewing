@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class MemberService {
 
-
     private final MemberRepository memberRepository;
 
 }

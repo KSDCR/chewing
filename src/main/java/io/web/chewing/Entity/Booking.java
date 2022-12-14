@@ -12,10 +12,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
 @Table
 public class Booking extends BaseEntity {
-
+/*
+* NonNull : 메소드 인자의 유효성 검사 / Null이 있을 때, NullPointerException 발생
+* NotNull : 변수에 Null 유무 검사
+*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,9 +37,12 @@ public class Booking extends BaseEntity {
     private Long people;
 
     @NotNull
-    private LocalDateTime date;
+    private String date;
 
     @NotNull
-    private LocalDateTime time;
+    private String time;
 
+    public void change(String name) {
+        this.name = name;
+    }
 }
