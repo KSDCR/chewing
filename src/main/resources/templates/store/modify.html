@@ -18,37 +18,43 @@
 
 <form class="modifyForm" th:action="@{/store/modify}" method="post" enctype="multipart/form-data">
     <div class="mb-3">
-        <input class="form-control" type="hidden" name="id" th:text="${store.id}">
+        <input class="form-control" type="hidden" name="id" th:value="${store.id}">
     </div>
     <div class="mb-3">
         <label class="form-label">매장명</label>
-        <input class="form-control" type="text" name="name" th:text="${store.name}">
+        <input class="form-control" type="text" name="name" th:value="${store.name}">
     </div>
     <div class="mb-3">
         <label class="form-label">상세내용</label>
-        <input class="form-control" type="text" name="detail" th:text="${store.detail}">
+        <input class="form-control" type="text" name="detail" th:value="${store.detail}">
     </div>
     <div class="mb-3">
         <label class="form-label">전화번호</label>
-        <input class="form-control" type="text" name="phone" th:text="${store.phone}">
+        <input class="form-control" type="text" name="phone" th:value="${store.phone}">
     </div>
     <div class="mb-3">
         <label class="form-label">주소</label>
-        <input class="form-control" type="text" name="address" th:text="${store.address}">
+        <input class="form-control" type="text" name="address" th:value="${store.address}">
     </div>
     <div class="mb-3">
         <label class="form-label">오픈시간</label>
-        <input class="form-control" type="time" name="open_time" th:text="${store.open_time}">
+        <input class="form-control" type="time" name="open_time" th:value="${store.open_time}">
     </div>
     <div class="mb-3">
         <label class="form-label">마감시간</label>
-        <input class="form-control" type="time" name="close_time" th:text="${store.close_time}">
+        <input class="form-control" type="time" name="close_time" th:value="${store.close_time}">
+    </div>
+    <div class="mb-3" th:if="${store.file != null && store.file != ''}">
+        <input type="hidden" name="removeImage" th:value="${store.file}">
+        <img id="img"
+             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${store.name},fileName=${store.file})}"
+             alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
     </div>
     <div class="mb-3">
         <label class="form-label">사진 파일</label>
         <input class="form-control" type="file" name="image" accept="image/*">
     </div>
-    <input class="btn" type="submit" value="등록">
+    <input class="btn" type="submit" value="수정">
 </form>
 
 </body>

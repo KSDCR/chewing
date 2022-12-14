@@ -73,20 +73,7 @@ public class StoreController {
         model.addAttribute("imgUrl", imgUrl);
     }
 
-
-//    public void list(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-//        Page<Store> list = storeService.list(pageable);
-//        log.info("list ===========> " + list);
-//        model.addAttribute("stores", list);
-//        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
-//        model.addAttribute("next", pageable.next().getPageNumber());
-//        model.addAttribute("hasNext", list.hasNext());
-//        model.addAttribute("hasPrev", list.hasPrevious());
-//
-//    }
-
-
-    /*매장 등록 (admin) - 추가 예정*/
+    /*매장 등록 (admin)*/
     @GetMapping("/register")
     public void register() {
 
@@ -95,26 +82,28 @@ public class StoreController {
     @PostMapping("/register")
     public String register(StoreDto storeDto, MultipartFile image, RedirectAttributes rttr) {
         long id = storeService.register(storeDto, image);
-        log.info("register file ===========> " + image);
-        log.info("register ===========> " + storeDto);
-//        if (id != null) {
+        if (storeDto.getName() != null) {
             rttr.addFlashAttribute("message", "새 매장이 등록되었습니다.");
-//        }
+        }
         return "redirect:/store/list";
     }
     
     /*매장 정보 수정 (admin) - 추가 예정*/
     @GetMapping("/modify")
     public void modify(Long id, Model model) {
-
         StoreDto storeDto = storeService.get(id);
         log.info("==== modify ====> " + storeDto);
         model.addAttribute("store", storeDto);
+        model.addAttribute("imgUrl", imgUrl);
     }
 
     @PostMapping("/modify")
-    public String modify(StoreDto storeDto) {
-        storeService.update(storeDto);
+    public String modify(
+            StoreDto storeDto,
+            @RequestParam("image") MultipartFile addImage,
+            @RequestParam(name = "removeImage", required = false) String removeImage,
+            RedirectAttributes rttr) {
+        storeService.update(storeDto, addImage, removeImage);
         return "redirect:/store/list";
     }
     

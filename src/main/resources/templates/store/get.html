@@ -36,7 +36,8 @@
             ⭐⭐⭐⭐⭐ [[${store.rate}]]
         </div>
         <div>
-            <a th:href="@{/review/list(store=${store.id})}">리뷰수 [[${store.reviewCnt}]]</a>
+            <a th:if="${store.reviewCnt == 0}">리뷰수 0</a>
+            <a th:href="@{/review/list(store=${store.id})}" th:if="${store.reviewCnt > 0}">리뷰수 [[${store.reviewCnt}]]</a>
         </div>
     </div>
     <span th:text="${store.detail}">가게설명</span>

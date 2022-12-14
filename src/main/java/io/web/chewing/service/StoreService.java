@@ -39,19 +39,22 @@ public class StoreService {
         Optional<Store> result = storeRepository.findById(id);
         Store store = result.orElseThrow();
         StoreDto storeReview = storeMapper.getStoreReviewInfo(id);
-
-        return StoreDto.builder()
-                .id(store.getId())
-                .name(store.getName())
-                .address(store.getAddress())
-                .phone(store.getPhone())
-                .detail(store.getDetail())
-                .open_time(store.getOpen_time())
-                .close_time(store.getClose_time())
-                .file(store.getFile())
-                .rate(storeReview.getRate())
-                .reviewCnt(storeReview.getReviewCnt())
-                .build();
+        log.info("storeReview ====================> {}", storeReview);
+        if (storeReview != null) {
+            return StoreDto.builder()
+                    .id(store.getId())
+                    .name(store.getName())
+                    .address(store.getAddress())
+                    .phone(store.getPhone())
+                    .detail(store.getDetail())
+                    .open_time(store.getOpen_time())
+                    .close_time(store.getClose_time())
+                    .file(store.getFile())
+                    .rate(storeReview.getRate())
+                    .reviewCnt(storeReview.getReviewCnt())
+                    .build();
+        }
+        return modelMapper.map(store, StoreDto.class);
     }
 
     public Page<StoreDto> list(int page, int size) {
@@ -137,26 +140,62 @@ public class StoreService {
             String key = "chewing/store/" + name + "/" + multipartFile.getOriginalFilename();
             log.info("key ============> " + key);
             InputStream inputStream = multipartFile.getInputStream();
-
-            // 파일 올리기
+            // 파일 업로드
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(multipartFile.getContentType());
             s3Client.putObject(bucketName, key, inputStream, metadata);
-            log.info("============= 파일 올림 ============");
+            log.info("============= 파일 업로드 ============");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
-    public void update(StoreDto storeDto) {
+    /* 파일 삭제 - S3 */
+    private void deleteFile(String name, String fileName) {
+        // 키 생성
+        String key = "chewing/store/" + name + "/" + fileName;
+        log.info("key ============> " + key);
+        // 파일 삭제
+        s3Client.deleteObject(bucketName, key);
+        log.info("============= 파일 삭제 ============");
+    }
+
+    public void update(StoreDto storeDto, MultipartFile addImage, String removeImage) {
         Optional<Store> result = storeRepository.findById(storeDto.getId());
         Store store = result.orElseThrow();
+        log.info("removeImage ===========> {} / addImage ============> {}", removeImage, addImage);
+
+        storeDto.setFile(removeImage);
+        log.info("storeDto ========> {}", storeDto);
+        // 파일 변경
+        if (addImage != null && addImage.getSize() > 0) {
+            log.info("----------- 파일 변경 ---------");
+            // 변경 파일 정보 저장
+            storeDto.setFile(addImage.getOriginalFilename());
+
+            if (removeImage != null) { // 파일이 있는 경우
+                log.info("----------- 기존 파일 삭제 ---------");
+                // S3에서 기존 파일 삭제
+                deleteFile(storeDto.getName(), removeImage);
+            }
+            // S3에 실제 파일 저장
+            uploadFile(storeDto.getName(), addImage);
+        }
+        
+        // DB의 매장 정보 수정
         store.change(storeDto.getName(), storeDto.getDetail(), storeDto.getAddress(), storeDto.getPhone(), storeDto.getFile(), storeDto.getOpen_time(), storeDto.getClose_time());
         storeRepository.save(store);
     }
 
     public void remove(Long id) {
+        Optional<Store> result = storeRepository.findById(id);
+        Store store = result.orElseThrow();
+        if (store.getFile() != null) { // 파일이 있는 경우
+            // S3에서 기존 파일 삭제
+            deleteFile(store.getName(), store.getFile());
+        }
+        // DB에서 매장 삭제
         storeRepository.deleteById(id);
     }
 }
