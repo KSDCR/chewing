@@ -5,11 +5,11 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
+import io.web.chewing.mapper.StoreMapper;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,13 +33,25 @@ public class StoreService {
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
-    //private final StoreMapper storeMapper;
-
+    private final StoreMapper storeMapper;
 
     public StoreDto get(Long id) {
         Optional<Store> result = storeRepository.findById(id);
         Store store = result.orElseThrow();
-        return modelMapper.map(store, StoreDto.class);
+        StoreDto storeReview = storeMapper.getStoreReviewInfo(id);
+
+        return StoreDto.builder()
+                .id(store.getId())
+                .name(store.getName())
+                .address(store.getAddress())
+                .phone(store.getPhone())
+                .detail(store.getDetail())
+                .open_time(store.getOpen_time())
+                .close_time(store.getClose_time())
+                .file(store.getFile())
+                .rate(storeReview.getRate())
+                .reviewCnt(storeReview.getReviewCnt())
+                .build();
     }
 
     public Page<StoreDto> list(int page, int size) {

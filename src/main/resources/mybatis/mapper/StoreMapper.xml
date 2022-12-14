@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.web.chewing.mapper.StoreMapper">
+
+    <select id="getStoreReviewInfo" resultType="io.web.chewing.domain.StoreDto">
+        SELECT round(AVG(rate),2) rate, count(store_id) reviewCnt
+        FROM review
+        WHERE store_id = #{id}
+        GROUP BY store_id;
+    </select>
+
+</mapper>

@@ -23,5 +23,4 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
             "ON s.id = c.store.id " +
             "where c.category like %:category%")
     Page<Store> findAllByCategory(@Param("category") String category, Pageable pageable);
-
 }

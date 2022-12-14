@@ -13,31 +13,38 @@
 </div>
 <div id="storeImage" style="width: 390px;height: 270px; padding: 20px; ">
     <div id="image" style="width: 343px; height: 240px; margin:auto; background-color: #C5CEE0; border-radius: 10px;">
-<!--        <img th:src="@{upload} + ${store.id}/${store.file}" alt="">-->
         <img id="img"
              th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${store.name},fileName=${store.file})}"
              alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
     </div>
 </div>
 
-<div id="store" style="width: 390px; height: 150px; padding-left: 30px; padding-top: 10px;">
-    <h2 th:text="${store.name}">
-        <!-- <수정버튼> admin일 경우만 보여줌-->
-
+<div id="store" style="/*width: 390px; */height: 150px; padding-left: 30px; padding-top: 10px;">
+    <!--<h2 th:text="${store.name}">-->
+    <h2>
+        [[${store.name}]]
+        <!-- <수정버튼> admin일 경우만 보이도록 수정!! -->
+        <button th:onclick="|location.href='@{/store/modify(id=${store.id})}'|"
+                id="modify" type="button" class="btn btn"
+                style="width: 90px;background-color: #F2F2F2;float: right;margin-right: 32px;align-content: center;">
+            ✏Edit
+        </button>
     </h2>
-    <button th:onclick="|location.href='@{/store/modify(id=${store.id})}'|"
-            id="modify" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">수정</button>
+
     <div>
-        ⭐⭐⭐⭐⭐ 5.0
-        <div>리뷰수 111</div>
+        <div>
+            ⭐⭐⭐⭐⭐ [[${store.rate}]]
+        </div>
+        <div>
+            <a th:href="@{/review/list(store=${store.id})}">리뷰수 [[${store.reviewCnt}]]</a>
+        </div>
     </div>
-    <span th:text="${store.detail}">가게설명....</span>
+    <span th:text="${store.detail}">가게설명</span>
 </div>
 
 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group" role="group me-2" style="padding-left: 20px;">
         <button type="button" class="btn btn" style="width: 100px; background-color: #FF8900;">정보</button>
-<!--        th:onclick="|index.replyDelete(${store.id})|"-->
         <button th:onclick="|location.href='@{/review/list(store=${store.id})}'|"
                 id="review" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">리뷰</button>
     </div>

@@ -22,6 +22,9 @@ public class StoreDto {
 
     private String category;
 
+    private Double rate;
+    private int reviewCnt;
+
     public StoreDto(Store store) {
         this.id = store.getId();
         this.name = store.getName();
@@ -32,10 +35,6 @@ public class StoreDto {
         this.close_time = store.getClose_time();
 
         this.file = store.getFile();
-//        if(store.getFile()!=null){
-//            this.file = store.getFile().getName();
-//        }
-
     }
 
     /* Dto -> Entity
