@@ -14,17 +14,17 @@ import java.time.LocalDateTime;
 public class BookingDTO {
     private Long id;
 
-    private String name;
+    private String store_name;
+
+    private String member_nickname;
+
+    private String real_name;
 
     private Long people;
 
-    private LocalDateTime date;
+    private String date;
 
-    private LocalDateTime time;
+    private String time;
 
-
-    private LocalDateTime created_at;
-
-    private LocalDateTime modified_at;
 
 }

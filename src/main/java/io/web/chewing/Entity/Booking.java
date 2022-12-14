@@ -3,6 +3,7 @@ package io.web.chewing.Entity;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -28,12 +29,11 @@ public class Booking extends BaseEntity {
     @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
     private Member member;
 
-    @NonNull
-    private String name;
-
     @ManyToOne
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_name", referencedColumnName = "name")
     private Store store;
+
+    private String real_name;
 
     @NonNull
     private Long people;
@@ -44,7 +44,7 @@ public class Booking extends BaseEntity {
     @NotNull
     private String time;
 
-    public void change(String name) {
-        this.name = name;
-    }
+    @ColumnDefault("false")
+    private boolean confirm;
+
 }

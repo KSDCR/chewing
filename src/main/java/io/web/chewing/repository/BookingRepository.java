@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    List<BookingDTO> findBookingListPaging(String store, String storeName);
+
+    /*List<BookingDTO> findBookingListPaging(String store, String storeName);*/
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.web.chewing.mapper.booking.BookingMapper">
+
+    <select id="findBookingByMember" resultType="io.web.chewing.domain.BookingDTO">
+        SELECT
+        b.id,
+        b.store_name,
+        b.member_nickname,
+        b.real_name,
+        b.people,
+        b.date,
+        b.time;
+        FROM booking b LEFT JOIN member m ON b.member_nickname = m.nickname
+        WHERE b.member_nickname = #{member_nickname};
+    </select>
+
+    <select id="countBookingByMember" resultType="int">
+        SELECT COUNT(*)
+        FROM booking b LEFT JOIN member m ON b.member_nickname = m.nickname
+        WHERE b.member_nickname = #{member_nickname};
+    </select>
+
+</mapper>

@@ -15,8 +15,8 @@
         r.store_name,
         r.rate,
         r.member_nickname,
-        r.content
-        r.creat_time;
+        r.content,
+        r.creat_time,
         r.modify_time;
         FROM review r
         WHERE r.id = #{id}
