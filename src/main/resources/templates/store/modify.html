@@ -47,7 +47,7 @@
     <div class="mb-3" th:if="${store.file != null && store.file != ''}">
         <input type="hidden" name="removeImage" th:value="${store.file}">
         <img id="img"
-             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${store.name},fileName=${store.file})}"
+             th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}"
              alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
     </div>
     <div class="mb-3">

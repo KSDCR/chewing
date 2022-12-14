@@ -119,25 +119,27 @@ public class StoreService {
         Store store = modelMapper.map(storeDto, Store.class);
         log.info("============> " + String.valueOf(storeDto));
 
+        // DB에 매장 정보 저장
+        Long id = storeRepository.save(store).getId();
+
         if (multipartFile != null && multipartFile.getSize() > 0) {
             // DB에 파일 정보 저장
             log.info("============> " + multipartFile.getOriginalFilename());
-            store.setFile(multipartFile.getOriginalFilename());
+            storeRepository.updateFileName(id, multipartFile.getOriginalFilename());
 
             // S3에 실제 파일 저장
-            uploadFile(storeDto.getName(), multipartFile);
+            uploadFile(id, multipartFile);
         }
 
-        // DB에 매장 정보 저장
-        Long id = storeRepository.save(store).getId();
+
         return id;
     }
 
     /* 파일 업로드 - S3 */
-    private void uploadFile(String name, MultipartFile multipartFile) {
+    private void uploadFile(Long id, MultipartFile multipartFile) {
         try {
             // 키 생성
-            String key = "chewing/store/" + name + "/" + multipartFile.getOriginalFilename();
+            String key = "chewing/store/" + id + "/" + multipartFile.getOriginalFilename();
             log.info("key ============> " + key);
             InputStream inputStream = multipartFile.getInputStream();
             // 파일 업로드
@@ -152,9 +154,9 @@ public class StoreService {
     }
 
     /* 파일 삭제 - S3 */
-    private void deleteFile(String name, String fileName) {
+    private void deleteFile(Long id, String fileName) {
         // 키 생성
-        String key = "chewing/store/" + name + "/" + fileName;
+        String key = "chewing/store/" + id + "/" + fileName;
         log.info("key ============> " + key);
         // 파일 삭제
         s3Client.deleteObject(bucketName, key);
@@ -177,10 +179,10 @@ public class StoreService {
             if (removeImage != null) { // 파일이 있는 경우
                 log.info("----------- 기존 파일 삭제 ---------");
                 // S3에서 기존 파일 삭제
-                deleteFile(storeDto.getName(), removeImage);
+                deleteFile(storeDto.getId(), removeImage);
             }
             // S3에 실제 파일 저장
-            uploadFile(storeDto.getName(), addImage);
+            uploadFile(storeDto.getId(), addImage);
         }
         
         // DB의 매장 정보 수정
@@ -193,7 +195,7 @@ public class StoreService {
         Store store = result.orElseThrow();
         if (store.getFile() != null) { // 파일이 있는 경우
             // S3에서 기존 파일 삭제
-            deleteFile(store.getName(), store.getFile());
+            deleteFile(store.getId(), store.getFile());
         }
         // DB에서 매장 삭제
         storeRepository.deleteById(id);

@@ -14,7 +14,7 @@
 <div id="storeImage" style="width: 390px;height: 270px; padding: 20px; ">
     <div id="image" style="width: 343px; height: 240px; margin:auto; background-color: #C5CEE0; border-radius: 10px;">
         <img id="img"
-             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${store.name},fileName=${store.file})}"
+             th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}"
              alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
     </div>
 </div>

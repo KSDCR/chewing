@@ -51,15 +51,9 @@
 
 <div class="list" th:each="store:${stores}">
     <div class="image">
-        <!--매장 사진-->
-        <!--th:src="@{/img/{id}_{name}.png(id=${players.id},name=${players.name})}"-->
-       <!--<img id="imgId" th:src="${imgUrl}" + "/${store.name}"/${store.file}" alt="첨부이미지" th:if="${imgUrl != null}" />-->
         <img id="img"
-             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${store.name},fileName=${store.file})}"
-             alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
-        <!--<img id="imgId"
-             th:src="@{{imgUrl}/{name}/{fileName}(imgUrl=${imgUrl},name=${UrlEncoder.encod(store.name,'utf-8')},fileName=${{UrlEncoder.encod(store.file,'utf-8')})}"
-             alt="첨부이미지" th:if="${store.file != ''}" />-->
+             th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}"
+             alt="매장이미지" th:if="${store.file != '' || store.file != null}" />
     </div>
     <div class="text">
         <h4>

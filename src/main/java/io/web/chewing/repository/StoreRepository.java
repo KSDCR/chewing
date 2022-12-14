@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface StoreRepository extends JpaRepository<Store,Object> {
@@ -23,4 +24,8 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
             "ON s.id = c.store.id " +
             "where c.category like %:category%")
     Page<Store> findAllByCategory(@Param("category") String category, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Store s set s.file = :file where s.id = :id")
+    void updateFileName(@Param("id") Long id, @Param("file") String file);
 }
