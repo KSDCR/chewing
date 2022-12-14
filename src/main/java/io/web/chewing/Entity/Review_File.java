@@ -1,8 +1,12 @@
 package io.web.chewing.Entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -10,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Table
-public class Review_File extends BaseEntity{
+public class Review_File{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +26,5 @@ public class Review_File extends BaseEntity{
 
     @NonNull
     private String name;
+
 }

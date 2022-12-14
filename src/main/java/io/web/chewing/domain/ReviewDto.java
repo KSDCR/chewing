@@ -22,10 +22,11 @@ public class ReviewDto {
     private double rate;
     private String member_nickname;
     private String content;
-    private String create_time;
+    private String creat_time;
     private String modify_time;
 
     private List<String> fileName;
+
 
     public Review toEntity(Store store){
 

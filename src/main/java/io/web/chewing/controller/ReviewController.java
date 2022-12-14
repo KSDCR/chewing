@@ -1,6 +1,7 @@
 package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
+import io.web.chewing.config.SecurityConfig;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageInfo;
 import io.web.chewing.domain.PageRequestDto;
@@ -10,6 +11,7 @@ import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +29,8 @@ import java.util.Optional;
 @Log4j2
 @RequiredArgsConstructor
 public class ReviewController {
-
+    @Value("${aws.s3.file.url.prefix}")
+    String imgUrl;
     private final ReviewService reviewService;
 
     @GetMapping("/myList")
@@ -60,8 +63,13 @@ public class ReviewController {
 
         model.addAttribute("reviewList", list);
         model.addAttribute("store_name", store_name);
+        model.addAttribute("imgUrl", imgUrl);
+
+        log.info(imgUrl);
+
 
         log.info(":::::::::::::"+store_name);
+        log.info("${imgUrl }/${review.id }/${URLEncoder.encode(file, 'utf-8')}");
 
     }
     /*complete*/

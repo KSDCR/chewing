@@ -2,14 +2,36 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}" xmlns:sec="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-</head>
+<style>
+    /* 별점 */
+    .rate_wrap{display:inline-block; position: absolute; bottom: 10px; right: 28px;}
+    .rate_box{position:relative;font-size:10px;}
+
+    .rate_box .star_radio:nth-of-type(1):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(1):checked ~ .rate_bg{width:10%;}
+    .rate_box .star_radio:nth-of-type(2):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(2):checked ~ .rate_bg{width:20%;}
+    .rate_box .star_radio:nth-of-type(3):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(3):checked ~ .rate_bg{width:30%;}
+    .rate_box .star_radio:nth-of-type(4):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(4):checked ~ .rate_bg{width:40%;}
+    .rate_box .star_radio:nth-of-type(5):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(5):checked ~ .rate_bg{width:50%;}
+    .rate_box .star_radio:nth-of-type(6):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(6):checked ~ .rate_bg{width:60%;}
+    .rate_box .star_radio:nth-of-type(7):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(7):checked ~ .rate_bg{width:70%;}
+    .rate_box .star_radio:nth-of-type(8):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(8):checked ~ .rate_bg{width:80%;}
+    .rate_box .star_radio:nth-of-type(9):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(9):checked ~ .rate_bg{width:90%;}
+    .rate_box .star_radio:nth-of-type(10):hover ~ .rate_bg,
+    .rate_box .star_radio:nth-of-type(10):checked ~ .rate_bg{width:100%;}
+</style>
 <body>
-
-
 
 <div layout:fragment="content">
     <div class="row">
@@ -17,13 +39,37 @@
             <h1>게시물 작성</h1>
             <form id="registerForm1" action="" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label class="form-label">본문</label>
+                    <label class="form-label" >본문</label>
                     <textarea required="required" rows="5" class="form-control" name="content"></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">평점</label>
-                    <input type="number" required="required" rows="1" class="form-control" name="rate">
+                    <div class="rate_wrap">
+                        <div class="rate_box" >
+                            <label for="rate_1" class="label_star" title="0.5"><span class="blind">0.5점</span></label>
+                            <label for="rate_2" class="label_star" title="1"><span class="blind">1점</span></label>
+                            <label for="rate_3" class="label_star" title="1.5"><span class="blind">1.5점</span></label>
+                            <label for="rate_4" class="label_star" title="2"><span class="blind">2점</span></label>
+                            <label for="rate_5" class="label_star" title="2.5"><span class="blind">2.5점</span></label>
+                            <label for="rate_6" class="label_star" title="3"><span class="blind">3점</span></label>
+                            <label for="rate_7" class="label_star" title="3.5"><span class="blind">3.5점</span></label>
+                            <label for="rate_8" class="label_star" title="4"><span class="blind">4점</span></label>
+                            <label for="rate_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
+                            <label for="rate_10" class="label_star" title="5"><span class="blind">5점</span></label>
+                            <input type="radio"  id="rate_1" class="star_radio" name="rate" value="0.5">
+                            <input type="radio"  id="rate_2" class="star_radio" name="rate" value="1.0">
+                            <input type="radio"  id="rate_3" class="star_radio" name="rate" value="1.5">
+                            <input type="radio"  id="rate_4" class="star_radio" name="rate" value="2.0">
+                            <input type="radio"  id="rate_5" class="star_radio" name="rate" value="2.5">
+                            <input type="radio"  id="rate_6" class="star_radio" name="rate" value="3.0">
+                            <input type="radio"  id="rate_7" class="star_radio" name="rate" value="3.5">
+                            <input type="radio"  id="rate_8" class="star_radio" name="rate" value="4.0">
+                            <input type="radio"  id="rate_9" class="star_radio" name="rate" value="4.5">
+                            <input type="radio"  id="rate_10" class="star_radio" name="rate" value="5.0">
+                            <span class="rate_bg"></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -39,153 +85,6 @@
     </div>
 </div>
 
-<!--<!—- 첨부 파일 섬네일을 보여줄 부분 &ndash;&gt;-->
-<!--<div class="row mt-3">-->
-<!--    <div class="col ">-->
-<!--        <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<!—- 첨부파일 추가를 위한 모달창 &ndash;&gt;-->
-<!--<div class="modal uploadModal" tabindex="-1">-->
-<!--    <div class="modal-dialog">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h5 class="modal-title">Upload File</h5>-->
-<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <div class="input-group mb-3">-->
-<!--                    <input type="file" name="files" class="form-control" multiple >-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="modal-footer">-->
-<!--                <button type="button" class="btn btn-primary uploadBtn">Upload</button>-->
-<!--                <button type="button" class="btn btn-outline-dark closeUploadBtn" >Close</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>&lt;!&ndash; register modal &ndash;&gt;-->
-
-
-
-<script layout:fragment="script" th:inline="javascript">
-
-    // const auth = [[${#authentication.principal}]]
-    //
-    //
-    //
-    // const errors = [[${errors}]]
-    // console.log(errors)
-    //
-    // let errorMsg = ''
-    //
-    // if(errors){
-    //     for (let i = 0; i < errors.length; i++) {
-    //         errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
-    //     }
-    //     alert(errorMsg)
-    // }
-    //
-    // //업로드 모달
-    // const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
-    //
-    // document.querySelector(".uploadFileBtn").addEventListener("click", function(e){
-    //
-    //     e.stopPropagation()
-    //     e.preventDefault()
-    //     uploadModal.show()
-    //
-    // }, false)
-    //
-    //
-    // document.querySelector(".uploadBtn").addEventListener("click", function(e){
-    //
-    //     const formObj = new FormData();
-    //
-    //     const fileInput = document.querySelector("input[name='files']")
-    //
-    //     console.log(fileInput.files)
-    //
-    //     const files = fileInput.files
-    //
-    //     for (let i = 0; i < files.length; i++) {
-    //         formObj.append("files", files[i]);
-    //     }
-    //
-    //
-    //     uploadToServer(formObj).then(result => {
-    //         console.log(result)
-    //         //console.log(result)
-    //         for (const uploadResult of result) {
-    //             showUploadFile(uploadResult)
-    //         }
-    //         uploadModal.hide()
-    //     }).catch(e => {
-    //         uploadModal.hide()
-    //     })
-    //
-    // },false)
-    //
-    // const uploadResult = document.querySelector(".uploadResult")
-    //
-    // function showUploadFile({uuid, fileName, link}){
-    //
-    //     const str =`<div class="card col-4">
-    //         <div class="card-header d-flex justify-content-center">
-    //             ${fileName}
-    //             <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
-    //         </div>
-    //         <div class="card-body">
-    //              <img src="/view/${link}" data-src="${uuid+"_"+fileName}" >
-    //         </div>
-    //     </div><!-- card -->`
-    //
-    //     uploadResult.innerHTML += str
-    // }
-    //
-    //
-    // function removeFile(uuid,fileName, obj){
-    //
-    //     console.log(uuid)
-    //     console.log(fileName)
-    //
-    //     console.log(obj)
-    //
-    //     const targetDiv = obj.closest(".card")
-    //
-    //     removeFileToServer(uuid, fileName).then(data => {
-    //         targetDiv.remove()
-    //     })
-    // }
-    //
-    // document.querySelector(".submitBtn").addEventListener("click", function(e){
-    //
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    //
-    //     const target = document.querySelector(".uploadHidden")
-    //
-    //     const uploadFiles = uploadResult.querySelectorAll("img")
-    //
-    //     let str = ''
-    //
-    //     for (let i = 0; i < uploadFiles.length ; i++) {
-    //         const uploadFile = uploadFiles[i]
-    //         const imgLink = uploadFile.getAttribute("data-src")
-    //
-    //         str += `<input type='hidden' name='fileNames' value="${imgLink}">`
-    //     }
-    //
-    //     target.innerHTML = str;
-    //
-    //     const formObj = document.querySelector("form");
-    //
-    //     formObj.submit();
-    //     formObj.reset();
-    //
-    // }, false)
 
 </script>
 </body>
