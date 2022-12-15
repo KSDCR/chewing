@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -203,4 +204,5 @@ public class StoreService {
     public Store getByName(String name) {
         return storeRepository.findByName(name);
     }
+
 }

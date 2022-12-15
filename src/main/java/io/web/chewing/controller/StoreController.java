@@ -135,4 +135,9 @@ public class StoreController {
         }
         return map;
     }
+
+    /*매장 찜하기*/
+
+    /*매장 랭킹 - BEST 10*/
+
 }
