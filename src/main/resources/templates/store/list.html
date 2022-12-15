@@ -6,42 +6,34 @@
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-   <!-- <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/common.css">-->
 </head>
 <style>
     .list {
         height: 100px;
-        width: 390px;
-/*        margin: 30px;
-        padding: 10px;*/
         background-color: #f2f2f2;
         border-radius: 10px;
+        padding: 10px;
+        margin: 10px;
     }
-    #img {
-        width: 90px;
-        height: 90px;
-        align-content: center;
+    #img, #noImg {
+        width: 85px;
+        height: 80px;
+        /*align-content: center;*/
         float: left;
+        margin-right: 20px;
+        border-radius: 30px;
     }
-    /*.list div {
-        display: inline;
-    }*/
+
 </style>
 <body>
 <div>
     <th:block th:replace="fragments/header :: headerFragment"></th:block>
 </div>
-<!--<header>
-    <h1 class="profile_icon">
-        <img src="/static/img/flog.jpg" alt="프로필사진">
-    </h1>
-    <a class="title">CHEWING</a>
-
-    <button class="main_menu">
-        <img src="/static/img/menu_icon.png" alt="메뉴">
-    </button>
-</header>-->
+<!--<th:block th:if="${not empty message}">
+    <div class="alert alert-success">
+        [[${message}]]
+    </div>
+</th:block>-->
 
 <form class="d-flex" role="search">
     <input class="form-control me-2" th:field="${paging.keyword}" id="search" type="text" name="keyword"
@@ -51,9 +43,10 @@
 
 <div class="list" th:each="store:${stores}">
     <div class="image">
-        <img id="img"
-             th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}"
-             alt="매장이미지" th:if="${store.file != '' || store.file != null}" />
+        <img id="img" th:if="${store.file != '' && store.file != null}"
+             th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}" alt="이미지" />
+        <img id="noImg" th:if="${store.file == '' || store.file == null}"
+             src="/img/noStoreImage.png" alt="매장기본이미지" />
     </div>
     <div class="text">
         <h4>

@@ -2,13 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
-    .registerForm {
-        width: 390px;
-    }
     .btn {
         background-color: #FF8900;
     }
@@ -18,40 +16,99 @@
 <div>
     <th:block th:replace="fragments/header :: headerFragment"></th:block>
 </div>
+<div class="container-md">
+    <div class="row">
+        <div class="col">
+            <h2 style="height: 60px;">
+<!--                <button class="back_icon" th:onclick="|location.href='@{/store/list}'|">
+                    <img src="/img/add-item-alt.png" alt="메뉴">
+                </button>-->
+                <div style="float: left; margin-right: 10px;">
+                    <button class="btn btn-light" onclick="location.href='/store/list'">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                </div>
+                매장 등록하기
+            </h2>
 
-<h1>매장 등록 페이지</h1>
+            <form class="registerForm" th:action="@{/store/register}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">매장명</label>
+                    <div class="input-group">
+                        <input id="nameInput" class="form-control" type="text" name="name" th:value="${store.name}" th:data-old-value="${store.name}">
+                        <button disabled id="nameExistButton" type="button" class="btn btn-outline-secondary">중복확인</button>
+                    </div>
+                    <div id="nameText" class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">상세내용</label>
+                    <input class="form-control" type="text" name="detail">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">전화번호</label>
+                    <input class="form-control" type="text" name="phone">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">주소</label>
+                    <input class="form-control" type="text" name="address">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">오픈시간</label>
+                    <input class="form-control" type="time" name="open_time">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">마감시간</label>
+                    <input class="form-control" type="time" name="close_time">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">사진 파일</label>
+                    <input class="form-control" type="file" name="image" accept="image/*">
+                </div>
+                <input disabled id="submitButton" class="btn" type="submit" value="등록" style="float:right">
+            </form>
+        </div>
+    </div>
+</div>
 
-<form class="registerForm" th:action="@{/store/register}" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label class="form-label">매장명</label>
-        <input class="form-control" type="text" name="name">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">상세내용</label>
-        <input class="form-control" type="text" name="detail">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">전화번호</label>
-        <input class="form-control" type="text" name="phone">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">주소</label>
-        <input class="form-control" type="text" name="address">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">오픈시간</label>
-        <input class="form-control" type="time" name="open_time">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">마감시간</label>
-        <input class="form-control" type="time" name="close_time">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">사진 파일</label>
-        <input class="form-control" type="file" name="image" accept="image/*">
-    </div>
-    <input class="btn" type="submit" value="등록">
-</form>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script type="text/javascript" th:inline="javascript">
+    let availableName = false;
+    const nameInput = document.querySelector("#nameInput");
+    const nameExistButton = document.querySelector("#nameExistButton");
+    const nameText = document.querySelector("#nameText");
+
+    function enableSubmitButton() {
+        const button = document.querySelector("#submitButton");
+        if (availableName) {
+            button.removeAttribute("disabled")
+        } else {
+            button.setAttribute("disabled", "");
+        }
+    }
+
+    nameExistButton.addEventListener("click", function() {
+        availableName = false;
+        const name = nameInput.value;
+
+        fetch(`/store/existName/` + ([name]))
+            .then(res => res.json())
+            .then(data => {
+                nameText.innerText = data.message;
+                if (data.status == "not exist") {
+                    availableName = true;
+                    enableSubmitButton();
+                }
+            });
+    });
+
+    nameInput.addEventListener("keyup", function() {
+        availableName = false;
+        enableSubmitButton();
+    });
+
+</script>
+
 
 </body>
 </html>

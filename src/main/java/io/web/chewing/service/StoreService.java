@@ -131,7 +131,6 @@ public class StoreService {
             uploadFile(id, multipartFile);
         }
 
-
         return id;
     }
 
@@ -199,5 +198,9 @@ public class StoreService {
         }
         // DB에서 매장 삭제
         storeRepository.deleteById(id);
+    }
+
+    public Store getByName(String name) {
+        return storeRepository.findByName(name);
     }
 }

@@ -28,4 +28,7 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
     @Modifying
     @Query("UPDATE Store s set s.file = :file where s.id = :id")
     void updateFileName(@Param("id") Long id, @Param("file") String file);
+
+    @Query("select s FROM Store s WHERE s.name=:name")
+    Store findByName(String name);
 }
