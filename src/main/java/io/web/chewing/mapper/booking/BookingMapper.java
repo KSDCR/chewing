@@ -19,9 +19,9 @@ public interface BookingMapper {
 
     int countReviewByStore(String store_name);
 
-    List<BookingDTO> findBookingByMember(String member_nickname, int offset, int records);
+    List<BookingDTO> findBookingByMember(String member_nickname);
 
-    int countReviewByMember(String member_nickname);
+    int countBookingByMember(String member_nickname);
 
 
     int update(ReviewDto review);

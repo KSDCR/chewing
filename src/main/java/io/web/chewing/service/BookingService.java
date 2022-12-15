@@ -1,12 +1,14 @@
 package io.web.chewing.service;
 
 import io.web.chewing.Entity.Booking;
+import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.BookingDTO;
 import io.web.chewing.domain.PageInfo;
 import io.web.chewing.mapper.booking.BookingMapper;
 import io.web.chewing.repository.BookingRepository;
+import io.web.chewing.repository.MemberRepository;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,20 +30,24 @@ public class BookingService {
 
     private final StoreRepository storeRepository;
 
+    private final MemberRepository memberRepository;
+
     private final BookingMapper bookingMapper;
 
     public Long register(BookingDTO bookingDTO, AuthMemberDTO authMemberDTO, String store_name) {
 
         Optional<Store> optionalStore = storeRepository.findByName(store_name);
-        Store store = optionalStore.orElseThrow(() -> new RuntimeException());
+        Store store = optionalStore.orElseThrow(RuntimeException::new);
+        Optional<Member> optionalMember = memberRepository.findByNickname(authMemberDTO.getNickname());
+        Member member = optionalMember.orElseThrow();
+        log.info("잘 가져왔나?" + member.getNickname());
 
-        Booking booking = modelMapper.map(bookingDTO, Booking.class);
+        Booking booking = bookingDTO.toEntity(store, member);
 
-        // Booking Entity에서 bno가 아닌 id로 선언 책과 달리 getId로 변경
-        Long bno = bookingRepository.save(booking).getId();
 
-        return bno;
+        return bookingRepository.save(booking).getId();
     }
+
 
     /**
      * 예약시 보이는 간단한 정보 (매장사진, 매장명) 보여주기
@@ -70,7 +76,9 @@ public class BookingService {
         int records = 10;
         int offset = (page - 1) * records;
 
-        int countAll = bookingMapper.countReviewByMember(member_nickname);
+
+
+        int countAll = bookingMapper.countBookingByMember(member_nickname);
         int lastPage = (countAll - 1) / records + 1;
 
         log.info("===========" + countAll);
@@ -87,7 +95,8 @@ public class BookingService {
         pageInfo.setRightPageNumber(rightPageNumber);
         pageInfo.setLastPageNumber(lastPage);
 
+        log.info("이거 가져온거 맞아?" + member_nickname);
 
-        return bookingMapper.findBookingByMember(member_nickname, offset, records);
+        return bookingMapper.findBookingByMember(member_nickname);
     }
 }

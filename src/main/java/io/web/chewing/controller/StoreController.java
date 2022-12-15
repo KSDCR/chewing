@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +50,8 @@ public class StoreController {
     public void list(Model model, Pageable pageable,
                      @RequestParam(required = false, name = "keyword") String keyword,
                      @RequestParam(required = false, name = "category") String category) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("여기에 뭐가 들었나용?"+String.valueOf(authentication));
 
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
         log.info("pageable ================> {}", pageable);

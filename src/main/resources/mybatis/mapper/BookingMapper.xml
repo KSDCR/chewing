@@ -13,9 +13,10 @@
         b.real_name,
         b.people,
         b.date,
-        b.time;
+        b.time
         FROM booking b LEFT JOIN member m ON b.member_nickname = m.nickname
-        WHERE b.member_nickname = #{member_nickname};
+        WHERE b.member_nickname = #{member_nickname}
+        ORDER BY b.id desc;
     </select>
 
     <select id="countBookingByMember" resultType="int">

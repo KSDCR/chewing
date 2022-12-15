@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -67,7 +68,10 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
                 member.getName(),
                 member.getDelete_yn(),
                 member.isVerify(),
-                List.of(new SimpleGrantedAuthority("USER")));
+                member.getRoleSet()
+                        .stream().map(memberRole -> new SimpleGrantedAuthority("ROLE_"+memberRole.name()))
+                        .collect(Collectors.toList())
+        );
         authMemberDTO.setAttr(paramMap);
         log.info("Member:" + member);
         log.info("authMemberDTO:"+authMemberDTO);

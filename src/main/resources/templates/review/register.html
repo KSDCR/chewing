@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}" xmlns:sec="http://www.w3.org/1999/xhtml">
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-<style>
+<!--<style>
     /* 별점 */
     .rate_wrap{display:inline-block; position: absolute; bottom: 10px; right: 28px;}
     .rate_box{position:relative;font-size:10px;}
@@ -30,7 +29,7 @@
     .rate_box .star_radio:nth-of-type(9):checked ~ .rate_bg{width:90%;}
     .rate_box .star_radio:nth-of-type(10):hover ~ .rate_bg,
     .rate_box .star_radio:nth-of-type(10):checked ~ .rate_bg{width:100%;}
-</style>
+</style>-->
 <body>
 
 <div layout:fragment="content">
@@ -43,7 +42,7 @@
                     <textarea required="required" rows="5" class="form-control" name="content"></textarea>
                 </div>
 
-                <div class="mb-3">
+                <!--<div class="mb-3">
                     <label class="form-label">평점</label>
                     <div class="rate_wrap">
                         <div class="rate_box" >
@@ -70,7 +69,7 @@
                             <span class="rate_bg"></span>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="mb-3">
                     <label class="form-label">파일</label>
