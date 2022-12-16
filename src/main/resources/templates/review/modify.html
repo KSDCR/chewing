@@ -2,34 +2,75 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}" xmlns:sec="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+
+<body  style="margin: 1%;">
+
+<header style=" background-color: #FF8900; height: 100px; margin-bottom: 50px">
+    <h1 class="profile_icon">
+    </h1>
+    <h1 class="title" style=" color: white; text-align: center;  line-height:100px">
+        chewing
+    </h1>
+    <div class="main_menu_button">
+    </div>
+</header>
 
 <div layout:fragment="content">
     <div class="row">
         <div class="col">
-            <h1>게시물 작성</h1>
+            <h1>리뷰 수정</h1>
             <form id="registerForm1" action="" method="post" enctype="multipart/form-data">
+                <h3 style="text-align: center">[[${reviewDto.store_name }]]</h3>
+
                 <div class="mb-3">
-                    <label class="form-label">본문</label>
-                    <textarea required="required" rows="5" class="form-control" name="content" th:value="${dto.title}"></textarea>
+                    <label class="form-label" >본문</label>
+                    <textarea required="required" rows="20" class="form-control" name="content">[[${reviewDto.content }]]</textarea>
                 </div>
 
-                <!--              <div class="mb-3">
-                                  <label class="form-label">파일</label>
-                                  <input multiple="multiple" type="file" accept="image/*" class="form-control" name="files"></input>
-                              </div>-->
+                <div class="mb-3">
+                    <div th:each="file, iterState:${reviewDto.fileName }">
+                        <div class="row">
+                            <div class="col-2 d-flex justify-content-center align-items-center" >
 
-                <input class="btn btn-primary" type="submit" value="등록">
+
+                                <div class="form-check form-switch text-danger">
+                                    <input name="removeFiles" th:value="${file}" class="custom-check form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked${iterState.count }" >
+                                    <label class="form-check-label" for="flexSwitchCheckChecked${iterState.count }"><i class="fa-regular fa-trash-can"></i></label>
+                                </div>
+
+                            </div>
+                            <div class="col-10">
+                                <div>
+                                    <img class="img-fluid img-thumbnail" style="display: inline-block; width: 33.3%; height: 300px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">파일</label>
+                    <input multiple="multiple" type="file" accept="image/*" class="form-control" name="files">
+                </div>
+
+                <input class="btn" style="background-color: #FF8900" type="submit" value="등록">
+                <input style="background-color: #ffffd4" class="btn" type="button" th:onclick="|location.href='@{/review/myList(member_nickname=${reviewDto.member_nickname})}'|" value="취소">
 
 
             </form>
         </div>
     </div>
 </div>
+</body>
+</html>
+
+
+</script>
 </body>
 </html>

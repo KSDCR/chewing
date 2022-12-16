@@ -2,12 +2,16 @@ package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
+import io.web.chewing.domain.PageRequestDto;
+import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.service.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +20,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -63,10 +75,10 @@ public class StoreController {
         PageDto paging = storeService.page(stores, keyword, category);
         log.info("stores ================> {}", stores.stream().toList());
         log.info("paging ================> {}", paging);
-        
+
         // 매장 이미지 없을 경우 -> 기본이미지
         //String imgUrl = "https://study-2022-08-02-343566579.s3.ap-northeast-2.amazonaws.com/chewing/store/noStore/noStore.jfif";
-        
+
         log.info("imgUrl ================> {}", imgUrl);
 
         model.addAttribute("stores", stores);
@@ -90,7 +102,7 @@ public class StoreController {
         }
         return "redirect:/store/list";
     }
-    
+
     /*매장 정보 수정 (admin) - 추가 예정*/
     @GetMapping("/modify")
     public void modify(Long id, Model model) {
@@ -118,7 +130,7 @@ public class StoreController {
         storeService.remove(id);
         return "redirect:/store/list";
     }
-    
+
     /*매장명 중복 확인*/
     @GetMapping("existName/{name}")
     @ResponseBody
