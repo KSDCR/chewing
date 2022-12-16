@@ -35,8 +35,10 @@ public class Store extends BaseEntity implements Serializable {
 
     private String file;
 
+    private String category;
 
-    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time) {
+
+    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time, String category) {
         this.name = name;
         this.detail = detail;
         this.address = address;
@@ -44,5 +46,6 @@ public class Store extends BaseEntity implements Serializable {
         this.file = file;
         this.open_time = open_time;
         this.close_time = close_time;
+        this.category = category;
     }
 }
