@@ -34,4 +34,5 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
 
     @Query("select s FROM Store s WHERE s.name=:name")
     Store findDuplicationByName(String name);
+
 }
