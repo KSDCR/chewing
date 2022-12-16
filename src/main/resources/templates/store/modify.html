@@ -44,6 +44,17 @@
                     <div id="nameText" class="form-text"></div>
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">카테고리</label>
+                    <select class="form-select" th:value="${store.category}">
+                        <!--<option selected value="-">매장 카테고리를 선택해주세요</option>-->
+                        <option value="Korean">한식</option>
+                        <option value="Chinese">중식</option>
+                        <option value="Japanese">일식</option>
+                        <option value="Western">양식</option>
+                        <option value="Cafe">디저트</option>
+                    </select>
+                </div>
+                <div class="mb-3">
                     <label class="form-label">상세내용</label>
                     <input class="form-control" type="text" name="detail" th:value="${store.detail}">
                 </div>

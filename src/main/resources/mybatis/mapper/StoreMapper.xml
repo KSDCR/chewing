@@ -6,10 +6,16 @@
 <mapper namespace="io.web.chewing.mapper.StoreMapper">
 
     <select id="getStoreReviewInfo" resultType="io.web.chewing.domain.StoreDto">
-        SELECT round(AVG(rate),2) rate, count(store_id) reviewCnt
+        SELECT round(AVG(rate),2) rate, count(store_name) reviewCnt
         FROM review
-        WHERE store_id = #{id}
-        GROUP BY store_id;
+        WHERE store_name = #{store_name}
+        GROUP BY store_name;
     </select>
+
+    <!--<select id="getLikeByStoreAndMember" resultType="Long">
+        SELECT COUNT(*)
+        FROM store_Like
+
+    </select>-->
 
 </mapper>

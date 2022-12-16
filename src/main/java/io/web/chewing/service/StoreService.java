@@ -6,6 +6,7 @@ import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.mapper.StoreMapper;
+import io.web.chewing.repository.StoreLikeRepository;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ import java.util.Optional;
 public class StoreService {
     private final ModelMapper modelMapper;
     private final StoreRepository storeRepository;
-
+    private final StoreLikeRepository storeLikeRepository;
     private final AmazonS3Client s3Client;
 
     @Value("${aws.s3.bucket}")
@@ -39,7 +41,7 @@ public class StoreService {
     public StoreDto get(Long id) {
         Optional<Store> result = storeRepository.findById(id);
         Store store = result.orElseThrow();
-        StoreDto storeReview = storeMapper.getStoreReviewInfo(id);
+        StoreDto storeReview = storeMapper.getStoreReviewInfo(store.getName());
         log.info("storeReview ====================> {}", storeReview);
         if (storeReview != null) {
             return StoreDto.builder()
@@ -186,7 +188,7 @@ public class StoreService {
         }
         
         // DB의 매장 정보 수정
-        store.change(storeDto.getName(), storeDto.getDetail(), storeDto.getAddress(), storeDto.getPhone(), storeDto.getFile(), storeDto.getOpen_time(), storeDto.getClose_time());
+        store.change(storeDto.getName(), storeDto.getDetail(), storeDto.getAddress(), storeDto.getPhone(), storeDto.getFile(), storeDto.getOpen_time(), storeDto.getClose_time(), storeDto.getCategory());
         storeRepository.save(store);
     }
 
@@ -202,7 +204,24 @@ public class StoreService {
     }
 
     public Store getByName(String name) {
-        return storeRepository.findByName(name);
+        return storeRepository.findDuplicationByName(name);
     }
 
+    public Map<String, Object> updateLike(String storeName, String nickname) {
+        Map<String,Object> map = new HashMap<>();
+
+        // user의 매장 찜 여부 조회
+        //Long cnt = storeLikeRepository.CountByStore_NameAndMember_Nickname(storeName, nickname);
+        //Long cnt = storeMapper.getLikeByStoreAndMember(storeName, nickname);
+        //log.info("updateLike ==========> {}", cnt);
+
+        // 찜한 매장인 경우 delete
+
+        // 찜한 매장이 아닌 경우 insert
+
+        // 매장의 총 찜 개수 조회
+
+
+        return map;
+    }
 }

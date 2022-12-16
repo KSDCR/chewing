@@ -1,17 +1,16 @@
 package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
+import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageDto;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.service.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -37,7 +28,8 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
-    private final String imgUrl = "https://study-2022-08-02-343566579.s3.ap-northeast-2.amazonaws.com/chewing/store";
+    @Value("${aws.s3.file.url.prefix}")
+    private String imgUrl;
 
     /*매장 정보 조회*/
     @GetMapping("/get")
@@ -53,12 +45,11 @@ public class StoreController {
     @GetMapping("/list")
     public void list(Model model, Pageable pageable,
                      @RequestParam(required = false, name = "keyword") String keyword,
-                     @RequestParam(required = false, name = "category") String category) {
-
+                     @RequestParam(required = false, name = "category") String category,
+                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        log.info("LIST 로그인 객체 =============> {}", String.valueOf(authMemberDTO));
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
-        log.info("pageable ================> {}", pageable);
-        log.info("keyword ================> {}", keyword);
-        log.info("category ================> {}", category);
+
         // 전체 매장 리스트
         Page<StoreDto> stores = storeService.list(page, 6);
         
@@ -76,11 +67,6 @@ public class StoreController {
         log.info("stores ================> {}", stores.stream().toList());
         log.info("paging ================> {}", paging);
 
-        // 매장 이미지 없을 경우 -> 기본이미지
-        //String imgUrl = "https://study-2022-08-02-343566579.s3.ap-northeast-2.amazonaws.com/chewing/store/noStore/noStore.jfif";
-
-        log.info("imgUrl ================> {}", imgUrl);
-
         model.addAttribute("stores", stores);
         model.addAttribute("paging", paging);
         model.addAttribute("imgUrl", imgUrl);
@@ -93,17 +79,22 @@ public class StoreController {
     }
 
     @PostMapping("/register")
-    public String register(StoreDto storeDto, MultipartFile image, RedirectAttributes rttr) {
+    public String register(
+            StoreDto storeDto,
+            MultipartFile image,
+            RedirectAttributes rttr,
+            @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        log.info(String.valueOf(authMemberDTO));
         long id = storeService.register(storeDto, image);
         log.info("register id ===========> {}", id);
         if (id > 0) {
             rttr.addFlashAttribute("message", "새 매장이 등록되었습니다.");
-            log.info("------------ 매장 등록 ----------");
+            log.info("======== 매장 등록 ========> {}", String.valueOf(storeDto));
         }
         return "redirect:/store/list";
     }
 
-    /*매장 정보 수정 (admin) - 추가 예정*/
+    /*매장 정보 수정 (admin)*/
     @GetMapping("/modify")
     public void modify(Long id, Model model) {
         StoreDto storeDto = storeService.get(id);
@@ -120,7 +111,6 @@ public class StoreController {
             RedirectAttributes rttr) {
         storeService.update(storeDto, addImage, removeImage);
 
-        //if ()
         return "redirect:/store/get?id=" + storeDto.getId();
     }
     
@@ -149,6 +139,18 @@ public class StoreController {
     }
 
     /*매장 찜하기*/
+    @PutMapping("/like")
+    @ResponseBody
+    //@PreAuthorize("isAuthenticated()")
+    public Map<String,Object> like(
+            @RequestBody Map<String, String> req,
+            @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        log.info("매장 찜하기 ====> member : {} / store : {}",String.valueOf(authMemberDTO),req.get("storeId"));
+        Map<String, Object> result = storeService.updateLike(req.get("storeId"), authMemberDTO.getNickname());
+        return result;
+    }
+
+
 
     /*매장 랭킹 - BEST 10*/
 
