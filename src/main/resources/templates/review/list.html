@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/star.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body style="position: relative; height: 100%; margin: 1%">
-    <header style=" background-color: #FF8900; height: 100px; margin-bottom: 50px">
+<body style="position: relative; height: 100%; margin: 1%;">
+    <header style=" background-color: #FF8900; height: 100px; margin-bottom: 30px">
         <h1 class="profile_icon">
         </h1>
         <h1 class="title" style=" color: white; text-align: center;  line-height:100px">
@@ -19,19 +20,39 @@
     </header>
 
 
-    <div th:each="list:${reviewList}">
-        <h1 style="clear: both; font-size: 30px; height: 40px"><i class="fa-sharp fa-solid fa-user"></i>[[${list.member_nickname}]]
-            <span style="position:absolute;right : 2%; vertical-align: bottom; font-size: 19px; color: grey">[[${list.rate}]]</span>
+    <div th:each="list:${reviewList}" style=" margin-left:4%;margin-right:4%;">
+        <h1 style="clear: both; font-size: 30px; height: 40px"><i class="fa-sharp fa-solid fa-user"></i>
+            <span>[[${list.member_nickname}]]</span>
+            <span style="position:absolute;right : 12%; vertical-align: bottom;">
+                <span class="star-rating">
+                    <span th:if="${list.rate}==0.5" style="width:10%"></span>
+                    <span th:if="${list.rate}==1.0" style="width:20%"></span>
+                    <span th:if="${list.rate}==1.5" style="width:30%"></span>
+                    <span th:if="${list.rate}==2.0" style="width:40%"></span>
+                    <span th:if="${list.rate}==2.5" style="width:50%"></span>
+                    <span th:if="${list.rate}==3.0" style="width:60%"></span>
+                    <span th:if="${list.rate}==3.5" style="width:70%"></span>
+                    <span th:if="${list.rate}==4.0" style="width:80%"></span>
+                    <span th:if="${list.rate}==4.5" style="width:90%"></span>
+                    <span th:if="${list.rate}==5.0" style="width:100%"></span>
+                </span>
+                <span style=" font-size: 19px; color: grey">[[${list.rate}]]</span>
+            </span>
         </h1>
-        <div style="width: 98%; overflow-x: auto; white-space: nowrap">
-            <span th:each="file:${list.fileName }">
-                <img style="display: inline-block; width: 33.3%; height: 300px" class="img-fluid img-thumbnail" th:src="|${imgUrl}/${list.id}/${file}|" alt="">
+
+        <div style="width: 98%; overflow-x: auto; white-space: nowrap;" >
+            <span th:each="file:${list.fileName }" style="width: 100%">
+                <img style="display: inline-block; height: 400px" class="img-fluid img-thumbnail" th:src="|${imgUrl}/${list.id}/${file}|" alt="">
             </span>
         </div>
         <div style="clear:both; background-color: #e5e5e5; height: 340px; width: 98%; text-align: center; font-size: 24px; line-height:340px">[[${list.content}]]</div>
 
         <div style="clear:both; width:25% ; border-radius: 30px; font-size: 18px; color: grey">
             [[${list.creat_time}]]
+        </div>
+        <div>
+            [[${pageInfo.currentPageNumber}]]
+            [[${pageInfo.leftPageNumber}]]
         </div>
 
         <hr style="clear: both;">
@@ -40,7 +61,7 @@
 
 
     <div style="clear: both;" class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group" role="group">
+        <div class="btn-group" role="group" style="margin-left: 4%">
             <button th:onclick="|location.href='@{/review/register(store_name=${store_name})}'|"
                     id="review" type="button" class="btn btn-lg" style="background-color: #FF8900;">리뷰등록</button>
         </div>
@@ -60,7 +81,7 @@
                     </div>
                     <div th:if="${pageInfo.leftPageNumber != 1 }">
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber})}" aria-label="left">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}-1)}" aria-label="left">
                                 <span aria-hidden="true"><i class="fa-solid fa-angle-left"></i></span>
                             </a>
                         </li>
@@ -68,18 +89,19 @@
                     <div th:each="num:${#numbers.sequence(pageInfo.leftPageNumber, pageInfo.rightPageNumber)}">
                         <li class="page-item ${pageInfo.currentPageNumber eq numStat.count} ? 'active' : '' }">
                             <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${numStat.count})}" th:text="${numStat.count}"></a>
+                            <div>check</div>
                         </li>
                     </div>
-                    <div th:if="${pageInfo.rightPageNumber != '((pageInfo.lastPageNumber-1)/10*10)' }">
+                    <div th:if="${pageInfo.rightPageNumber} != ((${pageInfo.lastPageNumber}-1)/10*10)">
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber+1 })}" aria-label="last">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}+1)}" aria-label="last">
                                 <span aria-hidden="true"><i class="fa-solid fa-angle-right"></i></span>
                             </a>
                         </li>
                     </div>
                     <div th:if="${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.lastPageNumber })}" aria-label="last">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.lastPageNumber})}" aria-label="last">
                                 <span aria-hidden="true"><i class="fa-solid fa-angles-right"></i></span>
                             </a>
                         </li>

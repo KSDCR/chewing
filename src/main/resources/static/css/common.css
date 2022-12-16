@@ -1,0 +1,29 @@
+
+/* 별점 */
+.rate_wrap{display:inline-block;}
+.rate_box{position:relative; background:url("../img/star.png") 0 0 no-repeat;font-size:0; }
+.rate_box .rate_bg{display:block;position:absolute;top:0;left:0;height:100px;background:url("../img/star.png") 0 -100px no-repeat;pointer-events:none;}
+.rate_box .label_star{display:inline-block;width:56px;height:100px;box-sizing:border-box;}
+.rate_box .star_radio{opacity:0;width:0;height:0;position:absolute;}
+.rate_box .star_radio:nth-of-type(1):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(1):checked ~ .rate_bg{width:10%;}
+.rate_box .star_radio:nth-of-type(2):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(2):checked ~ .rate_bg{width:20%;}
+.rate_box .star_radio:nth-of-type(3):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(3):checked ~ .rate_bg{width:30%;}
+.rate_box .star_radio:nth-of-type(4):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(4):checked ~ .rate_bg{width:40%;}
+.rate_box .star_radio:nth-of-type(5):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(5):checked ~ .rate_bg{width:50%;}
+.rate_box .star_radio:nth-of-type(6):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(6):checked ~ .rate_bg{width:60%;}
+.rate_box .star_radio:nth-of-type(7):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(7):checked ~ .rate_bg{width:70%;}
+.rate_box .star_radio:nth-of-type(8):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(8):checked ~ .rate_bg{width:80%;}
+.rate_box .star_radio:nth-of-type(9):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(9):checked ~ .rate_bg{width:90%;}
+.rate_box .star_radio:nth-of-type(10):hover ~ .rate_bg,
+.rate_box .star_radio:nth-of-type(10):checked ~ .rate_bg{width:100%;}
+
+.blind{position:absolute;clip:rect(0 0 0 0);margin:-1px;width:1px;height: 1px;overflow:hidden;}
