@@ -202,7 +202,7 @@ public class StoreService {
     }
 
     public Store getByName(String name) {
-        return storeRepository.findByName(name);
+        return storeRepository.findDuplicationByName(name);
     }
 
 }

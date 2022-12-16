@@ -33,5 +33,5 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
     void updateFileName(@Param("id") Long id, @Param("file") String file);
 
     @Query("select s FROM Store s WHERE s.name=:name")
-    Store findByName(String name);
+    Store findDuplicationByName(String name);
 }
