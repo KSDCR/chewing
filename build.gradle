@@ -64,8 +64,28 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+
+
+    //Jwt 오류(io.jsonwebtoken.lang.UnknownClassException 해결을 위해 추가한 의존성
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-gson
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-gson', version: '0.11.2'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
 
     implementation 'org.modelmapper:modelmapper:3.1.0'
+
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
+
+
+
 }
 
 tasks.named('test') {

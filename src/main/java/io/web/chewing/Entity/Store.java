@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@Setter
 @Table
 public class Store extends BaseEntity {
 
@@ -25,9 +27,9 @@ public class Store extends BaseEntity {
 
     private String detail;
 
-    private String open_Time;
+    private String open_time;
 
-    private String close_Time;
+    private String close_time;
 
     private String address;
 
@@ -35,17 +37,14 @@ public class Store extends BaseEntity {
 
     private String file;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<Categories> categoriesSet = new HashSet<>();
 
-    public void addCategories(Categories categories) {
-        categoriesSet.add(categories);
+    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time) {
+        this.name = name;
+        this.detail = detail;
+        this.address = address;
+        this.phone = phone;
+        this.file = file;
+        this.open_time = open_time;
+        this.close_time = close_time;
     }
-
-    public void clearCategories() {
-        this.categoriesSet.clear();
-    }
-
 }
