@@ -14,5 +14,5 @@ public class ChewingApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChewingApplication.class, args);
     }
-
+    
 }
