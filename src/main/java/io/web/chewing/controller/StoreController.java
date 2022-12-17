@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,14 +32,20 @@ public class StoreController {
     @Value("${aws.s3.file.url.prefix}")
     private String imgUrl;
 
+//    @Value("${KAKAO_MAP_URL}")
+//    private String kakaoMapURL;
+
     /*매장 정보 조회*/
     @GetMapping("/get")
     public void get(Long id, Model model) {
         StoreDto storeDto = storeService.get(id);
         log.info("===========> " + storeDto);
-
         model.addAttribute("imgUrl", imgUrl);
         model.addAttribute("store", storeDto);
+
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.add("kakaoMapURL", kakaoMapURL);
+        //model.addAttribute("kakaoMapURL", kakaoMapURL);
     }
 
     /*매장 리스트 조회*/

@@ -33,6 +33,7 @@ public class StoreDto {
         this.detail = store.getDetail();
         this.open_time = store.getOpen_time();
         this.close_time = store.getClose_time();
+        this.category = store.getCategory();
 
         this.file = store.getFile();
     }

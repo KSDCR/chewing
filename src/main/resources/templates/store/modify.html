@@ -46,12 +46,11 @@
                 <div class="mb-3">
                     <label class="form-label">카테고리</label>
                     <select class="form-select" th:value="${store.category}">
-                        <!--<option selected value="-">매장 카테고리를 선택해주세요</option>-->
-                        <option value="Korean">한식</option>
-                        <option value="Chinese">중식</option>
-                        <option value="Japanese">일식</option>
-                        <option value="Western">양식</option>
-                        <option value="Cafe">디저트</option>
+                        <option th:selected="${store.category} == 'Korean'">한식</option>
+                        <option th:selected="${store.category} == 'Chinese'">중식</option>
+                        <option th:selected="${store.category} == 'Japanese'">일식</option>
+                        <option th:selected="${store.category} == 'Western'">양식</option>
+                        <option th:selected="${store.category} == 'Cafe'">디저트</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -128,7 +127,7 @@
             <div class="modal-body">
                 삭제하시겠습니까?
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="margin-bottom: 10px;">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                 <button id="removeConfirmButton" type="button" class="btn btn-danger">확인</button>
             </div>
@@ -242,15 +241,14 @@
     });
 
     document.querySelector("#modifyButton").addEventListener("click", function(e) {
-        // 공백("  ")인 경우에도 입력값 들어가지 않도록 검증
-        // submit 진행 중지
         e.preventDefault();
 
         let nameInput = document.querySelector("#nameInput");
+        let addressInput = document.querySelector("#address_kakao");
         let modifyButton = document.querySelector("#modifyButton");
 
         // 필수 입력값이 모두 있는 경우에만 submit
-        if (nameInput.value.trim() !== "") {
+        if (nameInput.value.trim() !== "" && addressInput.value.trim() !== "") {
             modifyButton.setAttribute("data-bs-toggle", "modal");
             modifyButton.setAttribute("data-bs-target", "#modifyModal");
             modifyButton.click();
@@ -258,6 +256,7 @@
         // 필수 입력값이 없는 경우, 해당 입력창으로 커서 이동
         else {
             if (nameInput.value.trim() == "")  nameInput.focus();
+            if (addressInput.value.trim() == "")  addressInput.focus();
         }
     });
 

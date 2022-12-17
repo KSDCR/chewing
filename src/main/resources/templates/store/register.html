@@ -22,7 +22,7 @@
                     <img src="/img/add-item-alt.png" alt="메뉴">
                 </button>-->
                 <div style="float: left; margin-right: 10px;">
-                    <button class="btn btn-light" onclick="location.href='/store/list'">
+                    <button class="btn btn-light" onclick="location.href='/store/list'" style=" background-color: #FF8900">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
                 </div>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">카테고리</label>
-                    <select class="form-select">
+                    <select class="form-select" name="category">
                         <option selected value="-">매장 카테고리를 선택해주세요</option>
                         <option value="Korean">한식</option>
                         <option value="Chinese">중식</option>
@@ -75,7 +75,7 @@
                     <label class="form-label">사진 파일</label>
                     <input class="form-control" type="file" name="image" accept="image/*">
                 </div>
-                <input disabled id="submitButton" class="btn" type="submit" value="등록" style="float:right">
+                <input disabled id="submitButton" class="btn" type="submit" value="등록" style="float:right; margin-bottom: 10px; background-color: #FF8900">
             </form>
         </div>
     </div>
@@ -89,17 +89,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" th:inline="javascript">
-    // 주소 검색
-    /*window.onload = function(){
-        document.getElementById("address_kakao").addEventListener("click", function(){
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    document.getElementById("address_kakao").value = data.address;
-                }
-            }).open();
-        });
-    }*/
-    // 우편번호 찾기 화면을 넣을 element
+    /* 주소검색  */
     var element_layer = document.getElementById('layer');
 
     function closeDaumPostcode() {
@@ -173,6 +163,17 @@
     nameInput.addEventListener("keyup", function() {
         availableName = false;
         enableSubmitButton();
+    });
+
+    document.querySelector("#submitButton").addEventListener("click", function(e) {
+        e.preventDefault();
+
+        let  addressInput = document.querySelector("#address_kakao");
+        if (addressInput.value.trim() != "") {
+            document.querySelector("#registerForm").submit();
+        } else {
+            addressInput.focus();
+        }
     });
 
 </script>
