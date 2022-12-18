@@ -48,7 +48,7 @@ public class Member extends BaseEntity implements Serializable{
     @ColumnDefault("0")
     private char delete_yn;
     
-    private char gender;
+    private String gender;
 
     private boolean verify;
 

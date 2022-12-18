@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -68,14 +69,18 @@ public class BookingService {
     }
 
 
-    public void remove(Long id) {
-        //bookingRepository.deleteAllById(id);
+    public void remove(Long id, AuthMemberDTO authMemberDTO) {
+        Optional<Booking> optional = bookingRepository.findByIdAndMember_Nickname(id, authMemberDTO.getNickname());
+        Booking booking = optional.orElseThrow();
+
+       if(Objects.equals(booking.getMember().getNickname(), authMemberDTO.getNickname())){
+           bookingRepository.deleteById(id);
+       }
     }
 
     public List<BookingDTO> listBookingByMember(String member_nickname, int page, PageInfo pageInfo) {
         int records = 10;
         int offset = (page - 1) * records;
-
 
 
         int countAll = bookingMapper.countBookingByMember(member_nickname);
@@ -94,8 +99,6 @@ public class BookingService {
         pageInfo.setLeftPageNumber(leftPageNumber);
         pageInfo.setRightPageNumber(rightPageNumber);
         pageInfo.setLastPageNumber(lastPage);
-
-        log.info("이거 가져온거 맞아?" + member_nickname);
 
         return bookingMapper.findBookingByMember(member_nickname);
     }

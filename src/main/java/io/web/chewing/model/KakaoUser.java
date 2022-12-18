@@ -24,8 +24,8 @@ public class KakaoUser extends OAuth2ProviderUser {
     }
 
     @Override
-    public char getGender() {
-        return 't';
+    public String getGender() {
+        return "t";
     }
 
     @Override

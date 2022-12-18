@@ -4,20 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Store_LikeID implements Serializable {
+
+    @Id
     @OneToOne
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_name", referencedColumnName = "name")
     private Store store;
 
+    @Id
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
     private Member member;
 }

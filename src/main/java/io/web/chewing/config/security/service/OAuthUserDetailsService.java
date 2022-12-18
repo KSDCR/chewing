@@ -137,7 +137,7 @@ public class OAuthUserDetailsService extends DefaultOAuth2UserService {
                 .name(email)
                 .provider("test")
                 .phone("test")
-                .gender('t')
+                .gender("s")
                 .delete_yn('0')
                 .build();
 
