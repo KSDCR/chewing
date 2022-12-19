@@ -38,10 +38,12 @@ public class StoreService {
     private String bucketName;
     private final StoreMapper storeMapper;
 
-    public StoreDto get(Long id) {
-        Optional<Store> result = storeRepository.findById(id);
-        Store store = result.orElseThrow();
+    public StoreDto get(Long id, String nickname) {
+//        Optional<Store> result = storeRepository.findById(id);
+//        Store store = result.orElseThrow();
+        StoreDto store = storeMapper.getStoreById(id, nickname);
         StoreDto storeReview = storeMapper.getStoreReviewInfo(store.getName());
+
         log.info("storeReview ====================> {}", storeReview);
         if (storeReview != null) {
             return StoreDto.builder()
@@ -55,8 +57,11 @@ public class StoreService {
                     .file(store.getFile())
                     .rate(storeReview.getRate())
                     .reviewCnt(storeReview.getReviewCnt())
+                    .countLike(store.getCountLike())
+                    .liked(store.isLiked())
                     .build();
         }
+
         return modelMapper.map(store, StoreDto.class);
     }
 
@@ -171,15 +176,12 @@ public class StoreService {
         log.info("removeImage ===========> {} / addImage ============> {}", removeImage, addImage);
 
         storeDto.setFile(removeImage);
-        log.info("storeDto ========> {}", storeDto);
         // 파일 변경
         if (addImage != null && addImage.getSize() > 0) {
-            log.info("----------- 파일 변경 ---------");
             // 변경 파일 정보 저장
             storeDto.setFile(addImage.getOriginalFilename());
 
             if (removeImage != null) { // 파일이 있는 경우
-                log.info("----------- 기존 파일 삭제 ---------");
                 // S3에서 기존 파일 삭제
                 deleteFile(storeDto.getId(), removeImage);
             }
@@ -199,6 +201,8 @@ public class StoreService {
             // S3에서 기존 파일 삭제
             deleteFile(store.getId(), store.getFile());
         }
+        // 좋아요 삭제
+        storeMapper.deleteLikeByStore(store.getName());
         // DB에서 매장 삭제
         storeRepository.deleteById(id);
     }
@@ -211,17 +215,39 @@ public class StoreService {
         Map<String,Object> map = new HashMap<>();
 
         // user의 매장 찜 여부 조회
-        //Long cnt = storeLikeRepository.CountByStore_NameAndMember_Nickname(storeName, nickname);
-        //Long cnt = storeMapper.getLikeByStoreAndMember(storeName, nickname);
-        //log.info("updateLike ==========> {}", cnt);
+        int cnt = storeMapper.getLikeByStoreAndMember(storeName, nickname);
 
-        // 찜한 매장인 경우 delete
-
-        // 찜한 매장이 아닌 경우 insert
+        if (cnt == 1) {
+            // 찜한 매장인 경우 like 삭제
+            storeMapper.deleteLike(storeName, nickname);
+            map.put("current", "not liked");
+        } else {
+            // 찜한 매장이 아닌 경우 like 추가
+            storeMapper.insertLike(storeName, nickname);
+            map.put("current", "liked");
+        }
 
         // 매장의 총 찜 개수 조회
-
+        int countAll = storeMapper.countLikeByStore(storeName);
+        map.put("count", countAll);
+        log.info("like map ==========> {}", map);
 
         return map;
     }
+
+//    public Page<StoreDto> myLikeList(int page, int size, String storeName) {
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//        Page<Store> stores = storeRepository.findAllByStoreName(storeName,pageRequest);
+//
+//        return stores.map(store -> StoreDto.builder()
+//                .id(store.getId())
+//                .name(store.getName())
+//                .address(store.getAddress())
+//                .phone(store.getPhone())
+//                .detail(store.getDetail())
+//                .open_time(store.getOpen_time())
+//                .close_time(store.getClose_time())
+//                .file(store.getFile())
+//                .build());
+//    }
 }

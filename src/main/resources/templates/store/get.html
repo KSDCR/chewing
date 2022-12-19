@@ -72,7 +72,8 @@
 <div id="store">
     <h1 style="font-weight: bold;">
         [[${store.name}]]
-         <!--<수정버튼> admin일 경우만 보이도록 수정!! -->
+        <input type="hidden" id="storeName" th:value="${store.name}">
+        <!--<수정버튼> admin일 경우만 보이도록 수정!! -->
         <button th:onclick="|location.href='@{/store/modify(id=${store.id})}'|"
                 id="modify" type="button" class="btn btn"
                 style="width: 90px;background-color: #F2F2F2;float: right;margin-right: 32px;align-content: center;">
@@ -101,7 +102,12 @@
             <a th:href="@{/review/list(store_name=${store.name})}" th:if="${store.reviewCnt > 0}">리뷰수 [[${store.reviewCnt}]]</a>
         </div>
        <div>
-           💗🤍
+
+           <button id="likeButton" >
+               <th:block th:if="${store.liked}">💗</th:block>
+               <th:block th:if="${not store.liked}">🤍</th:block>
+           </button>
+           <span id="likeCount">[[${store.countLike}]]</span>
        </div>
     </div>
     <!--<div th:text="${store.detail}">가게설명</div>-->
@@ -140,9 +146,32 @@
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=13e4c49c4b681da6f753e3ea6e9ba777&libraries=services"></script>
 <script type="text/javascript"  th:inline="javascript">
-    /*<![CDATA[*/
+
+    /* 매장 찜 버튼 */
+    document.querySelector("#likeButton").addEventListener("click", function() {
+        const storeName = document.querySelector("#storeName").value;
+        fetch(`/store/like`, {
+            method : "put",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+                storeName: storeName
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.current == 'liked') {
+                    document.querySelector("#likeButton").innerHTML = `💗`;
+                } else {
+                    document.querySelector("#likeButton").innerHTML = `🤍`;
+                }
+                document.querySelector("#likeCount").innerText = data.count;
+            });
+    });
 
     /* 카카오 지도  */
+    /*<![CDATA[*/
     let info = document.querySelector("#info");
     let mapInfo = document.querySelector("#map");
 

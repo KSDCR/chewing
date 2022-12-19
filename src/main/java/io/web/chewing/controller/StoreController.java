@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,8 +38,8 @@ public class StoreController {
 
     /*매장 정보 조회*/
     @GetMapping("/get")
-    public void get(Long id, Model model) {
-        StoreDto storeDto = storeService.get(id);
+    public void get(Long id, Model model,  @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        StoreDto storeDto = storeService.get(id, authMemberDTO.getNickname());
         log.info("===========> " + storeDto);
         model.addAttribute("imgUrl", imgUrl);
         model.addAttribute("store", storeDto);
@@ -103,8 +104,8 @@ public class StoreController {
 
     /*매장 정보 수정 (admin)*/
     @GetMapping("/modify")
-    public void modify(Long id, Model model) {
-        StoreDto storeDto = storeService.get(id);
+    public void modify(Long id, Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        StoreDto storeDto = storeService.get(id, authMemberDTO.getNickname());
         log.info("==== modify ====> " + storeDto);
         model.addAttribute("store", storeDto);
         model.addAttribute("imgUrl", imgUrl);
@@ -146,17 +147,35 @@ public class StoreController {
     }
 
     /*매장 찜하기*/
-    @PutMapping("/like")
+    @PutMapping ("/like")
     @ResponseBody
-    //@PreAuthorize("isAuthenticated()")
+    // @PreAuthorize("isAuthenticated()")
     public Map<String,Object> like(
             @RequestBody Map<String, String> req,
             @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        log.info("매장 찜하기 ====> member : {} / store : {}",String.valueOf(authMemberDTO),req.get("storeId"));
-        Map<String, Object> result = storeService.updateLike(req.get("storeId"), authMemberDTO.getNickname());
+        Map<String, Object> result = storeService.updateLike(req.get("storeName"), authMemberDTO.getNickname());
         return result;
     }
 
+    /*찜한 매장 리스트*/
+//    @GetMapping("/list")
+//    public void list(Model model, Pageable pageable,
+//                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+//        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+//
+//        // 전체 매장 리스트
+//        Page<StoreDto> stores = storeService.myLikeList(page, 6);
+//
+//        String keyword = null, category = null;
+//
+//        PageDto paging = storeService.page(stores, keyword, category);
+//        log.info("stores ================> {}", stores.stream().toList());
+//        log.info("paging ================> {}", paging);
+//
+//        model.addAttribute("stores", stores);
+//        model.addAttribute("paging", paging);
+//        model.addAttribute("imgUrl", imgUrl);
+//    }
 
 
     /*매장 랭킹 - BEST 10*/

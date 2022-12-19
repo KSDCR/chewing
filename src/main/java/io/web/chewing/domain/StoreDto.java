@@ -25,6 +25,8 @@ public class StoreDto {
     private Double rate;
     private int reviewCnt;
 
+    private boolean liked;
+    private int countLike;
     public StoreDto(Store store) {
         this.id = store.getId();
         this.name = store.getName();

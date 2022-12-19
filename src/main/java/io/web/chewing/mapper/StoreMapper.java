@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface StoreMapper {
-
+    StoreDto getStoreById(Long id, String nickname);
     StoreDto getStoreReviewInfo(String store_name);
 
-    Long getLikeByStoreAndMember(String storeName, String nickname);
+    int getLikeByStoreAndMember(String storeName, String nickname);
+    int insertLike(String storeName, String nickname);
+    int deleteLike(String storeName, String nickname);
+    int countLikeByStore(String storeName);
+    int deleteLikeByStore(String storeName);
 }
