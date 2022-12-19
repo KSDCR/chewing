@@ -6,13 +6,12 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.NotFound;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Builder
@@ -21,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Table
-public class Member extends BaseEntity implements Serializable{
+public class Member extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +46,7 @@ public class Member extends BaseEntity implements Serializable{
 
     @ColumnDefault("0")
     private char delete_yn;
-    
+
     private String gender;
 
     private boolean verify;
@@ -62,9 +61,7 @@ public class Member extends BaseEntity implements Serializable{
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();
 
-    public void addMemberRole(MemberRole memberRole) {
-        roleSet.add(memberRole);
-    }
+    public void addMemberRole(MemberRole memberRole) {roleSet.add(memberRole);}
 
     public void clearRoles() {
         this.roleSet.clear();

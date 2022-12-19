@@ -1,18 +1,15 @@
 package io.web.chewing.service;
 
 import io.web.chewing.Entity.Member;
-import io.web.chewing.model.GoogleUser;
-import io.web.chewing.model.KakaoUser;
-import io.web.chewing.model.NaverUser;
+import io.web.chewing.common.converters.ProviderUserConverter;
+import io.web.chewing.common.converters.ProviderUserRequest;
 import io.web.chewing.model.ProviderUser;
 import io.web.chewing.repository.MemberRepository;
 import io.web.chewing.repository.UserRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,22 +26,16 @@ public abstract class AbstractOAuth2UserService {
     @Autowired
     private UserService userService;
 
-    public ProviderUser providerUser(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
-        String registrationId = clientRegistration.getRegistrationId();
-        log.info("registrationId:"+registrationId);
+    @Autowired
+    private ProviderUserConverter<ProviderUserRequest, ProviderUser> providerUserConverter;
 
+    public ProviderUser providerUser(ProviderUserRequest providerUserRequest) {
 
-
-        return switch (registrationId) {
-            case "google" -> new GoogleUser(oAuth2User, clientRegistration);
-            case "naver" -> new NaverUser(oAuth2User, clientRegistration);
-            case "kakao" -> new KakaoUser(oAuth2User, clientRegistration);
-            default -> throw new IllegalStateException("Unexpected value: " + registrationId);
-        };
+        return providerUserConverter.converter(providerUserRequest);
     }
 
     public void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
-        log.info(String.valueOf(saveMember(providerUser, userRequest)));
+        saveMember(providerUser, userRequest);
 
     }
 

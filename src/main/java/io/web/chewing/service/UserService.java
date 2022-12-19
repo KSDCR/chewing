@@ -17,6 +17,7 @@ public class UserService {
     private MemberRepository memberRepository;
 
     public Member register(ProviderUser providerUser){
+        log.info("여기 오나요?" + providerUser);
         Member  member = Member.builder().email(providerUser.getEmail())
                 .nickname(providerUser.getNickName())
                 .delete_yn('0')

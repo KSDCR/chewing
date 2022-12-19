@@ -1,5 +1,6 @@
 package io.web.chewing.config;
 
+import io.web.chewing.common.authority.CustomAuthorityMapper;
 import io.web.chewing.service.CustomOAuth2UserService;
 import io.web.chewing.service.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -49,8 +48,5 @@ public class OAuth2ClientConfig {
         return http.build();
     }
 
-    @Bean
-    public GrantedAuthoritiesMapper customAuthoritiesMapper(){
-        return new CustomAuthorityMapper();
-    }
+
 }

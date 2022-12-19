@@ -1,5 +1,6 @@
 package io.web.chewing.service;
 
+import io.web.chewing.common.converters.ProviderUserRequest;
 import io.web.chewing.model.ProviderUser;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -15,11 +16,14 @@ public class CustomOidcUserService extends AbstractOAuth2UserService implements 
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
 
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        OAuth2UserService<OidcUserRequest,OidcUser> oidcUserRequestOidcUserOAuth2UserService = new OidcUserService();
+        OAuth2UserService<OidcUserRequest, OidcUser> oidcUserRequestOidcUserOAuth2UserService = new OidcUserService();
         OidcUser oidcUser = oidcUserRequestOidcUserOAuth2UserService.loadUser(userRequest);
 
-        ProviderUser providerUser = super.providerUser(clientRegistration, oidcUser);
-        super.register(providerUser,userRequest);
+        ProviderUserRequest providerUserRequest = new ProviderUserRequest(clientRegistration, oidcUser);
+
+
+        ProviderUser providerUser = super.providerUser(providerUserRequest);
+        super.register(providerUser, userRequest);
 
         return oidcUser;
     }

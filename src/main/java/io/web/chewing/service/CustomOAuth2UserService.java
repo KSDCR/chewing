@@ -1,7 +1,7 @@
 package io.web.chewing.service;
 
+import io.web.chewing.common.converters.ProviderUserRequest;
 import io.web.chewing.model.ProviderUser;
-import io.web.chewing.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -28,8 +28,9 @@ public class CustomOAuth2UserService extends AbstractOAuth2UserService implement
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-        ProviderUser providerUser = super.providerUser(clientRegistration, oAuth2User);
-        log.info("providerUser : "+ providerUser);
+        ProviderUserRequest providerUserRequest = new ProviderUserRequest(clientRegistration,oAuth2User);
+
+        ProviderUser providerUser = super.providerUser(providerUserRequest);
 
         super.register(providerUser, userRequest);
 
