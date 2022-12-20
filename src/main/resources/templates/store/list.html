@@ -61,57 +61,58 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center"
         th:with="start = ${paging.start}, last=${paging.last}">
+        <th:block th:if="${paging.last != 0}">
+            <!--맨앞 버튼 (1페이지 아닐경우)-->
+            <th:block th:if="${paging.number} != 1">
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/store/list(page=1, keyword=${paging.keyword}, category=${paging.category})}">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </a>
+                </li>
+            </th:block>
 
-        <!--맨앞 버튼 (1페이지 아닐경우)-->
-        <th:block th:if="${paging.number} != 1">
-            <li class="page-item">
-                <a class="page-link"
-                   th:href="@{/store/list(page=1, keyword=${paging.keyword}, category=${paging.category})}">
-                    <i class="fa-solid fa-angles-left"></i>
-                </a>
-            </li>
-        </th:block>
+            <!-- 이전 버튼 -->
+            <th:block th:if="${paging.hasPrevButton}">
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/store/list(page=${paging.jumpPrevPageNum}, keyword=${paging.keyword}, category=${paging.category})}">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                </li>
+            </th:block>
 
-        <!-- 이전 버튼 -->
-        <th:block th:if="${paging.hasPrevButton}">
-            <li class="page-item">
-                <a class="page-link"
-                   th:href="@{/store/list(page=${paging.jumpPrevPageNum}, keyword=${paging.keyword}, category=${paging.category})}">
-                    <i class="fa-solid fa-angle-left"></i>
-                </a>
-            </li>
-        </th:block>
-
-        <!-- 페이지 번호 -->
-        <th:block th:each="num : ${#numbers.sequence(start,last)}" >
-            <li class="page-item
+            <!-- 페이지 번호 -->
+            <th:block th:each="num : ${#numbers.sequence(start,last)}" >
+                <li class="page-item
 
             ">
-                <a class="page-link"
-                   th:href="@{/store/list(page=${num}, keyword=${paging.keyword}, category=${paging.category})}"
-                   th:text="${num}"></a>
-            </li>
-        </th:block>
+                    <a class="page-link"
+                       th:href="@{/store/list(page=${num}, keyword=${paging.keyword}, category=${paging.category})}"
+                       th:text="${num}"></a>
+                </li>
+            </th:block>
 
-        <!-- 다음 버튼 -->
-        <th:block th:if="${paging.hasNextButton}">
-            <li class="page-item">
-                <a class="page-link"
-                   th:href="@{/store/list(page=${paging.jumpNextPageNum}, keyword=${paging.keyword}, category=${paging.category})}">
-                    <i class="fa-solid fa-angle-right"></i>
-                </a>
-            </li>
-        </th:block>
+            <!-- 다음 버튼 -->
+            <th:block th:if="${paging.hasNextButton}">
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/store/list(page=${paging.jumpNextPageNum}, keyword=${paging.keyword}, category=${paging.category})}">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                </li>
+            </th:block>
 
-        <!--맨뒤 버튼 (마지막페이지 아닐경우)-->
-        <!--<th:block th:if="${paging.number ne paging.last}">-->
-        <th:block th:if="${paging.number ne paging.totalPages}">
-            <li class="page-item">
-                <a class="page-link"
-                   th:href="@{/store/list(page=${paging.totalPages}, keyword=${paging.keyword}, category=${paging.category})}">
-                    <i class="fa-solid fa-angles-right"></i>
-                </a>
-            </li>
+            <!--맨뒤 버튼 (마지막페이지 아닐경우)-->
+            <!--<th:block th:if="${paging.number ne paging.last}">-->
+            <th:block th:if="${paging.number ne paging.totalPages}">
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/store/list(page=${paging.totalPages}, keyword=${paging.keyword}, category=${paging.category})}">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                </li>
+            </th:block>
         </th:block>
     </ul>
 </nav>

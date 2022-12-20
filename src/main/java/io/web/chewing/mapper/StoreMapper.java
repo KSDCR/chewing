@@ -19,4 +19,6 @@ public interface StoreMapper {
     int deleteLikeByStore(String storeName);
 
     List<String> getStoreNameByMember(String nickname);
+
+    List<String> getTop10Store();
 }

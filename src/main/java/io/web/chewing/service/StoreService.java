@@ -242,4 +242,9 @@ public class StoreService {
 
         return stores;
     }
+
+    public List<String> getRank() {
+        List<String> storeRankList = storeMapper.getTop10Store();
+        return storeRankList;
+    }
 }

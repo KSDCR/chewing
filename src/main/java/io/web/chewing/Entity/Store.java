@@ -37,6 +37,10 @@ public class Store extends BaseEntity implements Serializable {
 
     private String category;
 
+//    @OneToOne
+//    @JoinColumn(name = "owner", referencedColumnName = "owner")
+//    private Member member_id;
+
 
     public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time, String category) {
         this.name = name;
@@ -48,4 +52,9 @@ public class Store extends BaseEntity implements Serializable {
         this.close_time = close_time;
         this.category = category;
     }
+
+//    public void assignUser(Member member) {
+//
+//        this.member_id = member;
+//    }
 }

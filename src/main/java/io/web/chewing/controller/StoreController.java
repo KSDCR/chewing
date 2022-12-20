@@ -57,19 +57,23 @@ public class StoreController {
                      @RequestParam(required = false, name = "category") String category,
                      @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         log.info("LIST 로그인 객체 =============> {}", String.valueOf(authMemberDTO));
+        log.info("keyword =====> {} / category ======> {}", keyword, category);
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
 
         // 전체 매장 리스트
-        Page<StoreDto> stores = storeService.list(page, 6);
+        Page<StoreDto> stores;
         
         // 키워드 검색 매장 리스트
         if (keyword != null && keyword != "") {
             stores = storeService.listByKeyword(page, 6, keyword);
         }
-        
         // 카테고리별 매장 리스트
-        if (category != null && category != "") {
+        else if (category != null && category != "") {
             stores = storeService.listByCategory(page, 6, category);
+        }
+        // 전체 매장 리스트
+        else {
+            stores = storeService.list(page, 6);
         }
 
         PageDto paging = storeService.page(stores, keyword, category);
@@ -160,7 +164,7 @@ public class StoreController {
 
     /*찜한 매장 리스트*/
     @GetMapping("/myLike")
-    public void list(Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+    public void myLike(Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         List<Store> stores = storeService.myLikeList(authMemberDTO.getNickname());
         int likeStoreCnt = stores.size();
 
@@ -170,6 +174,11 @@ public class StoreController {
     }
 
     /*매장 랭킹 - BEST 10*/
-    // storeName만 메인에 스케줄링 하루
+    @GetMapping("/rank")
+    public void rank(Model model) {
+        List<String> storeRank = storeService.getRank();
+        log.info("storeRank ====================> {}",storeRank);
+        model.addAttribute("storeRank", storeRank);
+    }
     
 }

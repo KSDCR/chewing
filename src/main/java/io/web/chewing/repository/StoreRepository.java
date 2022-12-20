@@ -25,7 +25,8 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
    @Query(value = "select distinct s from Store s " +
             "left join Store_categories c " +
             "ON s.id = c.store.id " +
-            "where c.category like %:category%")
+            "where s.category = :category")
+            /*"where c.category like %:category%")*/
     Page<Store> findAllByCategory(@Param("category") String category, Pageable pageable);
 
     @Modifying

@@ -8,7 +8,7 @@
     <select id="getStoreById" resultMap="storeMap">
         SELECT
             s.id, s.name, s.address, s.close_time, s.open_time, s.detail, s.file, s.phone, s.category,
-            (SELECT count(*) FROM store_like WHERE store_name = s.name AND member_nickname =  #{nickname}) liked,
+            (SELECT count(*) FROM store_like WHERE store_name = s.name AND member_nickname = #{nickname}) liked,
             (SELECT count(*) FROM store_like WHERE store_name = s.name) countLike
         FROM store s
         WHERE s.id = #{id};
@@ -65,4 +65,18 @@
         SELECT store_name FROM store_like
         WHERE member_nickname = #{nickname}
     </select>
+
+    <select id="getTop10Store" resultMap="storeTop10Map">
+        SELECT
+        s.id, s.name,
+        (SELECT count(*) FROM store_like WHERE store_name = s.name) countLike
+        FROM store s
+        ORDER BY countLike DESC
+        LIMIT 10;
+    </select>
+    <resultMap type="io.web.chewing.domain.StoreDto" id="storeTop10Map">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="countLike" property="countLike" />
+    </resultMap>
 </mapper>

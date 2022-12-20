@@ -31,18 +31,18 @@
                 <div class="mb-3">
                     <input class="form-control" type="hidden" name="id" th:value="${store.id}">
                 </div>
-                <!--<div class="mb-3">
-                    <label class="form-label">매장명</label>
-                    <input id="nameInput" class="form-control" type="text" name="name" th:value="${store.name}">
-                </div>-->
                 <div class="mb-3">
+                    <label class="form-label">매장명</label>
+                    <input readonly id="nameInput" class="form-control" type="text" name="name" th:value="${store.name}">
+                </div>
+               <!-- <div class="mb-3">
                     <label class="form-label">매장명</label>
                     <div class="input-group">
                         <input id="nameInput" class="form-control" type="text" name="name" th:value="${store.name}" th:data-old-value="${store.name}">
                         <button disabled id="nameExistButton" type="button" class="btn btn-outline-secondary">중복확인</button>
                     </div>
                     <div id="nameText" class="form-text"></div>
-                </div>
+                </div>-->
                 <div class="mb-3">
                     <label class="form-label">카테고리</label>
                     <select class="form-select" th:value="${store.category}">
@@ -183,53 +183,53 @@
     }
 
     /* 매장명 중복 확인 */
-    let availableName = true;
-    const nameInput = document.querySelector("#nameInput");
-    const nameExistButton = document.querySelector("#nameExistButton");
-    const nameText = document.querySelector("#nameText");
+    /* let availableName = true;
+     const nameInput = document.querySelector("#nameInput");
+     const nameExistButton = document.querySelector("#nameExistButton");
+     const nameText = document.querySelector("#nameText");
 
-    // 수정 버튼 활성화
-    function enableModifyButton() {
-        const button = document.querySelector("#modifyButton");
-        if (availableName) {
-            button.removeAttribute("disabled")
-        } else {
-            button.setAttribute("disabled", "");
-        }
-    }
+     // 수정 버튼 활성화
+     function enableModifyButton() {
+         const button = document.querySelector("#modifyButton");
+         if (availableName) {
+             button.removeAttribute("disabled")
+         } else {
+             button.setAttribute("disabled", "");
+         }
+     }
 
-    // 매장명 input의 값이 변경되었을 때
-    nameInput.addEventListener("keyup", function() {
-        availableName = false;
-        const oldValue = nameInput.dataset.oldValue;
-        const newValue = nameInput.value;
+     // 매장명 input의 값이 변경되었을 때
+     nameInput.addEventListener("keyup", function() {
+         availableName = false;
+         const oldValue = nameInput.dataset.oldValue;
+         const newValue = nameInput.value;
 
-        if (oldValue === newValue) {
-            nameText.innerText = "";
-            nameExistButton.setAttribute("disabled", "disabled");
-            availableName = true;
-        } else {
-            nameText.innerText = "매장명 중복확인을 해주세요.";
-            nameExistButton.removeAttribute("disabled");
-        }
-        enableModifyButton();
-    });
+         if (oldValue === newValue) {
+             nameText.innerText = "";
+             nameExistButton.setAttribute("disabled", "disabled");
+             availableName = true;
+         } else {
+             nameText.innerText = "매장명 중복확인을 해주세요.";
+             nameExistButton.removeAttribute("disabled");
+         }
+         enableModifyButton();
+     });
 
-    // 매장명 중복 확인 버튼 클릭
-    nameExistButton.addEventListener("click", function() {
-        availableName = false;
-        const name = nameInput.value;
+     // 매장명 중복 확인 버튼 클릭
+     nameExistButton.addEventListener("click", function() {
+         availableName = false;
+         const name = nameInput.value;
 
-        fetch(`/store/existName/` + ([name]))
-            .then(res => res.json())
-            .then(data => {
-                nameText.innerText = data.message;
-                if (data.status == "not exist") {
-                    availableName = true;
-                    enableModifyButton();
-                }
-            });
-    });
+         fetch(`/store/existName/` + ([name]))
+             .then(res => res.json())
+             .then(data => {
+                 nameText.innerText = data.message;
+                 if (data.status == "not exist") {
+                     availableName = true;
+                     enableModifyButton();
+                 }
+             });
+     });*/
 
     document.querySelector("#modifyCancelButton").addEventListener("click", function() {
         document.querySelector("#modifyButton").removeAttribute("data-bs-toggle", "modal");
