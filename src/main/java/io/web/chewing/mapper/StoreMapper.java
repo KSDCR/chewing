@@ -4,6 +4,8 @@ import io.web.chewing.domain.StoreDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface StoreMapper {
@@ -15,4 +17,6 @@ public interface StoreMapper {
     int deleteLike(String storeName, String nickname);
     int countLikeByStore(String storeName);
     int deleteLikeByStore(String storeName);
+
+    List<String> getStoreNameByMember(String nickname);
 }

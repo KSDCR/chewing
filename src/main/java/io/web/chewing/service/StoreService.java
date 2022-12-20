@@ -20,9 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -44,7 +42,6 @@ public class StoreService {
         StoreDto store = storeMapper.getStoreById(id, nickname);
         StoreDto storeReview = storeMapper.getStoreReviewInfo(store.getName());
 
-        log.info("storeReview ====================> {}", storeReview);
         if (storeReview != null) {
             return StoreDto.builder()
                     .id(store.getId())
@@ -125,14 +122,13 @@ public class StoreService {
 
     public Long register(StoreDto storeDto, MultipartFile multipartFile) {
         Store store = modelMapper.map(storeDto, Store.class);
-        log.info("============> " + String.valueOf(storeDto));
+        log.info("등록 매장 정보 ============> " + String.valueOf(storeDto));
 
         // DB에 매장 정보 저장
         Long id = storeRepository.save(store).getId();
 
         if (multipartFile != null && multipartFile.getSize() > 0) {
             // DB에 파일 정보 저장
-            log.info("============> " + multipartFile.getOriginalFilename());
             storeRepository.updateFileName(id, multipartFile.getOriginalFilename());
 
             // S3에 실제 파일 저장
@@ -147,7 +143,7 @@ public class StoreService {
         try {
             // 키 생성
             String key = "chewing/store/" + id + "/" + multipartFile.getOriginalFilename();
-            log.info("key ============> " + key);
+
             InputStream inputStream = multipartFile.getInputStream();
             // 파일 업로드
             ObjectMetadata metadata = new ObjectMetadata();
@@ -164,7 +160,7 @@ public class StoreService {
     private void deleteFile(Long id, String fileName) {
         // 키 생성
         String key = "chewing/store/" + id + "/" + fileName;
-        log.info("key ============> " + key);
+
         // 파일 삭제
         s3Client.deleteObject(bucketName, key);
         log.info("============= 파일 삭제 ============");
@@ -230,24 +226,20 @@ public class StoreService {
         // 매장의 총 찜 개수 조회
         int countAll = storeMapper.countLikeByStore(storeName);
         map.put("count", countAll);
-        log.info("like map ==========> {}", map);
 
         return map;
     }
 
-//    public Page<StoreDto> myLikeList(int page, int size, String storeName) {
-//        PageRequest pageRequest = PageRequest.of(page, size);
-//        Page<Store> stores = storeRepository.findAllByStoreName(storeName,pageRequest);
-//
-//        return stores.map(store -> StoreDto.builder()
-//                .id(store.getId())
-//                .name(store.getName())
-//                .address(store.getAddress())
-//                .phone(store.getPhone())
-//                .detail(store.getDetail())
-//                .open_time(store.getOpen_time())
-//                .close_time(store.getClose_time())
-//                .file(store.getFile())
-//                .build());
-//    }
+    public List<Store> myLikeList(String nickname) {
+        List<Store> stores = new ArrayList<>();
+        List<String> storeLikeList = storeMapper.getStoreNameByMember(nickname);
+
+        for (String storeName : storeLikeList) {
+            Optional<Store> myStore = storeRepository.findByName(storeName);
+            Store store = myStore.orElseThrow();
+            stores.add(store);
+        }
+
+        return stores;
+    }
 }

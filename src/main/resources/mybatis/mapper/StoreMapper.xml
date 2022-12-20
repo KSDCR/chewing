@@ -60,4 +60,9 @@
         DELETE FROM store_like
         WHERE store_name = #{storeName}
     </delete>
+
+    <select id="getStoreNameByMember" resultType="String">
+        SELECT store_name FROM store_like
+        WHERE member_nickname = #{nickname}
+    </select>
 </mapper>

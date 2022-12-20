@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -158,26 +159,17 @@ public class StoreController {
     }
 
     /*찜한 매장 리스트*/
-//    @GetMapping("/list")
-//    public void list(Model model, Pageable pageable,
-//                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-//        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
-//
-//        // 전체 매장 리스트
-//        Page<StoreDto> stores = storeService.myLikeList(page, 6);
-//
-//        String keyword = null, category = null;
-//
-//        PageDto paging = storeService.page(stores, keyword, category);
-//        log.info("stores ================> {}", stores.stream().toList());
-//        log.info("paging ================> {}", paging);
-//
-//        model.addAttribute("stores", stores);
-//        model.addAttribute("paging", paging);
-//        model.addAttribute("imgUrl", imgUrl);
-//    }
+    @GetMapping("/myLike")
+    public void list(Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        List<Store> stores = storeService.myLikeList(authMemberDTO.getNickname());
+        int likeStoreCnt = stores.size();
 
+        model.addAttribute("stores", stores);
+        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("likeStoreCnt", likeStoreCnt);
+    }
 
     /*매장 랭킹 - BEST 10*/
-
+    // storeName만 메인에 스케줄링 하루
+    
 }
