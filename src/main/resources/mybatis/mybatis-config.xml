@@ -11,8 +11,6 @@
     <!--        <setting name="jdbcTypeForNull" value="NULL" />-->
     <!--    </settings>-->
     <!-- vo type aliases -->
-
-
     <mappers>
         <mapper resource="mapper.xml"/>
     </mappers>

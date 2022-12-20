@@ -73,11 +73,11 @@ dependencies {
 
     implementation 'org.modelmapper:modelmapper:3.1.0'
 
+
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
-
 
 
 }
