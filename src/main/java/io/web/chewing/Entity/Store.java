@@ -3,7 +3,7 @@ package io.web.chewing.Entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,9 +12,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@Setter
 @Table
-public class Store extends BaseEntity {
+public class Store extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +25,9 @@ public class Store extends BaseEntity {
 
     private String detail;
 
-    private String open_Time;
+    private String open_time;
 
-    private String close_Time;
+    private String close_time;
 
     private String address;
 
@@ -35,17 +35,26 @@ public class Store extends BaseEntity {
 
     private String file;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<Categories> categoriesSet = new HashSet<>();
+    private String category;
 
-    public void addCategories(Categories categories) {
-        categoriesSet.add(categories);
+//    @OneToOne
+//    @JoinColumn(name = "owner", referencedColumnName = "owner")
+//    private Member member_id;
+
+
+    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time, String category) {
+        this.name = name;
+        this.detail = detail;
+        this.address = address;
+        this.phone = phone;
+        this.file = file;
+        this.open_time = open_time;
+        this.close_time = close_time;
+        this.category = category;
     }
 
-    public void clearCategories() {
-        this.categoriesSet.clear();
-    }
-
+//    public void assignUser(Member member) {
+//
+//        this.member_id = member;
+//    }
 }

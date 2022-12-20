@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModifyStore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--<link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/common.css">-->
+</head>
+<body>
+
+<div>
+    <th:block th:replace="fragments/header :: headerFragment"></th:block>
+</div>
+<div class="container-md">
+    <div class="row">
+        <div class="col">
+            <h2>
+                <div style="float: left; margin-right: 10px;">
+                    <button class="btn btn-light" style="background-color: #FF8900;" th:onclick="|location.href='@{/store/get(id=${store.id})}'|">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                </div>
+                매장 수정하기
+<!--                <p style="margin-left: 10px"></p>-->
+            </h2>
+
+            <form id="modifyForm" th:action="@{/store/modify}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <input class="form-control" type="hidden" name="id" th:value="${store.id}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">매장명</label>
+                    <input readonly id="nameInput" class="form-control" type="text" name="name" th:value="${store.name}">
+                </div>
+               <!-- <div class="mb-3">
+                    <label class="form-label">매장명</label>
+                    <div class="input-group">
+                        <input id="nameInput" class="form-control" type="text" name="name" th:value="${store.name}" th:data-old-value="${store.name}">
+                        <button disabled id="nameExistButton" type="button" class="btn btn-outline-secondary">중복확인</button>
+                    </div>
+                    <div id="nameText" class="form-text"></div>
+                </div>-->
+                <div class="mb-3">
+                    <label class="form-label">카테고리</label>
+                    <select class="form-select" th:value="${store.category}">
+                        <option th:selected="${store.category} == 'Korean'">한식</option>
+                        <option th:selected="${store.category} == 'Chinese'">중식</option>
+                        <option th:selected="${store.category} == 'Japanese'">일식</option>
+                        <option th:selected="${store.category} == 'Western'">양식</option>
+                        <option th:selected="${store.category} == 'Cafe'">디저트</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">상세내용</label>
+                    <input class="form-control" type="text" name="detail" th:value="${store.detail}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">전화번호</label>
+                    <input class="form-control" type="text" name="phone" th:value="${store.phone}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">주소</label>
+                    <input class="form-control" type="text" id="address_kakao" name="address" th:value="${store.address}" readonly />
+                    <!--<input class="form-control" type="text" name="address" th:value="${store.address}">-->
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">오픈시간</label>
+                    <input class="form-control" type="time" name="open_time" th:value="${store.open_time}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">마감시간</label>
+                    <input class="form-control" type="time" name="close_time" th:value="${store.close_time}">
+                </div>
+                <div class="mb-3" th:if="${store.file != null && store.file != ''}">
+                    <input type="hidden" name="removeImage" th:value="${store.file}">
+                    <img id="img"
+                         th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}"
+                         alt="첨부이미지" th:if="${store.file != '' || store.file != null}" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">사진 파일</label>
+                    <input class="form-control" type="file" name="image" accept="image/*">
+                </div>
+            </form>
+            <div style="float: right">
+                <input id="modifyButton" class="btn btn-warning" type="submit" value="수정">
+                <input class="btn btn-danger" type="submit" value="삭제" data-bs-toggle="modal" data-bs-target="#removeModal">
+            </div>
+
+            <form id="removeForm" th:action="@{/store/remove}" method="post">
+                <input type="hidden" name="id" th:value="${store.id}">
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- modify Modal -->
+<div class="modal fade" id="modifyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">수정 확인</h1>
+                <button id="modifyCloseButton" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                수정하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button id="modifyCancelButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button id="modifyConfirmButton" type="button" class="btn btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- remove Modal -->
+<div class="modal fade" id="removeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">삭제 확인</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                삭제하시겠습니까?
+            </div>
+            <div class="modal-footer" style="margin-bottom: 10px;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button id="removeConfirmButton" type="button" class="btn btn-danger">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
+    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /* 주소 검색 */
+    // 우편번호 찾기 화면을 넣을 element
+    var element_layer = document.getElementById('layer');
+
+    function closeDaumPostcode() {
+        // iframe을 넣은 element를 안보이게 한다.
+        element_layer.style.display = 'none';
+    }
+
+    document.getElementById("address_kakao").addEventListener("click", function(){
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById("address_kakao").value = data.address;
+                // iframe을 넣은 element를 안보이게 한다.
+                element_layer.style.display = 'none';
+            },
+            width : '100%',
+            height : '100%',
+            maxSuggestItems : 5
+        }).embed(element_layer);
+        // iframe을 넣은 element를 보이게 한다.
+        element_layer.style.display = 'block';
+        // iframe을 넣은 element의 위치를 화면의 가운데로 이동시킨다.
+        initLayerPosition();
+    });
+
+    function initLayerPosition(){
+        var width = 300; //우편번호서비스가 들어갈 element의 width
+        var height = 400; //우편번호서비스가 들어갈 element의 height
+        var borderWidth = 5; //샘플에서 사용하는 border의 두께
+
+        // 위에서 선언한 값들을 실제 element에 넣는다.
+        element_layer.style.width = width + 'px';
+        element_layer.style.height = height + 'px';
+        element_layer.style.border = borderWidth + 'px solid';
+        // 실행되는 순간의 화면 너비와 높이 값을 가져와서 중앙에 뜰 수 있도록 위치를 계산한다.
+        element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
+        element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth +30) + 'px';
+    }
+
+    /* 매장명 중복 확인 */
+    /* let availableName = true;
+     const nameInput = document.querySelector("#nameInput");
+     const nameExistButton = document.querySelector("#nameExistButton");
+     const nameText = document.querySelector("#nameText");
+
+     // 수정 버튼 활성화
+     function enableModifyButton() {
+         const button = document.querySelector("#modifyButton");
+         if (availableName) {
+             button.removeAttribute("disabled")
+         } else {
+             button.setAttribute("disabled", "");
+         }
+     }
+
+     // 매장명 input의 값이 변경되었을 때
+     nameInput.addEventListener("keyup", function() {
+         availableName = false;
+         const oldValue = nameInput.dataset.oldValue;
+         const newValue = nameInput.value;
+
+         if (oldValue === newValue) {
+             nameText.innerText = "";
+             nameExistButton.setAttribute("disabled", "disabled");
+             availableName = true;
+         } else {
+             nameText.innerText = "매장명 중복확인을 해주세요.";
+             nameExistButton.removeAttribute("disabled");
+         }
+         enableModifyButton();
+     });
+
+     // 매장명 중복 확인 버튼 클릭
+     nameExistButton.addEventListener("click", function() {
+         availableName = false;
+         const name = nameInput.value;
+
+         fetch(`/store/existName/` + ([name]))
+             .then(res => res.json())
+             .then(data => {
+                 nameText.innerText = data.message;
+                 if (data.status == "not exist") {
+                     availableName = true;
+                     enableModifyButton();
+                 }
+             });
+     });*/
+
+    document.querySelector("#modifyCancelButton").addEventListener("click", function() {
+        document.querySelector("#modifyButton").removeAttribute("data-bs-toggle", "modal");
+        document.querySelector("#modifyButton").removeAttribute("data-bs-target", "#modifyModal");
+    });
+    document.querySelector("#modifyCloseButton").addEventListener("click", function() {
+        document.querySelector("#modifyButton").removeAttribute("data-bs-toggle", "modal");
+        document.querySelector("#modifyButton").removeAttribute("data-bs-target", "#modifyModal");
+    });
+
+    document.querySelector("#modifyButton").addEventListener("click", function(e) {
+        e.preventDefault();
+
+        let nameInput = document.querySelector("#nameInput");
+        let addressInput = document.querySelector("#address_kakao");
+        let modifyButton = document.querySelector("#modifyButton");
+
+        // 필수 입력값이 모두 있는 경우에만 submit
+        if (nameInput.value.trim() !== "" && addressInput.value.trim() !== "") {
+            modifyButton.setAttribute("data-bs-toggle", "modal");
+            modifyButton.setAttribute("data-bs-target", "#modifyModal");
+            modifyButton.click();
+        }
+        // 필수 입력값이 없는 경우, 해당 입력창으로 커서 이동
+        else {
+            if (nameInput.value.trim() == "")  nameInput.focus();
+            if (addressInput.value.trim() == "")  addressInput.focus();
+        }
+    });
+
+    // 수정확인 버튼 클릭하면 수정 form 전송
+    document.querySelector("#modifyConfirmButton").addEventListener("click", function() {
+        document.querySelector("#modifyForm").submit();
+    });
+
+    // 삭제확인 버튼 클릭하면 삭제 form 전송
+    document.querySelector("#removeConfirmButton").addEventListener("click", function() {
+        document.querySelector("#removeForm").submit();
+    });
+
+</script>
+</body>
+</html>

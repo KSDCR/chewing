@@ -5,15 +5,15 @@ import lombok.*;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
 @Table
-public class Store_Like extends BaseEntity{
+public class Store_Like extends BaseEntity implements Serializable {
 
 
     @EmbeddedId

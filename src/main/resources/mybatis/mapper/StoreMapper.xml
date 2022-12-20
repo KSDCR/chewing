@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.web.chewing.mapper.StoreMapper">
+
+    <select id="getStoreById" resultMap="storeMap">
+        SELECT
+            s.id, s.name, s.address, s.close_time, s.open_time, s.detail, s.file, s.phone, s.category,
+            (SELECT count(*) FROM store_like WHERE store_name = s.name AND member_nickname = #{nickname}) liked,
+            (SELECT count(*) FROM store_like WHERE store_name = s.name) countLike
+        FROM store s
+        WHERE s.id = #{id};
+    </select>
+    <resultMap type="io.web.chewing.domain.StoreDto" id="storeMap">
+       <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="address" property="address" />
+        <result column="close_time" property="close_time" />
+        <result column="open_time" property="open_time" />
+        <result column="detail" property="detail" />
+        <result column="file" property="file" />
+        <result column="phone" property="phone" />
+        <result column="category" property="category" />
+        <result column="liked" property="liked" />
+        <result column="countLike" property="countLike" />
+    </resultMap>
+
+    <select id="getStoreReviewInfo" resultType="io.web.chewing.domain.StoreDto">
+        SELECT round(AVG(rate),2) rate, count(store_name) reviewCnt
+        FROM review
+        WHERE store_name = #{store_name}
+        GROUP BY store_name;
+    </select>
+
+    <select id="getLikeByStoreAndMember" resultType="int">
+        SELECT COUNT(*)
+        FROM store_like
+        WHERE store_name = #{storeName} AND member_nickname = #{nickname}
+    </select>
+
+    <insert id="insertLike">
+        INSERT INTO store_like (store_name, member_nickname)
+        VALUES (#{storeName}, #{nickname})
+    </insert>
+
+    <delete id="deleteLike">
+        DELETE FROM store_like
+        WHERE store_name = #{storeName} AND member_nickname = #{nickname}
+    </delete>
+
+    <select id="countLikeByStore" resultType="int">
+        SELECT COUNT(*)
+        FROM store_like
+        WHERE store_name = #{storeName}
+    </select>
+
+    <delete id="deleteLikeByStore">
+        DELETE FROM store_like
+        WHERE store_name = #{storeName}
+    </delete>
+
+    <select id="getStoreNameByMember" resultType="String">
+        SELECT store_name FROM store_like
+        WHERE member_nickname = #{nickname}
+    </select>
+
+    <select id="getTop10Store" resultMap="storeTop10Map">
+        SELECT
+        s.id, s.name,
+        (SELECT count(*) FROM store_like WHERE store_name = s.name) countLike
+        FROM store s
+        ORDER BY countLike DESC
+        LIMIT 10;
+    </select>
+    <resultMap type="io.web.chewing.domain.StoreDto" id="storeTop10Map">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="countLike" property="countLike" />
+    </resultMap>
+</mapper>
