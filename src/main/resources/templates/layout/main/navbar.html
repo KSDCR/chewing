@@ -13,10 +13,10 @@
 <!-- navbar -->
 <nav class="navbar fixed-top shadow-sm p-3" style="background-color: #FF8900">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="/static/img/LOL.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top" style="border-radius: 100px;">
+        <a class="navbar-brand" href="#" th:onclick="|location.href='/main'|">
+            <img src="/img/LOL.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top" style="border-radius: 100px;">
         </a>
-        <div style="margin: auto; text-align: center;">
+        <div style="margin: auto; text-align: center;" th:onclick="|location.href='/main'|">
             <h5>chewing</h5>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="width: 54px; height: 44px; padding: unset; margin: unset;">
@@ -26,19 +26,25 @@
         </button>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header" style="background-color: #FF8900">
-                <h5 class="offcanvas-title"  id="offcanvasNavbarLabel" style="color: white;">Nav-bar</h5>
+                <h5 class="offcanvas-title"  id="offcanvasNavbarLabel" style="color: white;">chewing</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">마이페이지</a>
+                        <a class="nav-link active" aria-current="page" href="#">마이페이지</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">예약페이지</a>
+                        <a class="nav-link" href="#">예약페이지</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">공지사항</a>
+                        <a class="nav-link" href="/notice/list">공지사항</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">매장등록</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">찜한매장</a>
                     </li>
                 </ul>
             </div>
@@ -46,31 +52,10 @@
     </div>
 </nav>
 
-<div id="bookingDetails" style="height: 100px; text-align: center; padding-top: 30px; padding-bottom: 30px; background-color: #ffffff; color: #FF8900;">
-    <h4 style="margin: auto;">+ 예약 리스트 +</h4>
-</div>
-<div layout:fragment="content" style="background-color: #e5e5e5; margin: 18px; border-radius: 12px;">
-    <div id="bookingList" style="height: 548.4px; padding-top: 7px;">
-        <div id="titleList" style="height: 128px; margin: 25px; padding: 10px; background-color: white; border-radius: 10px;" th:each="list:${myBookingList}">
-            <div style="float: right; margin-right: 7px; margin-top: 33px;">
-                <a th:href="@{/booking/myList(id=${list.id})}">
-                    <button class="btn btn-light" style="color: red;">
-                        <i class="fa-solid fa-square-xmark fa-lg"></i>
-                    </button>
-                </a>
-            </div>
-            <h5 th:text="${list.store_name}" style="margin-top: 7px; margin-bottom: 20px;"/>
-            <div style="display: inline;" th:text="${list.date}"></div>
-        </div>
-    </div>
-</div>
 
-<div>
-    <th:block layout:fragment="script">
-        <div id="blankSpace" style="height: 30px; text-align: center;">
-            <h5>예약 리스트 냠냠</h5>
-        </div>
-    </th:block>
+
+<div layout:fragment="content">
+
 </div>
 
 </body>
