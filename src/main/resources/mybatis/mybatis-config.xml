@@ -12,6 +12,7 @@
     <!--    </settings>-->
     <!-- vo type aliases -->
     <mappers>
-        <mapper resource="mapper.xml"/>
+        <mapper resource="ReviewMapper.xml"/>
+        <mapper resource="StoreMapper.xml"/>
     </mappers>
 </configuration>
