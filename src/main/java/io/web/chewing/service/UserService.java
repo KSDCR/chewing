@@ -30,6 +30,7 @@ public class UserService {
                 .name(providerUser.getName())
                 .verify(true).build();
             member.addMemberRole(MemberRole.USER);
+            member.addAuthoritiesSet(providerUser.getAuthorities());
 
             memberRepository.save(member);
         return member;

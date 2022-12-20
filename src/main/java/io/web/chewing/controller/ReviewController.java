@@ -3,11 +3,14 @@ package io.web.chewing.controller;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.*;
+import io.web.chewing.model.PrincipalUser;
+import io.web.chewing.model.ProviderUser;
 import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -200,17 +203,17 @@ public class ReviewController {
 //    }
 //
     @GetMapping("register")
-    public void register(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        log.info("객체가 있나요?"+ authMemberDTO);
+    public void register(@AuthenticationPrincipal PrincipalUser principalUser) {
+        log.info("객체가 있나요?"+ principalUser.providerUser().getNickName());
     }
 
     //
     @PostMapping("register")
     public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal AuthMemberDTO authMemberDTO, String store) throws NotFoundException {
-
+                           MultipartFile[] files, @AuthenticationPrincipal PrincipalUser principalUser, String store) throws NotFoundException {
+        log.info("store 키워드가 뭔가요?" + store);
         log.info("POST register.......");
-        log.info("인증객체는?" + authMemberDTO);
+        log.info("인증객체는?" + principalUser);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors......." + bindingResult.getAllErrors());
@@ -220,7 +223,7 @@ public class ReviewController {
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, authMemberDTO, store);
+        Long id = reviewService.register(reviewDto, principalUser, store);
 
         log.info("id" + id);
 

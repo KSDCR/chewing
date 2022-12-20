@@ -2,16 +2,20 @@ package io.web.chewing.Entity;
 
 
 import com.sun.istack.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.NotFound;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -55,13 +59,19 @@ public class Member extends BaseEntity implements Serializable {
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
+    
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<String> authoritiesSet = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();
 
-    public void addMemberRole(MemberRole memberRole) {roleSet.add(memberRole);}
+    public void addMemberRole(MemberRole memberRole) {
+        roleSet.add(memberRole);
+    }
 
     public void clearRoles() {
         this.roleSet.clear();
@@ -75,4 +85,7 @@ public class Member extends BaseEntity implements Serializable {
         this.categoriesSet.clear();
     }
 
+    public void addAuthoritiesSet(List<? extends GrantedAuthority> authorities) {
+        authorities.forEach(grantedAuthority -> authoritiesSet.add(String.valueOf(grantedAuthority)));
+    }
 }

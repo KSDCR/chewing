@@ -1,6 +1,7 @@
 package io.web.chewing.service;
 
 import io.web.chewing.common.converters.ProviderUserRequest;
+import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.model.ProviderUser;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -25,7 +26,7 @@ public class CustomOidcUserService extends AbstractOAuth2UserService implements 
         ProviderUser providerUser = super.providerUser(providerUserRequest);
         super.register(providerUser, userRequest);
 
-        return oidcUser;
+        return new PrincipalUser(providerUser);
     }
 }
 

@@ -3,9 +3,12 @@ package io.web.chewing.service;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
-import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.*;
+import io.web.chewing.domain.PageInfo;
+import io.web.chewing.domain.PageRequestDto;
+import io.web.chewing.domain.PageResponseDto;
+import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.mapper.review.ReviewMapper;
+import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.repository.ReviewRepository;
 import io.web.chewing.repository.StoreRepository;
 import lombok.AllArgsConstructor;
@@ -129,8 +132,7 @@ public class ReviewService {
 
     public PageResponseDto<ReviewDto> list(String store/*String member,*/ ,PageRequestDto pageRequestDto) {
 
-        Optional<Store> getStore = storeRepository.findByName(store);
-        Store findStore = getStore.orElseThrow();
+        Store findStore = storeRepository.findByName(store).orElseThrow();
 
 
         Pageable pageable = pageRequestDto.getPageable("store");
@@ -190,14 +192,16 @@ public class ReviewService {
 //        return reviewRepository.listByStore(store);
 //    }
 
-    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal AuthMemberDTO authMemberDTO,String store) throws NotFoundException {
-        Optional<Store> getStore = storeRepository.findByName(store);
-        Store findStore = getStore.orElseThrow();
+    public Long register(ReviewDto reviewDto, @AuthenticationPrincipal PrincipalUser principalUser
+            , String store) throws NotFoundException {
+        Store findStore = storeRepository.findByName(store).orElseThrow();
+        log.info("스토어를 왜 검색안해줘"+ findStore);
 
+        log.info("이거 공유하기"+ principalUser);
         log.info(findStore.getName());
 
         Review review = reviewDto.toEntity(findStore);
-        Member loadMember = getBuild(authMemberDTO);
+        Member loadMember = getBuild(principalUser);
         review.assignUser(loadMember);
 
         log.info("===========================ls");
@@ -206,20 +210,20 @@ public class ReviewService {
         return id;
     }
 
-    private static Member getBuild(AuthMemberDTO authMemberDTO) {
+    private static Member getBuild(PrincipalUser principalUser) {
         return Member.builder()
-                .id(authMemberDTO.getId())
-                .nickname(authMemberDTO.getNickname())
-                .password(authMemberDTO.getPassword())
+                .id(0L)
+                .nickname(principalUser.providerUser().getNickName())
+                .password(principalUser.providerUser().getPassword())
                 .delete_yn('0')
-                .email(authMemberDTO.getEmail())
-                .provider(authMemberDTO.getProvider())
+                .email(principalUser.providerUser().getEmail())
+                .provider(principalUser.providerUser().getProvider())
                 .build();
     }
 
-    public Member memberBuild(AuthMemberDTO authMemberDTO) {
-        return modelMapper.map(authMemberDTO, Member.class);
-    }
+/*    public Member memberBuild(principalUser principalUser) {
+        return modelMapper.map(principalUser, Member.class);
+    }*/
 
 //    public Long register(ReviewDto reviewDto /*,MemberDto memberDto/*, Long id, MultipartFile[] files*/) {
 //
@@ -469,17 +473,17 @@ public class ReviewService {
     }
 
 
-//    public List<ReviewDto> getListOfStore(Long store, ReviewDto reviewDto, AuthMemberDTO authMemberDTO) throws NotFoundException {
+//    public List<ReviewDto> getListOfStore(Long store, ReviewDto reviewDto, principalUser principalUser) throws NotFoundException {
 //
 //        Review review = reviewDto.toEntity();
 //
 //        Member loadMember = Member.builder()
-//            .id(authMemberDTO.getId())
-//            .nickname(authMemberDTO.getNickname())
-//            .password(authMemberDTO.getPassword())
+//            .id(principalUser.getId())
+//            .nickname(principalUser.getNickname())
+//            .password(principalUser.getPassword())
 //            .delete_yn('0')
-//            .email(authMemberDTO.getEmail())
-//            .provider(authMemberDTO.getProvider())
+//            .email(principalUser.getEmail())
+//            .provider(principalUser.getProvider())
 //            .build();
 //        review.assignUser(loadMember);
 //
@@ -491,12 +495,12 @@ public class ReviewService {
 //        log.info("dd" + String.valueOf(reviewDto));
 //    Review review = reviewDto.toEntity();
 //    Member loadMember = Member.builder()
-//            .id(authMemberDTO.getId())
-//            .nickname(authMemberDTO.getNickname())
-//            .password(authMemberDTO.getPassword())
+//            .id(principalUser.getId())
+//            .nickname(principalUser.getNickname())
+//            .password(principalUser.getPassword())
 //            .delete_yn('0')
-//            .email(authMemberDTO.getEmail())
-//            .provider(authMemberDTO.getProvider())
+//            .email(principalUser.getEmail())
+//            .provider(principalUser.getProvider())
 //            .build();
 //        review.assignUser(loadMember);
 //        log.info("===========================ls");

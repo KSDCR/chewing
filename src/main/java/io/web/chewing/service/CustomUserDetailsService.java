@@ -2,6 +2,7 @@ package io.web.chewing.service;
 
 import io.web.chewing.Entity.Member;
 import io.web.chewing.common.converters.ProviderUserRequest;
+import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.model.ProviderUser;
 import io.web.chewing.repository.MemberRepository;
 import io.web.chewing.repository.UserRepository;
@@ -30,6 +31,10 @@ public class CustomUserDetailsService extends AbstractOAuth2UserService implemen
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(username).orElseThrow(() -> new IllegalArgumentException("no such data"));
 
-        return null;
+        ProviderUserRequest providerUserRequest = new ProviderUserRequest(member);
+
+        ProviderUser providerUser = providerUser(providerUserRequest);
+
+        return new PrincipalUser(providerUser);
     }
 }
