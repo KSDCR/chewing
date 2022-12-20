@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+.dib{display: inline-block;}
+.db{display: block !important; }
+.tl{text-align: left;}
+.pdT10{padding-top: 10px;}
+.mgt40{margin-top: 40px;}
+
+
+body{margin: 0; background: #f5f5f5;}
+body.fixed{overflow: hidden;}
+.content{position: relative; height: 100%; }
+header{background: #ff8900; display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+header.white{background: #fff;}
+header > .title{color: #fff; height:1rem; font-size: 1rem; }
+header > .title.fcb{color: #222B45 !important; font-weight: bolder;}
+header > .main_menu{padding: 0; background: transparent;}
+header > .main_menu > img{max-width: 100%;height: 34px;}
+footer{text-align: center; padding: 0px 0 30px; font-weight: 400; color: #fff; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;
+}
+section{padding: 20px;}
+section.mypage{height: 260px; background: #FF8900; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-bottom-left-radius: 140px; border-bottom-right-radius: 140px;}
+section.mypage p{text-align: center; font-size: 2rem;}
+.logo_article{ width: 150px; height: 150px; background: #E0DAD7; margin: 118px auto 184px; border-radius: 58px; overflow: hidden;}
+.logo_article > img{ width: 100%; height:100%; vertical-align: middle;}
+.logo_article.mypage{margin: 30px auto 20px;}
+.login_list{ text-align: center; padding: 0;}
+.login_list > li {}
+.login_list > li > button{width:100%; height: 36px; border-radius: 4px; box-shadow: 0px 4px 4px rgba(255, 255, 255, 0.5); background: #ff8900; margin-bottom: 40px; color: #fff; font-size: 0.875rem; }
+.login_list > li:last-child > button{ margin-bottom: 0px;}
+.pop.on{display: block; transition: 0.5s;}
+.pop{display: none; transition: 0.5s;}
+.pop_content{position: fixed;top:0; left: 0; background: rgba(240, 240, 240, 0.5); z-index: 1; width: 100%; height: 100%; box-sizing: border-box;  display: flex; align-items: flex-end; flex-wrap: wrap;}
+.btn_box{bottom: 0; width: 100%; padding: 0 20px 10px;}
+.btn_box button{background:#FF8900; width: 100%; height: 36px; border-radius: 4px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);}
+.btn_box p{font-size: 1.25rem; padding-bottom: 20px; display: inline-block;}
+.checkbox_list li{ margin-bottom: 20px;}
+.checkbox_list li:first-child{padding-bottom: 10px; border-bottom: 1px solid #000;}
+.input_box{padding: 46px 22px 0; margin: 0 auto; text-align: center; overflow: hidden;}
+.input_box p{font-size: 2rem;  display: inline-block;}
+.input_box p:first-child{margin-bottom: 15px; width: 290px; text-align: left;}
+.input_box p:nth-child(3){width: 190px; text-align: left;}
+.input_box .tel_box {width: 100%; margin: 0 auto; padding: 0; display: inline-block; margin-bottom: 20px;}
+.input_box input{width: 4.85rem; height: 1.5rem;}
+.input_box select{width: 5.25rem; height: 2rem; vertical-align: top; display: inline-block;}
+.input_box_02{display: flex; flex-wrap: wrap; justify-content: center; width: 330px; margin: 0 auto; }
+.input_box_02 li{padding-bottom: 20px; padding-right: 10px;}
+.input_box_02 li:nth-child(3){padding-right: 0;}
+.input_box_02 li:nth-child(6){padding-right: 0;}
+.btn{background:#FF8900; width: 100%; height: 36px; border-radius: 4px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);}
+.profile_icon{margin: 0; width: 57px;  background: #E0DAD7; border-radius: 44px; overflow: hidden; vertical-align: bottom;}
+.profile_icon img{ max-width: 100%; height:100%;}
+.profile_box{border-bottom: 1px solid #747474; position: relative; margin-top: 12px;}
+.profile_box > .profile_name{display: inline-block; padding-bottom: 10px; color: #000;letter-spacing: 3px;}
+.five_star_rating{position: absolute; bottom: 10px;right: 0; color: #AEAEAE; font-size: 0.75rem;}
+.pointbox{display: flex; justify-content: space-between; align-items: flex-end; font-size: 1.25rem; padding: 10px;}
+.pointbox span{font-weight: bold;}
+.pointbox strong{font-size: 1rem; font-weight: bold; height: 1rem;}
+.btn_box02.arrow > li button{background: url("../image/arrow_right.png") 100% 50% no-repeat, #fff ; font-size: 0.85rem; text-align: left; padding-left: 10px;}
+.btn_box02.arrow > li button > p{font-weight: 100; color: #A09C99;}
+.btn_box02 > li{margin-bottom: 10px;}
+.btn_box02 > li button{width: 100%; padding: 24px 0; background: #fff; color: #373432; font-size: 1rem; font-weight: bold; padding-top: 6px;}
+.btn_box02 > li:last-child{margin-bottom: 35px;}
+/* 별점 */
+.starpoint_wrap{display:inline-block; position: absolute; bottom: 10px; right: 28px;}
+.starpoint_box{position:relative; background:url("../image/sp_star.png") 0 0 no-repeat;font-size:0;}
+.starpoint_box .starpoint_bg{display:block;position:absolute;top:0;left:0;height:18px;background:url("../image/sp_star.png") 0 -20px no-repeat;pointer-events:none;}
+.starpoint_box .label_star{display:inline-block;width:10px;height:18px;box-sizing:border-box;}
+.starpoint_box .star_radio{opacity:0;width:0;height:0;position:absolute;}
+.starpoint_box .star_radio:nth-of-type(1):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(1):checked ~ .starpoint_bg{width:10%;}
+.starpoint_box .star_radio:nth-of-type(2):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(2):checked ~ .starpoint_bg{width:20%;}
+.starpoint_box .star_radio:nth-of-type(3):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(3):checked ~ .starpoint_bg{width:30%;}
+.starpoint_box .star_radio:nth-of-type(4):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(4):checked ~ .starpoint_bg{width:40%;}
+.starpoint_box .star_radio:nth-of-type(5):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(5):checked ~ .starpoint_bg{width:50%;}
+.starpoint_box .star_radio:nth-of-type(6):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(6):checked ~ .starpoint_bg{width:60%;}
+.starpoint_box .star_radio:nth-of-type(7):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(7):checked ~ .starpoint_bg{width:70%;}
+.starpoint_box .star_radio:nth-of-type(8):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(8):checked ~ .starpoint_bg{width:80%;}
+.starpoint_box .star_radio:nth-of-type(9):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(9):checked ~ .starpoint_bg{width:90%;}
+.starpoint_box .star_radio:nth-of-type(10):hover ~ .starpoint_bg,
+.starpoint_box .star_radio:nth-of-type(10):checked ~ .starpoint_bg{width:100%;}
+
+.blind{position:absolute;clip:rect(0 0 0 0);margin:-1px;width:1px;height: 1px;overflow:hidden;}
