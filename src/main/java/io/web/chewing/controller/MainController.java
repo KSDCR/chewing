@@ -29,6 +29,6 @@ public class MainController {
         List<StoreDto> storeRandom = storeService.getRandomStore();
         log.info("storeRandom ====================> {}",storeRandom);
         model.addAttribute("storeRandom", storeRandom);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl + "/store");
     }
 }
