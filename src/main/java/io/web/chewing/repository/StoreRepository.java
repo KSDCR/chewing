@@ -7,13 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
-import java.util.Set;
 
 public interface StoreRepository extends JpaRepository<Store,Object> {
 
+    Optional<Store> findByName(String name);
     @Query(value = "select distinct s from Store s ",
             countQuery = "select count(s) from Store s")
     Page<Store> findAllStores(Pageable pageRequest);
@@ -23,25 +24,18 @@ public interface StoreRepository extends JpaRepository<Store,Object> {
             countQuery = "select count(s) from Store s where s.name like %:keyword%")
     Page<Store> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"categoriesSet"}, type = EntityGraph.EntityGraphType.LOAD)
-    Optional<Store> findByName(String name);
+   @Query(value = "select distinct s from Store s " +
+            "left join Store_categories c " +
+            "ON s.id = c.store.id " +
+            "where s.category = :category")
+            /*"where c.category like %:category%")*/
+    Page<Store> findAllByCategory(@Param("category") String category, Pageable pageable);
 
+    @Modifying
+    @Query("UPDATE Store s set s.file = :file where s.id = :id")
+    void updateFileName(@Param("id") Long id, @Param("file") String file);
 
-
-//    @Query(value = "select distinct s from Store s " +
-//            "left join fetch s.category c " +
-//            "where c.name like %:category%",
-//            countQuery = "select count(s) from Seller s " +
-//                    "where s.category.name like %:category%")
-   // Page<Store> findAllByCategory(@Param("category") String category, Pageable pageable);
-
-
-    //Page<Store> findByNameContaining(String keyword, Pageable pageable);
-
-    //boolean existsByName(String name);
-
-//    @Query("")
-//    void insertFile(Long id, String fileName);
-
+    @Query("select s FROM Store s WHERE s.name=:name")
+    Store findDuplicationByName(String name);
 
 }

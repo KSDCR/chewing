@@ -8,7 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -29,6 +31,8 @@ public class AuthMemberDTO extends User implements OAuth2User {
     private boolean verify;
     private Map<String, Object> attr;
 
+    private List Authorities;
+
 
     public AuthMemberDTO(Long id, String username,
                          String password,
@@ -46,6 +50,7 @@ public class AuthMemberDTO extends User implements OAuth2User {
         this.provider = provider;
         this.name = name;
         this.verify = verify;
+        this.Authorities = Arrays.asList(authorities.toArray());
     }
 
 

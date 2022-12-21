@@ -36,20 +36,14 @@ public class Store extends BaseEntity implements Serializable {
 
     private String file;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<Categories> categoriesSet = new HashSet<>();
+    private String category;
 
-    public void addCategories(Categories categories) {
-        categoriesSet.add(categories);
-    }
+//    @OneToOne
+//    @JoinColumn(name = "owner", referencedColumnName = "owner")
+//    private Member member_id;
 
-    public void clearCategories() {
-        this.categoriesSet.clear();
-    }
 
-    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time) {
+    public void change(String name, String detail, String address, String phone, String file, String open_time, String close_time, String category) {
         this.name = name;
         this.detail = detail;
         this.address = address;
@@ -57,5 +51,11 @@ public class Store extends BaseEntity implements Serializable {
         this.file = file;
         this.open_time = open_time;
         this.close_time = close_time;
+        this.category = category;
     }
+
+//    public void assignUser(Member member) {
+//
+//        this.member_id = member;
+//    }
 }

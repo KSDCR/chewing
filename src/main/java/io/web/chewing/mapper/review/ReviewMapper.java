@@ -10,16 +10,25 @@ import java.util.List;
 @Repository
 public interface ReviewMapper {
 
-    ReviewDto select();
+    ReviewDto select(Long id, String member_nickname);
+    default ReviewDto select(Long id){
+        return select(id, null);
+    };
 
-    List<ReviewDto> findReviewByStore(String store,int offset, int records);
+    List<ReviewDto> findReviewByStore(String store_name,int offset, int records);
 
-    int countReviewByStore(String store);
+    int countReviewByStore(String store_name);
 
     List<ReviewDto> findReviewByMember(String member_nickname, int offset, int records);
 
     int countReviewByMember(String member_nickname);
 
+    void insertFile(Long id, String fileName);
 
-    int update(ReviewDto review);
+    void deleteFileByReviewIdAndFileName(Long id, String fileName);
+
+
+    ReviewDto findReviewById(Long id);
+
+
 }

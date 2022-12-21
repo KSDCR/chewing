@@ -2,13 +2,16 @@ package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.*;
-import io.web.chewing.model.PrincipalUser;
-import io.web.chewing.model.ProviderUser;
+import io.web.chewing.domain.PageInfo;
+import io.web.chewing.domain.PageRequestDto;
+import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -19,217 +22,103 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Controller
 @RequestMapping("review")
 @Log4j2
 @RequiredArgsConstructor
 public class ReviewController {
-
+    @Value("${aws.s3.file.url.prefix}")
+    String imgUrl;
     private final ReviewService reviewService;
 
-//    @GetMapping("/get")
-//    public List<ReviewDto> myReviewList(String member, PageRequestDto pageRequestDto, Model model){
-//
-//        ReviewDto reviewDto = ReviewService.get(member);
-//
-//        model.addAttribute("reviewDto", reviewDto);
-////        List<ReviewDto> list = ReviewService.myReviewList(member, pageRequestDto);
-////
-////        model.addAttribute("myReviewList", list);
-//
-//    }
 
-//    @PostMapping("/get")
-//    public String myReviewList(ReviewDto reviewDto) {
-//        ReviewDto oldmember = service.get(member.getId());
-//
-//        rttr.addAttribute("id", member.getId());
-//        boolean passwordMatch = passwordEncoder.matches(oldPassword, oldmember.getPassword());
-//        if (passwordMatch) {
-//            return "redirect:/member/modify";
-//        } else {
-//            rttr.addFlashAttribute("message", "암호가 일치하지 않습니다.");
-//            return "redirect:/member/information";
-//        }
-//
-//    }
-
-//    @GetMapping("/myList")
-//    public void myList(String member, PageRequestDto pageRequestDto, Model model){
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.myList(member, pageRequestDto);
-//
-//        log.info(responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//
-//    }
-
+    // 수정했으니 확인할것
     @GetMapping("/myList")
-    public void myList(@RequestParam(name="page", defaultValue = "1") int page,
-                       PageInfo pageInfo,
-                       String member_nickname,
-                       Model model) {
+    public String myList(@RequestParam(name = "page", defaultValue = "1") int page,
+                         PageInfo pageInfo,
+                         Model model,
+                         @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        // 나중에 롤 처리 일괄로 할꺼라서 일단 임시처리
+        if (authMemberDTO == null) {
+            return "redirect:/login";
+        }
 
+        List<ReviewDto> list = reviewService.listReviewByMember(authMemberDTO.getNickname(), page, pageInfo);
+        list.forEach(reviewDto -> log.info(reviewDto));
 
-
-        List<ReviewDto> list = reviewService.listReviewByMember(member_nickname, page, pageInfo);
-
+        String member_nickname = authMemberDTO.getNickname();
         model.addAttribute("myReviewList", list);
+        model.addAttribute("member_nickname", authMemberDTO.getNickname());
+        model.addAttribute("imgUrl", imgUrl);
 
         log.info(list);
 
-
+        return "review/myList";
     }
 
     @GetMapping("list")
-    public void list(@RequestParam(name="page", defaultValue = "1") int page,
+    public void list(@RequestParam(name = "page", defaultValue = "1") int page,
                      PageInfo pageInfo,
-                     String store,
-                     Model model) {
+                     String store_name,
+                     Model model,
+                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
 
+        log.info("인증객체는?" + authMemberDTO);
 
-
-        List<ReviewDto> list = reviewService.listReviewByStore(store, page, pageInfo);
+        List<ReviewDto> list = reviewService.listReviewByStore(store_name, page, pageInfo);
         list.forEach(reviewDto -> log.info(reviewDto));
 
         model.addAttribute("reviewList", list);
+        model.addAttribute("store_name", store_name);
+        model.addAttribute("imgUrl", imgUrl);
 
-    }
-    /*complete*/
+        log.info(imgUrl);
 
 
-    @GetMapping("/listbefore")
-    public void list(String store, PageRequestDto pageRequestDto, Model model){
-
-        String member = "";
-
-        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
-
-        log.info(responseDto);
-
-        model.addAttribute("responseDto", responseDto);
+        log.info(":::::::::::::" + store_name);
+        log.info("${imgUrl }/${review.id }/${URLEncoder.encode(file, 'utf-8')}");
 
     }
 
-//    @GetMapping("/list")
-//    public void list(Store store, Long member_id, PageRequestDto pageRequestDto, Model model) {
-//
-////
-//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store, member_id, pageRequestDto);
-//
-//        log.info(responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//
-//
-//    }
-
-
-//    @GetMapping("getList")
-//    public PageResponseDto<ReviewDto> getList(Long store,
-//                                              PageRequestDto pageRequestDto) {
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.getList(store, pageRequestDto);
-//
-//
-//        log.info("==========================" + String.valueOf(responseDto));
-//
-//        return responseDto;
-//    }
-//
-//    @GetMapping("/list")
-//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
-//
-//        String member = "";
-//
-//        List<ReviewDto> list = reviewService.list(store);
-//
-//        model.addAttribute("ReviewList", list);
-//
-//        log.info("================================"+list);
-//
-//
-//    }
-
-
-//    pub
-
-
-//    @GetMapping("/reviewList")
-//    public void store(Long store) {
-//        Optional<Review> review = reviewService.reviewList(store);
-//        log.info("review");
-//
-//    }
-
-//    @GetMapping("/list")
-//    public void list(Long store, Model model){
-//
-//        List<ReviewDto> list = reviewService.reviewList(store);
-//
-//         log.info(list);
-//
-//        model.addAttribute("ReviewList", list);
-//
-//
-//    }
-
-//    @GetMapping("/list/{store}")
-//    public List<ReviewDto> getList(@PathVariable("store") Long store){
-//
-//        return null;
-//    }
-
-
-    //    @GetMapping("/list")
-//    public void list(PageRequestDto pageRequestDto, Model model) {
-//
-//        List<ReviewDto> list = ReviewService.list(pageRequestDto);
-//
-//
-//    }
-
-    //    @RequestMapping("/list")
-//    public void list(Model model) {
-//
-//        List<ReviewDto> list = ReviewService.list();
-//
-//
-//        model.addAttribute("ReviewList", list);
-//    }
-//
     @GetMapping("register")
-    public void register(@AuthenticationPrincipal PrincipalUser principalUser) {
-        log.info("객체가 있나요?"+ principalUser.providerUser().getNickName());
+    public void register(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        log.info("객체가 있나요?" + authMemberDTO);
     }
 
     //
     @PostMapping("register")
-    public String register(@Validated ReviewDto reviewDto, BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                           MultipartFile[] files, @AuthenticationPrincipal PrincipalUser principalUser, String store) throws NotFoundException {
-        log.info("store 키워드가 뭔가요?" + store);
+    public String register(@Validated ReviewDto reviewDto,
+                           BindingResult bindingResult,
+                           RedirectAttributes rttr,
+                           MultipartFile[] files,
+                           @AuthenticationPrincipal AuthMemberDTO authMemberDTO,
+                           String store_name) throws NotFoundException {
+
         log.info("POST register.......");
-        log.info("인증객체는?" + principalUser);
+        log.info("인증객체는?" + authMemberDTO);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors......." + bindingResult.getAllErrors());
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/review/register";
         }
 
         log.info(reviewDto);
 
-        Long id = reviewService.register(reviewDto, principalUser, store);
+        String id = reviewService.register(reviewDto, authMemberDTO, store_name, files);
 
         log.info("id" + id);
 
-        redirectAttributes.addFlashAttribute("result", id);
+        rttr.addFlashAttribute("result", id);
+        rttr.addFlashAttribute("store_name", store_name);
 
-        return "redirect:/review/list";
+        return "redirect:/review/list?store_name=" + store_name;
     }
 
     @GetMapping({"remove", "modify"})
@@ -237,26 +126,63 @@ public class ReviewController {
 
         ReviewDto reviewDto = reviewService.get(id);
 
-        log.info(reviewDto);
+        log.info("===================" + reviewDto);
 
-        model.addAttribute("dto", reviewDto);
+        model.addAttribute("reviewDto", reviewDto);
+        model.addAttribute("imgUrl", imgUrl);
 
     }
 
-    //    @GetMapping({"modify", "delete"})
-//    public void findReviewById(long id, Model model ) {
-//
-//        ReviewDto reviewDto = ReviewService.findById(id);
-//
-////        model.addAttribute("review",review);
-//    }
-//
+
     @PostMapping("modify")
     public String updateReview(
-            PageRequestDto pageRequestDto,
+//            PageRequestDto pageRequestDto,
             @Validated ReviewDto reviewDto,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes,
+            RedirectAttributes rttr,
+            MultipartFile[] files,
+            @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
+
+
+        if (bindingResult.hasErrors()) {
+            log.info("has errors.......");
+
+//            String link = pageRequestDto.getLink();
+
+            rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+            rttr.addAttribute("id", reviewDto.getId());
+
+            return "redirect:/list/modify?id=" + reviewDto.getId();
+        }
+
+        if (removeFiles != null) {
+            for (String name : removeFiles) {
+                System.out.println(name);
+            }
+        }
+
+        log.info("===================" + reviewDto);
+
+        String member_nickname = reviewService.modify(reviewDto, files, removeFiles);
+
+        rttr.addFlashAttribute("result", "modified");
+
+
+//        return "redirect:/review/read";
+
+//        reviewService.update(review, files, removeFiles);
+
+
+        return "redirect:/review/myList?member_nickname=" + member_nickname;
+    }
+
+    @PostMapping("modifybefore")
+    public String updateReviewbefore(
+            PageRequestDto pageRequestDto,
+            ReviewDto reviewDto,
+            BindingResult bindingResult,
+            RedirectAttributes rttr,
             MultipartFile[] files,
             @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
 
@@ -266,18 +192,18 @@ public class ReviewController {
 
             String link = pageRequestDto.getLink();
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
 
-            redirectAttributes.addAttribute("id", reviewDto.getId());
+            rttr.addAttribute("id", reviewDto.getId());
 
             return "redirect:/list/modify?" + link;
         }
 
-        reviewService.modify(reviewDto);
+        reviewService.modify(reviewDto, files, removeFiles);
 
-        redirectAttributes.addFlashAttribute("result", "modified");
+        rttr.addFlashAttribute("result", "modified");
 
-        redirectAttributes.addAttribute("id", reviewDto.getId());
+        rttr.addAttribute("id", reviewDto.getId());
 
 //        return "redirect:/review/read";
 
@@ -286,25 +212,48 @@ public class ReviewController {
         return "redirect:/review/list";
     }
 
-    //
+
     @PostMapping("remove")
-    public String deleteReview(long id, RedirectAttributes redirectAttributes) {
+    public String deleteReview(ReviewDto reviewDto, RedirectAttributes rttr) {
+
+        Long id = reviewDto.getId();
+
+        log.info("aaaaaaaaaaaaa" + reviewDto);
 
         log.info("remove post.. " + id);
 
-        reviewService.remove(id);
+        String member_nickname = reviewService.remove(id);
 
-        redirectAttributes.addFlashAttribute("result", "removed");
+        log.info("==============" + id);
 
-        return "redirect:/review/list";
+//        //게시물이 삭제되었다면 첨부 파일 삭제
+//        log.info(reviewDto.getFileName());
+//        List<String> fileNames = reviewDto.getFileName();
+//        if(fileNames != null && fileNames.size() > 0){
+//            removeFiles(fileNames, id);
+//        }
+
+        rttr.addFlashAttribute("result", "removed");
+
+        return "redirect:/review/myList?member_nickname=" + member_nickname;
+
     }
 
 
-    @GetMapping("test")
-    public ReviewDto test(){
-        ReviewDto dto = reviewService.test();
-        return dto;
-    }
+
+
+//    @DeleteMapping("removeFile/{id}&{fileName}")
+//    public String removeFileByName(@PathVariable ReviewDto reviewDto,@PathVariable String fileName) {
+//
+//        Long id = reviewDto.getId();
+//
+//        reviewService.removeFileByName(id, fileName);
+//
+//        return "redirect:/review/modify?id=" + id;
+//
+//    }
+
+
 }
 
 

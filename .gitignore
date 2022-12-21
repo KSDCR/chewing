@@ -40,3 +40,4 @@ out/
 develop.log
 apptest.log
 .gz
+*.gz

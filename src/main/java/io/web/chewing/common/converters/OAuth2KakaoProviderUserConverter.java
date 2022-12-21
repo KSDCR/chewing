@@ -2,8 +2,8 @@ package io.web.chewing.common.converters;
 
 import io.web.chewing.common.enums.OAuth2Config;
 import io.web.chewing.model.ProviderUser;
-import io.web.chewing.model.social.KakaoUser;
 import io.web.chewing.common.util.OAuth2Utils;
+import io.web.chewing.model.social.KakaoUser;
 
 // 해당 컨버터를 DelegatingProviderUserConverter에서 List로 모아서 사용하지 않고 있었음
 public class OAuth2KakaoProviderUserConverter implements ProviderUserConverter<ProviderUserRequest, ProviderUser> {

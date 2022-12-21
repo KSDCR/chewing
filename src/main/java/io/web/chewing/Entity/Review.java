@@ -27,7 +27,7 @@ public class Review implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "store_name", referencedColumnName = "name")
-    private Store store;
+    private Store store_name;
 
     @NonNull
     private double rate;
@@ -41,11 +41,11 @@ public class Review implements Serializable {
 
     @CreatedDate
     @Column(name = "creat_time", updatable = false)
-    private LocalDateTime created_at;
+    private String created_at;
 
     @LastModifiedDate
     @Column(name = "modify_time")
-    private LocalDateTime modified_at;
+    private String modified_at;
 
     public void change(String content) {
         this.content = content;

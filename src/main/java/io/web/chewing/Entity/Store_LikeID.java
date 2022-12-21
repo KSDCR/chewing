@@ -13,11 +13,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Store_LikeID implements Serializable {
+
     @OneToOne
     @JoinColumn(name = "store_id")
     private Store store;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
     private Member member;
 }

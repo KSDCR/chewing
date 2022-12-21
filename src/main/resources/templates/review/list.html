@@ -2,42 +2,222 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/star.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+
+        .header{
+            margin-bottom: 60px
+        }
+        .main{
+            margin-left:13%;
+            margin-right:13%;"
+        }
+
+        .star{
+            right : 15%;
+        }
+
+        .img{
+            min-height:300px;
+            max-height:350px;
+        }
+
+        .content{
+            clear:both;
+            background-color: #e5e5e5;
+            width: 99%;
+            text-align: center;
+            height: 480px;
+            line-height: 480px;
+            font-size: 24px;
+        }
+
+        @media screen and (max-width: 780px ){
+            .header{
+                margin-bottom: 10px
+            }
+
+            .main{
+                margin-left:3%;
+                margin-right:3%;"
+            }
+
+            .name{
+                font-size: 17.4px;
+                left: 1%;
+
+            }
+
+            .time{
+                font-size: 14px;
+            }
+
+            .star-rate{
+                font-size: 17.4px;
+            }
+
+            .btn{
+                font-size: 17.4px;
+                height: 43px;
+
+            }
+
+            .content{
+                clear:both;
+                background-color: #e5e5e5;
+                width: 99%;
+                text-align: center;
+                height: 190px;
+                line-height: 190px;
+                font-size: 18px;
+            }
+
+            .star{
+                right : 3%;
+            }
+
+            .img{
+                min-height: 100px; max-height:150px
+            }
+
+
+
+        }
+
+
+
+
+    </style>
 </head>
-<body>
-<table class="table">
-    <thead>
-    <tr>
-<!--        <th scope="col">id</th>-->
-        <th scope="col">content</th>
-        <th scope="col">nickname</th>
-        <th scope="col">store</th>
+<body style="position: relative; height: 96%; margin: 1%;">
+    <header class="header" style=" background-color: #FF8900; height: 100px;">
+        <h1 class="profile_icon">
+        </h1>
+        <h1 class="title" style=" color: white; text-align: center;  line-height:120px; font-size: 50px">
+            chewing
+        </h1>
+        <div class="main_menu_button">
+        </div>
 
-    </tr>
-    </thead>
+    </header>
 
-    <tbody>
-        <tr th:each="list:${reviewList}"  >
-            <!--<th scope="row">[[${list.id}]]</th>-->
-            <td>[[${list.content}]]</td>
-            <td>[[${list.member_nickname}]]</td>
-            <td>[[${list.store}]]</td>
 
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group" role="group">
-                    <button th:onclick="|location.href='@{/review/register(store=${list.store})}'|"
-                            id="review" type="button" class="btn btn" style="background-color: #FF8900">리뷰등록</button>
-                </div>
+
+    <div th:each="list:${reviewList}" class="main">
+
+
+        <h1 style="clear: both; font-size: 250%; height: 60px">
+            <span class="name" style="line-height: 30px;"><i class="fa-sharp fa-solid fa-user"></i>  [[${list.member_nickname}]]</span>
+            <span class="star" style="position:absolute; vertical-align: bottom;">
+                <span class="star-rating">
+                    <span th:if="${list.rate}==0.5" style="width:10%"></span>
+                    <span th:if="${list.rate}==1.0" style="width:20%"></span>
+                    <span th:if="${list.rate}==1.5" style="width:30%"></span>
+                    <span th:if="${list.rate}==2.0" style="width:40%"></span>
+                    <span th:if="${list.rate}==2.5" style="width:50%"></span>
+                    <span th:if="${list.rate}==3.0" style="width:60%"></span>
+                    <span th:if="${list.rate}==3.5" style="width:70%"></span>
+                    <span th:if="${list.rate}==4.0" style="width:80%"></span>
+                    <span th:if="${list.rate}==4.5" style="width:90%"></span>
+                    <span th:if="${list.rate}==5.0" style="width:100%"></span>
+                </span>
+                <span style="font-size: 32px;">
+                    <span style="color: grey; font-weight: lighter" class="star-rate">[[${list.rate}]]</span>
+                </span>
+
+            </span>
+        </h1>
+
+
+
+        <div style="width: 90%; overflow-x: auto; white-space: nowrap; text-align: center; margin-left: 4%"   >
+            <span id="imgs" th:each="file:${list.fileName }" style="width: 120%;">
+                <img id="img" style="display: inline-block; min-width: 35%; max-width: 70%; " class="img img-fluid img-thumbnail" th:src="|${imgUrl}/${list.id}/${file}|" alt="">
+            </span>
+        </div>
+        <div class="content">[[${list.content}]]</div>
+        <div style="font-size: 24px;">
+            <div class="time" style="clear:both; width:100% ; border-radius: 30px; color: grey">
+                [[${list.creat_time}]]
             </div>
-        </tr>
-    </tbody>
+        </div>
+
+        <hr style="clear: both;">
+
+
+    </div>
+
+    <div style="margin-left: 13.2%; margin-right: 5%">
+        <button th:onclick="|location.href='@{/review/register(store_name=${store_name})}'|"
+                id="review" type="button" class="btn btn-lg" style="background-color: #FF8900; letter-spacing: 1.5px; width: 90%">리뷰등록</button>
+    </div>
 
 
 
-</table>
+
+
+
+
+
+    <div class="row">
+        <div class="col">
+            <nav class="mt-3 page" aria-label="Page navigation example">
+                <ul id= "pagination" >
+                    <div th:if="${pageInfo.currentPageNumber != 1 }">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=1)}" aria-label="first">
+                                <span aria-hidden="true"><i class="fa-solid fa-angles-left"></i></span>
+                            </a>
+                        </li>
+                    </div>
+                    <div th:if="${pageInfo.leftPageNumber != 1 }">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}-1)}" aria-label="left">
+                                <span aria-hidden="true"><i class="fa-solid fa-angle-left"></i></span>
+                            </a>
+                        </li>
+                    </div>
+                    <div th:each="num:${#numbers.sequence(pageInfo.leftPageNumber, pageInfo.rightPageNumber)}">
+                        <li th:class="${pageInfo.currentPageNumber eq num} ? 'page-item active' : ''">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${num})}" th:text="${num}"></a>
+                        </li>
+                    </div>
+                    <div th:if="${pageInfo.rightPageNumber} != ${pageInfo.lastPageNumber}/10*10 and ${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}+1)}" aria-label="last">
+                                <span aria-hidden="true"><i class="fa-solid fa-angle-right"></i></span>
+                            </a>
+                        </li>
+                    </div>
+                    <div th:if="${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.lastPageNumber})}" aria-label="last">
+                                <span aria-hidden="true"><i class="fa-solid fa-angles-right"></i></span>
+                            </a>
+                        </li>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+
+
 
 
 </body>
+
+<script>
+
+    if(matchMedia("screen and (max-width: 700px)").matches){
+        document.querySelector("#pagination").setAttribute("class", "pagination pagination-sm justify-content-center ");
+    }else{
+        document.querySelector("#pagination").setAttribute("class", "pagination pagination-lg justify-content-center ");
+    }
+</script>
+
 </html>
