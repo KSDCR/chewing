@@ -26,6 +26,8 @@ public class ReviewDto {
 
     private List<String> fileName;
 
+    private int countFile;
+
 
     public Review toEntity(Store store){
 

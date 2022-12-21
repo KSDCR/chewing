@@ -7,8 +7,6 @@ import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageInfo;
-import io.web.chewing.domain.PageRequestDto;
-import io.web.chewing.domain.PageResponseDto;
 import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.mapper.review.ReviewMapper;
 import io.web.chewing.repository.ReviewRepository;
@@ -18,8 +16,6 @@ import org.apache.ibatis.javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,39 +46,6 @@ public class ReviewService {
 
     @Value("${aws.s3.bucket}")
     private  String bucketName;
-
-
-    public List<ReviewDto> myReviewList(String member_nickname) {
-
-        return reviewRepository.ReviewByMember(member_nickname);
-    }
-
-
-    public PageResponseDto<ReviewDto> listbefore(Long store/*String member,*/ ,PageRequestDto pageRequestDto) {
-
-        Optional<Store> store1 = storeRepository.findById(store);
-
-        Store store2 = Store.builder()
-                .id(store1.get().getId()).build();
-
-
-        Pageable pageable = pageRequestDto.getPageable("store");
-
-        Page<Review> result = reviewRepository.findReviewByStore(store2, pageable);
-
-//        Page<Review> result = reviewRepository.findReviewByStore(store);
-
-        List<ReviewDto> dtoList = result.getContent().stream()
-                .map(review -> modelMapper.map(review,ReviewDto.class)).collect(Collectors.toList());
-
-
-        return PageResponseDto.<ReviewDto>withAll()
-                .pageRequestDto(pageRequestDto)
-                .dtoList(dtoList)
-                .total((int)result.getTotalElements())
-                .build();
-
-    }
 
 
     public String register(ReviewDto reviewDto,
@@ -134,15 +96,6 @@ public class ReviewService {
     public Member memberBuild(AuthMemberDTO authMemberDTO) {
         return modelMapper.map(authMemberDTO, Member.class);
     }
-
-
-//            ObjectMetadata objMeta = new ObjectMetadata();
-//            objMeta.setContentLength(file.getInputStream().available());
-//
-//            s3Client.putObject(bucketName, key, file.getInputStream(), objMeta);
-
-            /*return s3Client.getUrl(bucketName, key).toString();*/
-
 
 
 
@@ -210,15 +163,6 @@ public class ReviewService {
     }
 
 
-
-    public void modifybefore(ReviewDto reviewDto) {
-        log.info(String.valueOf(reviewDto.getId()));
-
-//        reviewRepository.save(review);
-
-        reviewMapper.update(reviewDto);
-    }
-
     @Transactional
     public String remove(Long id) {
         ReviewDto reviewDto = reviewMapper.select(id);
@@ -240,81 +184,15 @@ public class ReviewService {
         reviewRepository.deleteById(id);
         return reviewDto.getMember_nickname();
     }
-//    public int beforeremove(Long id) {
-//        ReviewDto review = reviewMapper.select(id);
-//        List<String> fileNames = review.getFileName();
-//
-//        if (fileNames != null) {
-//            for (String fileName : fileNames) {
-//                deleteFile(id, fileName);
-//            }
-//        }
-//
-//
-//        reviewMapper.deleteFileByBoardId(id);
-//
-//
-//        return reviewMapper.delete(id);
-//
-////        reviewRepository.deleteById(id);
-//
-//    }
 
     private void deleteFile(Long id, String fileName) {
         String key = "chewing/review/" + id + "/" + fileName;
 
-//        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName,key);
-///*        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-//                .bucket(bucketName)
-//                .key(key)
-//                .build();
-//        .deleteObject(deleteObjectRequest);*/
-//        s3Client.deleteObject(deleteObjectRequest);
         s3Client.deleteObject(bucketName, key);
         log.info("==========="+ key);
 
     }
-//
-//    public Map<String, Object> updateLike(String boardId, String memberId) {
-//
-//        Map<String, Object> map = new HashMap<>();
-//
-//        int cnt = boardMapper.getLikeByBoardIdAndMemberId(boardId, memberId);
-//
-//        if(cnt == 1) {
-//            boardMapper.deleteLike(boardId, memberId);
-//            map.put("current", "not liked");
-//        }else {
-//            boardMapper.insertLike(boardId, memberId);
-//            map.put("current", "liked");
-//        }
-//
-//        int countAll = boardMapper.countLikeByBoardId(boardId);
-//        map.put("count", countAll);
-//
-//        return map;
-//    }
-    public PageResponseDto<ReviewDto> myList(Long member, PageRequestDto pageRequestDto) {
 
-        Pageable pageable = pageRequestDto.getPageable("id");
-
-        Page<Review> result = reviewRepository.findReviewByMember(member, pageable);
-
-        List<ReviewDto> dtoList = result.getContent().stream()
-                .map(review -> modelMapper.map(review, ReviewDto.class)).collect(Collectors.toList());
-
-
-        return PageResponseDto.<ReviewDto>withAll()
-                .pageRequestDto(pageRequestDto)
-                .dtoList(dtoList)
-                .total((int) result.getTotalElements())
-                .build();
-    }
-
-
-    public List<ReviewDto> reviewList(String store_name) {
-        return reviewRepository.reviewList(store_name);
-    }
 
     public ReviewDto get(Long id) {
         ReviewDto reviewDto= reviewMapper.findReviewById(id);
@@ -322,20 +200,9 @@ public class ReviewService {
 
         return reviewDto;
     }
-    public ReviewDto beforeget(Long id) {
-        Optional<Review> result = reviewRepository.findById(id);
-
-        Review review = result.orElseThrow();
-
-        ReviewDto reviewDto = modelMapper.map(review, ReviewDto.class);
-
-        return reviewDto;
-    }
-
-
     public List<ReviewDto> listReviewByStore(String store_name, int page, PageInfo pageInfo) {
 
-        log.info("bbbbbbbbbbb"+page);
+        log.info("bbbbbbbbbbbPage"+page);
 
         int records = 10;
         int offset = (page - 1) * records;
@@ -345,22 +212,27 @@ public class ReviewService {
         int lastPage = (countAll - 1) / records + 1;
 
         log.info("==========="+countAll);
-        log.info("==========="+lastPage);
+        log.info("===========lastPage"+lastPage);
 
-        double leftPageNumber = ((double) page - 1) / 10 * 10 + 1;
+        int leftPageNumber = (page - 1) / 10 * 10 + 1;
 
-        log.info("cccccccccccccc"+leftPageNumber);
+        log.info("ccccccccccccccLeftPageNum"+leftPageNumber);
 
-        double rightPageNumber = leftPageNumber + 9;
+        int rightPageNumber = leftPageNumber + 9;
+
+        log.info("==========="+rightPageNumber);
 
 
         int currentPageNumber = page;
 
-        log.info("cccccccccccccc"+currentPageNumber);
+        log.info("ccccccccccccccCurrentPageNum"+currentPageNumber);
+
         rightPageNumber = Math.min(rightPageNumber, lastPage);
 
-        log.info("cccccccccccccc"+rightPageNumber);
+        log.info("ccccccccccccccRightPageNum"+rightPageNumber);
         boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
+
+        log.info("cccccccccccccchasNextPageNum"+hasNextPageNumber);
 
         pageInfo.setHasNextPageNumber(hasNextPageNumber);
         pageInfo.setCurrentPageNumber(currentPageNumber);
@@ -384,7 +256,10 @@ public class ReviewService {
         int leftPageNumber = (page - 1) / 10 * 10 + 1;
         int rightPageNumber = leftPageNumber + 9;
         int currentPageNumber = page;
+
         rightPageNumber = Math.min(rightPageNumber, lastPage);
+
+        log.info("==========="+rightPageNumber);
         boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
 
         pageInfo.setHasNextPageNumber(hasNextPageNumber);
@@ -396,46 +271,21 @@ public class ReviewService {
         return reviewMapper.findReviewByMember(member_nickname, offset, records);
     }
 
-
-//    public List<ReviewDto> getListOfStore(Long store, ReviewDto reviewDto, AuthMemberDTO authMemberDTO) throws NotFoundException {
-//
-//        Review review = reviewDto.toEntity();
-//
-//        Member loadMember = Member.builder()
-//            .id(authMemberDTO.getId())
-//            .nickname(authMemberDTO.getNickname())
-//            .password(authMemberDTO.getPassword())
-//            .delete_yn('0')
-//            .email(authMemberDTO.getEmail())
-//            .provider(authMemberDTO.getProvider())
-//            .build();
-//        review.assignUser(loadMember);
-//
-//        return reviewRepository.listOfBoard(store, review.getMember_id());
-//
-//
-//    }
-//
-//        log.info("dd" + String.valueOf(reviewDto));
-//    Review review = reviewDto.toEntity();
-//    Member loadMember = Member.builder()
-//            .id(authMemberDTO.getId())
-//            .nickname(authMemberDTO.getNickname())
-//            .password(authMemberDTO.getPassword())
-//            .delete_yn('0')
-//            .email(authMemberDTO.getEmail())
-//            .provider(authMemberDTO.getProvider())
-//            .build();
-//        review.assignUser(loadMember);
-//        log.info("===========================ls");
-//    Long id = reviewRepository.save(review).getId();
-//
-//        return id;
         public File multipartToFile(MultipartFile mfile) throws IllegalStateException, IOException{
             File file = new File(mfile.getOriginalFilename());
             mfile.transferTo(file);
             return file;
         }
 
+
+//    public void removeFileByName(Long id, String fileName) {
+//
+//        String key = "chewing/review/" + id + "/" + fileName;
+//
+//        s3Client.deleteObject(bucketName, key);
+//
+//        reviewMapper.deleteFileByReviewIdAndFileName(id, fileName);
+//    }
+//
 
 }
