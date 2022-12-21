@@ -5,6 +5,7 @@ import io.web.chewing.service.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @Controller
 @Slf4j
-@RequestMapping("/")
 public class MainController {
 
     @Autowired
@@ -23,12 +24,14 @@ public class MainController {
     @Value("${aws.s3.file.url.prefix}")
     private String imgUrl;
 
-    @GetMapping("/main")
-    public void main(Model model){
+    @GetMapping(value = {"/","main"})
+    public String main(Model model) {
         /*랜덤 매장 보여주기*/
         List<StoreDto> storeRandom = storeService.getRandomStore();
-        log.info("storeRandom ====================> {}",storeRandom);
+        log.info("storeRandom ====================> {}", storeRandom);
         model.addAttribute("storeRandom", storeRandom);
         model.addAttribute("imgUrl", imgUrl + "/store");
+
+        return "main";
     }
 }

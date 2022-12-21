@@ -1,16 +1,15 @@
 package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Store;
-import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
+import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.service.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@PreAuthorize("hasRole('USER')")
 @Slf4j
 @RequestMapping("/store")
 public class StoreController {
@@ -40,10 +40,10 @@ public class StoreController {
     /*매장 정보 조회*/
     @GetMapping("/get")
     public void get(Long id, Model model,
-                    @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+                    @AuthenticationPrincipal PrincipalUser principalUser) {
         String nickname = "";
-        if (authMemberDTO != null) { //로그인 된 경우
-            nickname = authMemberDTO.getNickname();
+        if (principalUser.providerUser().getNickName() != null) { //로그인 된 경우
+            nickname = principalUser.providerUser().getNickName();
             model.addAttribute("nickname", nickname);
             log.info("로그인 nickname ===========> " + nickname);
         }
@@ -62,8 +62,8 @@ public class StoreController {
     public void list(Model model, Pageable pageable,
                      @RequestParam(required = false, name = "keyword") String keyword,
                      @RequestParam(required = false, name = "category") String category,
-                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        log.info("LIST 로그인 객체 =============> {}", String.valueOf(authMemberDTO));
+                     @AuthenticationPrincipal PrincipalUser principalUser) {
+        log.info("LIST 로그인 객체 =============> {}", String.valueOf(principalUser));
         log.info("keyword =====> {} / category ======> {}", keyword, category);
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
 
@@ -103,8 +103,8 @@ public class StoreController {
             StoreDto storeDto,
             MultipartFile image,
             RedirectAttributes rttr,
-            @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        log.info(String.valueOf(authMemberDTO));
+            @AuthenticationPrincipal PrincipalUser principalUser) {
+        log.info(String.valueOf(principalUser));
         long id = storeService.register(storeDto, image);
         log.info("register id ===========> {}", id);
         if (id > 0) {
@@ -116,8 +116,8 @@ public class StoreController {
 
     /*매장 정보 수정 (admin)*/
     @GetMapping("/modify")
-    public void modify(Long id, Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        StoreDto storeDto = storeService.get(id, authMemberDTO.getNickname());
+    public void modify(Long id, Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+        StoreDto storeDto = storeService.get(id, principalUser.providerUser().getNickName());
         log.info("==== modify ====> " + storeDto);
         model.addAttribute("store", storeDto);
         model.addAttribute("imgUrl", imgUrl + "/store");
@@ -164,15 +164,15 @@ public class StoreController {
     // @PreAuthorize("isAuthenticated()")
     public Map<String,Object> like(
             @RequestBody Map<String, String> req,
-            @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        Map<String, Object> result = storeService.updateLike(req.get("storeName"), authMemberDTO.getNickname());
+            @AuthenticationPrincipal PrincipalUser principalUser) {
+        Map<String, Object> result = storeService.updateLike(req.get("storeName"), principalUser.providerUser().getNickName());
         return result;
     }
 
     /*찜한 매장 리스트*/
     @GetMapping("/myLike")
-    public void myLike(Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        List<Store> stores = storeService.myLikeList(authMemberDTO.getNickname());
+    public void myLike(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+        List<Store> stores = storeService.myLikeList(principalUser.providerUser().getNickName());
         int likeStoreCnt = stores.size();
 
         model.addAttribute("stores", stores);

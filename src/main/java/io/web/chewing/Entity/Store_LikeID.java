@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class Store_LikeID implements Serializable {
 
     @OneToOne
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_name", referencedColumnName = "name")
     private Store store;
 
     @ManyToOne

@@ -19,6 +19,8 @@ public class BookingDTO {
 
     private String store_name;
 
+    private Long store_id;
+
     private String member_nickname;
 
     private String real_name;
@@ -38,6 +40,7 @@ public class BookingDTO {
                 .time(time)
                 .confirm(false)
                 .store(store)
+                .store_id(store.getId())
                 .member(member)
                 .build();
     }

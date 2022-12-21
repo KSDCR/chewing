@@ -6,7 +6,6 @@ import io.web.chewing.Entity.Store;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.domain.StoreDto;
 import io.web.chewing.mapper.StoreMapper;
-import io.web.chewing.repository.StoreLikeRepository;
 import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ import java.util.*;
 public class StoreService {
     private final ModelMapper modelMapper;
     private final StoreRepository storeRepository;
-    private final StoreLikeRepository storeLikeRepository;
     private final AmazonS3Client s3Client;
 
     @Value("${aws.s3.bucket}")
@@ -43,6 +41,7 @@ public class StoreService {
 //            return modelMapper.map(store, StoreDto.class);
 //        } else {
             StoreDto store = storeMapper.getStoreById(id, nickname);
+            log.info("이게 나오나?"+String.valueOf(store));
             StoreDto storeReview = storeMapper.getStoreReviewInfo(store.getName());
             if (storeReview != null) {
                 return StoreDto.builder()

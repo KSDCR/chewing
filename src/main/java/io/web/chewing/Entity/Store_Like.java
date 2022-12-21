@@ -6,7 +6,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-
+@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

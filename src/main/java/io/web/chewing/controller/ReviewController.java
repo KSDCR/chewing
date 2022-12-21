@@ -1,37 +1,36 @@
 package io.web.chewing.controller;
 
-import io.web.chewing.Entity.Store;
-import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageInfo;
 import io.web.chewing.domain.PageRequestDto;
 import io.web.chewing.domain.ReviewDto;
+import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.HashMap;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("review")
 @Log4j2
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('USER')")
 public class ReviewController {
     @Value("${aws.s3.file.url.prefix}")
     String imgUrl;
@@ -43,18 +42,18 @@ public class ReviewController {
     public String myList(@RequestParam(name = "page", defaultValue = "1") int page,
                          PageInfo pageInfo,
                          Model model,
-                         @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+                         @AuthenticationPrincipal PrincipalUser principalUser) {
         // 나중에 롤 처리 일괄로 할꺼라서 일단 임시처리
-        if (authMemberDTO == null) {
+        if (principalUser.providerUser().getNickName() == null) {
             return "redirect:/login";
         }
 
-        List<ReviewDto> list = reviewService.listReviewByMember(authMemberDTO.getNickname(), page, pageInfo);
+        List<ReviewDto> list = reviewService.listReviewByMember(principalUser.providerUser().getNickName(), page, pageInfo);
         list.forEach(reviewDto -> log.info(reviewDto));
 
-        String member_nickname = authMemberDTO.getNickname();
+        String member_nickname = principalUser.providerUser().getNickName();
         model.addAttribute("myReviewList", list);
-        model.addAttribute("member_nickname", authMemberDTO.getNickname());
+        model.addAttribute("member_nickname", member_nickname);
         model.addAttribute("imgUrl", imgUrl);
 
         log.info(list);
@@ -67,9 +66,9 @@ public class ReviewController {
                      PageInfo pageInfo,
                      String store_name,
                      Model model,
-                     @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+                     @AuthenticationPrincipal PrincipalUser principalUser) {
 
-        log.info("인증객체는?" + authMemberDTO);
+        log.info("인증객체는?" + principalUser);
 
         List<ReviewDto> list = reviewService.listReviewByStore(store_name, page, pageInfo);
         list.forEach(reviewDto -> log.info(reviewDto));
@@ -87,8 +86,8 @@ public class ReviewController {
     }
 
     @GetMapping("register")
-    public void register(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        log.info("객체가 있나요?" + authMemberDTO);
+    public void register(@AuthenticationPrincipal PrincipalUser principalUser) {
+        log.info("객체가 있나요?" + principalUser);
     }
 
     //
@@ -97,11 +96,11 @@ public class ReviewController {
                            BindingResult bindingResult,
                            RedirectAttributes rttr,
                            MultipartFile[] files,
-                           @AuthenticationPrincipal AuthMemberDTO authMemberDTO,
+                           @AuthenticationPrincipal PrincipalUser principalUser,
                            String store_name) throws NotFoundException {
 
         log.info("POST register.......");
-        log.info("인증객체는?" + authMemberDTO);
+        log.info("인증객체는?" + principalUser);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors......." + bindingResult.getAllErrors());
@@ -111,7 +110,7 @@ public class ReviewController {
 
         log.info(reviewDto);
 
-        String id = reviewService.register(reviewDto, authMemberDTO, store_name, files);
+        String id = reviewService.register(reviewDto, principalUser, store_name, files);
 
         log.info("id" + id);
 

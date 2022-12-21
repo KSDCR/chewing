@@ -50,9 +50,10 @@ public class ReviewService {
 
 
     public String register(ReviewDto reviewDto,
-                           @AuthenticationPrincipal AuthMemberDTO authMemberDTO,
+                           @AuthenticationPrincipal PrincipalUser principalUser,
                            String store_name,
                            MultipartFile[] files) throws NotFoundException {
+
 
         Optional<Store> getStore = storeRepository.findByName(store_name);
         Store findStore = getStore.orElseThrow();
@@ -60,7 +61,7 @@ public class ReviewService {
         log.info(findStore.getName());
 
         Review review = reviewDto.toEntity(findStore);
-        Member loadMember = getBuild(authMemberDTO);
+        Member loadMember = getBuild(principalUser);
         review.assignUser(loadMember);
 
         log.info("===========================ls");
@@ -80,18 +81,6 @@ public class ReviewService {
         }
 
         return storeSave;
-    }
-
-
-    private static Member getBuild(AuthMemberDTO authMemberDTO) {
-        return Member.builder()
-                .id(authMemberDTO.getId())
-                .nickname(authMemberDTO.getNickname())
-                .password(authMemberDTO.getPassword())
-                .delete_yn('0')
-                .email(authMemberDTO.getEmail())
-                .provider(authMemberDTO.getProvider())
-                .build();
     }
 
     private static Member getBuild(PrincipalUser principalUser) {

@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class IndexController {
 
-    @GetMapping("/")
+    @GetMapping("/dddd")
     public String index(Model model, Authentication authentication, @AuthenticationPrincipal PrincipalUser principalUser) {
 
         if (authentication != null) {
