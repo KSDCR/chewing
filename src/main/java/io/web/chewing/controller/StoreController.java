@@ -39,8 +39,15 @@ public class StoreController {
 
     /*매장 정보 조회*/
     @GetMapping("/get")
-    public void get(Long id, Model model,  @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
-        StoreDto storeDto = storeService.get(id, authMemberDTO.getNickname());
+    public void get(Long id, Model model,
+                    @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        String nickname = "";
+        if (authMemberDTO != null) { //로그인 된 경우
+            nickname = authMemberDTO.getNickname();
+            model.addAttribute("nickname", nickname);
+            log.info("로그인 nickname ===========> " + nickname);
+        }
+        StoreDto storeDto = storeService.get(id, nickname);
         log.info("===========> " + storeDto);
         model.addAttribute("imgUrl", imgUrl);
         model.addAttribute("store", storeDto);

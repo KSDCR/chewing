@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main/navbar.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +12,7 @@
     <link rel="stylesheet" href="/static/css/common.css">-->
 </head>
 <body>
-
-<div>
-    <th:block th:replace="fragments/header :: headerFragment"></th:block>
-</div>
+<div layout:fragment="content">
 <div class="container-md">
     <div class="row">
         <div class="col">
@@ -271,5 +270,6 @@
     });
 
 </script>
+</div>
 </body>
 </html>

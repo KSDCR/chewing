@@ -1,34 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main/navbar.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .myLikeList {
+            height: 100px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+        }
+        #img, #noImg {
+            width: 85px;
+            height: 80px;
+            /*align-content: center;*/
+            float: left;
+            margin-right: 20px;
+            border-radius: 30px;
+        }
+    </style>
 </head>
-<style>
-    .myLikeList {
-        height: 100px;
-        background-color: #f2f2f2;
-        border-radius: 10px;
-        padding: 10px;
-        margin: 10px;
-    }
-    #img, #noImg {
-        width: 85px;
-        height: 80px;
-        /*align-content: center;*/
-        float: left;
-        margin-right: 20px;
-        border-radius: 30px;
-    }
-
-</style>
 <body>
-<div>
-    <th:block th:replace="fragments/header :: headerFragment"></th:block>
-</div>
+<div layout:fragment="content">
 <div style="padding: 10px;">
     <h2>
         <div style="float: left; margin-right: 10px;">
@@ -37,7 +36,6 @@
             </button>
         </div>
         내가 찜한 매장
-        <!--                <p style="margin-left: 10px"></p>-->
     </h2>
     <a style="float: right">총 [[${likeStoreCnt}]]개</a>
 </div>
@@ -54,8 +52,9 @@
             <a th:href="@{/store/get(id=${store.id})}">[[${store.name}]]</a>
         </h4>
         <div>[[${store.address}]]</div>
-        <div>[[${store.detail}]]</div>
+        <!--<div>[[${store.detail}]]</div>-->
     </div>
+</div>
 </div>
 </body>
 </html>

@@ -37,29 +37,31 @@ public class StoreService {
     private final StoreMapper storeMapper;
 
     public StoreDto get(Long id, String nickname) {
-//        Optional<Store> result = storeRepository.findById(id);
-//        Store store = result.orElseThrow();
-        StoreDto store = storeMapper.getStoreById(id, nickname);
-        StoreDto storeReview = storeMapper.getStoreReviewInfo(store.getName());
-
-        if (storeReview != null) {
-            return StoreDto.builder()
-                    .id(store.getId())
-                    .name(store.getName())
-                    .address(store.getAddress())
-                    .phone(store.getPhone())
-                    .detail(store.getDetail())
-                    .open_time(store.getOpen_time())
-                    .close_time(store.getClose_time())
-                    .file(store.getFile())
-                    .rate(storeReview.getRate())
-                    .reviewCnt(storeReview.getReviewCnt())
-                    .countLike(store.getCountLike())
-                    .liked(store.isLiked())
-                    .build();
-        }
-
-        return modelMapper.map(store, StoreDto.class);
+//        if (nickname == null || nickname == "") {
+//            Optional<Store> result = storeRepository.findById(id);
+//            Store store = result.orElseThrow();
+//            return modelMapper.map(store, StoreDto.class);
+//        } else {
+            StoreDto store = storeMapper.getStoreById(id, nickname);
+            StoreDto storeReview = storeMapper.getStoreReviewInfo(store.getName());
+            if (storeReview != null) {
+                return StoreDto.builder()
+                        .id(store.getId())
+                        .name(store.getName())
+                        .address(store.getAddress())
+                        .phone(store.getPhone())
+                        .detail(store.getDetail())
+                        .open_time(store.getOpen_time())
+                        .close_time(store.getClose_time())
+                        .file(store.getFile())
+                        .rate(storeReview.getRate())
+                        .reviewCnt(storeReview.getReviewCnt())
+                        .countLike(store.getCountLike())
+                        .liked(store.isLiked())
+                        .build();
+            }
+            return modelMapper.map(store, StoreDto.class);
+//        }
     }
 
     public Page<StoreDto> list(int page, int size) {
@@ -244,7 +246,11 @@ public class StoreService {
     }
 
     public List<String> getRank() {
-        List<String> storeRankList = storeMapper.getTop10Store();
-        return storeRankList;
+        return storeMapper.getTop10Store();
+    }
+
+    public List<StoreDto> getRandomStore() {
+        return storeMapper.getRandomStore();
+
     }
 }
