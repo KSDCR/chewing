@@ -1,7 +1,6 @@
-package io.web.chewing.mapper.booking;
+package io.web.chewing.mapper.review;
 
 
-import io.web.chewing.domain.BookingDTO;
 import io.web.chewing.domain.ReviewDto;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 @org.apache.ibatis.annotations.Mapper
 @Repository
-public interface BookingMapper {
+public interface ReviewMapper {
 
     default ReviewDto select(Long id){
         return select(id);
@@ -19,9 +18,9 @@ public interface BookingMapper {
 
     int countReviewByStore(String store_name);
 
-    List<BookingDTO> findBookingByMember(String member_nickname);
+    List<ReviewDto> findReviewByMember(String member_nickname, int offset, int records);
 
-    int countBookingByMember(String member_nickname);
+    int countReviewByMember(String member_nickname);
 
 
     int update(ReviewDto review);

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.web.chewing.mapper.review.ReviewMapper">
+
+
+  <!--  <select id="select" resultType="io.web.chewing.domain.ReviewDto">
+        SELECT * FROM review;
+    </select>-->
+
+    <select id="select" resultType="io.web.chewing.domain.ReviewDto" >
+        SELECT r.id,
+        r.store_name,
+        r.rate,
+        r.member_nickname,
+        r.content,
+        r.creat_time,
+        r.modify_time;
+        FROM review r
+        WHERE r.id = #{id}
+    </select>
+<!--    <resultMap type="io.web.chewing.domain.ReviewDto" id="reviewMap">-->
+<!--        <id column="id" property="id"></id>-->
+<!--        <result column="store_name" property="store_name"></result>-->
+<!--        <result column="rate" property="rate"></result>-->
+<!--        <result column="member_nickname" property="member_nickname"></result>-->
+<!--        <result column="content" property="content"></result>-->
+<!--        <result column="create_time" property="create_time"></result>-->
+<!--        <result column="modify_time" property="modify_time"></result>-->
+<!--        <collection property="fileName" ofType="String" >-->
+<!--            <result property="fileName" column="fileName"></result>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+
+    <select id="findReviewByStore" resultMap="reviewMap">
+        SELECT
+        r.id,
+        r.store_name,
+        r.rate,
+        r.member_nickname,
+        r.content,
+        r.creat_time,
+        r.modify_time,
+        f.name fileName
+        FROM review r LEFT JOIN store s ON r.store_name = s.name
+                      LEFT JOIN review_file f ON r.id = f.review_id
+        WHERE r.store_name = #{store_name};
+    </select>
+    <resultMap type="io.web.chewing.domain.ReviewDto" id="reviewMap">
+        <id column="id" property="id"></id>
+        <result column="store_name" property="store_name"></result>
+        <result column="rate" property="rate"></result>
+        <result column="member_nickname" property="member_nickname"></result>
+        <result column="content" property="content"></result>
+        <result column="creat_time" property="creat_time"></result>
+        <result column="modify_time" property="modify_time"></result>
+        <collection property="fileName" ofType="String" >
+            <result property="fileName" column="fileName"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="countReviewByStore" resultType="int">
+        SELECT COUNT(*)
+        FROM review r LEFT JOIN store s ON r.store_name = s.name
+        WHERE r.store_name = #{store_name};
+    </select>
+
+    <insert id="insertFile">
+        INSERT INTO review_file (review_id, name)
+        VALUES (#{id}, #{fileName})
+    </insert>
+
+    <delete id="deleteFileByBoardIdAndFileName">
+        DELETE FROM review_file
+        WHERE review_id = #{id} AND name = #{fileName}
+    </delete>
+
+    <select id="findReviewByMember" resultType="io.web.chewing.domain.ReviewDto">
+        SELECT
+        r.id,
+        r.store_name,
+        r.rate,
+        r.member_nickname,
+        r.content
+        r.creat_time;
+        r.modify_time;
+        FROM review r LEFT JOIN member m ON r.member_nickname = m.nickname
+        WHERE r.member_nickname = #{member_nickname};
+    </select>
+
+
+    <select id="countReviewByMember" resultType="int">
+        SELECT COUNT(*)
+        FROM review r LEFT JOIN member m ON r.member_nickname = m.nickname
+        WHERE r.member_nickname = #{member_nickname};
+    </select>
+
+    <update id="update">
+        UPDATE review
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

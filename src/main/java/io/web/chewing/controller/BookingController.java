@@ -2,6 +2,7 @@ package io.web.chewing.controller;
 
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.BookingDTO;
+import io.web.chewing.domain.PageInfo;
 import io.web.chewing.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("booking")
@@ -67,10 +69,10 @@ public class BookingController {
 
         return "redirect:/booking/myList";
     }
-    
-    // // TODO: 2022-12-19 삭제가 아니고 예약 취소 구조로 바꿔야함 status 컬럼필요함
+
     @PostMapping("/remove")
     public String deleteBooking(Long id, RedirectAttributes rttr, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        log.info("여기 오긴하나여?");
         bookingService.remove(id, authMemberDTO);
 
         rttr.addFlashAttribute("result", "removed");
