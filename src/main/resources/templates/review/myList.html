@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  myList
+
+  <table class="table">
+      <thead>
+      <tr>
+          <!--        <th scope="col">id</th>-->
+          <th scope="col">content</th>
+          <th scope="col">nickname</th>
+
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="list:${myReviewList}"  >
+          <!--<th scope="row">[[${list.id}]]</th>-->
+          <td>[[${list.content}]]</td>
+          <td>[[${list.member_nickname}]]</td>
+      </tr>
+      </tbody>
+
+  </table>
+</body>
+</html>

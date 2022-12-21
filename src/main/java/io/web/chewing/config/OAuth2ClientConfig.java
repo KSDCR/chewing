@@ -37,8 +37,7 @@ public class OAuth2ClientConfig {
         http.authorizeRequests(authRequest -> authRequest
                 .antMatchers("/api/user").access("hasAnyRole('SCOPE_profile','SCOPE_profile_image', 'SCOPE_email','ROLE_USER')")
                 .antMatchers("/api/oidc").access("hasRole('SCOPE_openid')")
-                .antMatchers("/**").permitAll().anyRequest().authenticated()
-                .antMatchers("/login").permitAll().anyRequest().authenticated());
+                .antMatchers("/**").permitAll().anyRequest().authenticated());
 
 
         http.csrf().disable();
