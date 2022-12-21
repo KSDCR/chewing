@@ -54,7 +54,7 @@ public class ReviewController {
         String member_nickname = authMemberDTO.getNickname();
         model.addAttribute("myReviewList", list);
         model.addAttribute("member_nickname", authMemberDTO.getNickname());
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl+"/review");
 
         log.info(list);
 
@@ -75,7 +75,7 @@ public class ReviewController {
 
         model.addAttribute("reviewList", list);
         model.addAttribute("store_name", store_name);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl+"/review");
 
         log.info(imgUrl);
 
@@ -128,7 +128,7 @@ public class ReviewController {
         log.info("===================" + reviewDto);
 
         model.addAttribute("reviewDto", reviewDto);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl+"/review");
 
     }
 
@@ -166,11 +166,6 @@ public class ReviewController {
         String member_nickname = reviewService.modify(reviewDto, files, removeFiles);
 
         rttr.addFlashAttribute("result", "modified");
-
-
-//        return "redirect:/review/read";
-
-//        reviewService.update(review, files, removeFiles);
 
 
         return "redirect:/review/myList?member_nickname=" + member_nickname;

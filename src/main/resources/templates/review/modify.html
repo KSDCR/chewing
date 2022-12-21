@@ -96,9 +96,9 @@
 
                 <!-- 이미지 미리보기 영역 -->
                 <div id="image_old" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;" >
-                    <div th:each="file:${reviewDto.fileName }" style="margin-bottom: 20px; display: inline; position: relative">
+                    <div th:each="file, i:${reviewDto.fileName }" style="margin-bottom: 20px; display: inline; position: relative">
                         <img style="width:300px; height: 300px; margin: 10px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" th:id="${file}"  alt="">
-                        <button type="button" th:value="${file}" name="removeFiles" style="position: absolute; left: 10px" id="deleteFile">
+                        <button type="button" th:value="${file}" style="position: absolute; left: 10px" th:id="${i.index}" th:class="delete">
                             <i class="fa-solid fa-xmark"></i></button>
 
                     </div>
@@ -120,13 +120,20 @@
 <script>
 
     // 삭제확인 버튼 클릭하면
-    document.querySelector("#deleteFile").addEventListener("click", function() {
-        let del = document.getElementById('deleteFile').value;
-        console.log(del);
-        console.log(document.getElementById(del));
-        document.getElementById(del).remove();
+    for(let i=0; i<document.getElementsByClassName('delete').length; i++){
+        document.getElementById(i).addEventListener("click", function() {
+            let del = document.getElementById(i).value;
 
-    });
+            let arr = new Array();
+            arr.push(del);
+
+            console.log(del);
+            console.log(arr);
+            console.log(document.getElementById(del));
+            document.getElementById(del).remove();
+        });
+    }
+
 
     document.querySelector(`#modifyForm input[name="files"]`).addEventListener("change", function() {
 
@@ -181,14 +188,15 @@
                 let cnt=0;
                 for (let num=1; num<(document.getElementById('image').files.length)*2; num= num+2){
 
-
+                    let size=0;
                     button.style.position = 'absolute';
                     button.setAttribute("th:value", image.name);
                     button.setAttribute("name", "removeFiles");
-                    button.setAttribute("onClick", "delImg();");
-                    button.setAttribute("id", "delete");
+                    button.setAttribute("id", size);
+                    button.setAttribute("th:class", "delete");
                     button.innerHTML ='<i class="fa-solid fa-xmark"></i>';
 
+                    size++;
 
                     if(matchMedia("screen and (max-width: 700px)").matches){
                         let left =  10+(90*cnt);
@@ -208,12 +216,7 @@
                         document.getElementById('image_container').children[num].style.margin = '10px';
 
                     }
-
-
-
-
                 }
-
 
             };
 
@@ -222,15 +225,6 @@
         }
     }
 
-    function delImg(){
-
-        let removeButton = document.querySelector("#delete");
-
-        removeButton.addEventListener('click', function() {
-            document.querySelector().files.remove();
-        });
-
-    }
 
 
 
