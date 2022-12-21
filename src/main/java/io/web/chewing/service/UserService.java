@@ -4,7 +4,6 @@ import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.MemberRole;
 import io.web.chewing.model.ProviderUser;
 import io.web.chewing.repository.MemberRepository;
-import io.web.chewing.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

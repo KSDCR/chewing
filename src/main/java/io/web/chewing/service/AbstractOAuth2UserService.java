@@ -5,7 +5,6 @@ import io.web.chewing.common.converters.ProviderUserConverter;
 import io.web.chewing.common.converters.ProviderUserRequest;
 import io.web.chewing.model.ProviderUser;
 import io.web.chewing.repository.MemberRepository;
-import io.web.chewing.repository.UserRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,6 @@ import org.springframework.stereotype.Service;
 @Getter
 @Slf4j
 public abstract class AbstractOAuth2UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -36,7 +31,6 @@ public abstract class AbstractOAuth2UserService {
 
     public void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
         saveMember(providerUser, userRequest);
-
     }
 
     public Member saveMember(ProviderUser providerUser, OAuth2UserRequest userRequest) {
