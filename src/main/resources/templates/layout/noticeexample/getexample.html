@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+  <title>Bootstrap Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="p-3 m-0 border-0 bd-example">
+<!-- navbar -->
+<nav class="navbar fixed-top shadow-sm p-3" style="background-color: #FF8900">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="/img/LOL.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top" style="border-radius: 100px;">
+    </a>
+    <div style="margin: auto; text-align: center;">
+      <h5>chewing</h5>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="width: 54px; height: 44px; padding: unset; margin: unset;">
+      <div style="margin: auto; width: 50px; height: 40px;">
+        <span class="navbar-toggler-icon" style="margin-top: 5px; margin-bottom: 5px; margin-left: 10px; margin-right: 10px;"></span>
+      </div>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header" style="background-color: #FF8900">
+        <h5 class="offcanvas-title"  id="offcanvasNavbarLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">MyPage</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Booking</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Notice</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<div layout:fragment="content">
+  <div id="information" style="height: 110px; text-align: center; padding-top: 30px; background-color: #ffffff;">
+    <h2>공지사항</h2>
+    <div style="float: left; margin: 20px;">
+      <button class="btn btn-light" onclick="location.href='/notice/list'">
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+    </div>
+    <div style="float: right; margin: 20px;">
+      <button class="btn btn-light" th:onclick="|location.href='@{/notice/modify(id=${notice.id})}'|">
+        <i class="fa-solid fa-pen"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="gongjiTitle" style="height: 100px;">
+    <div id="titledate" style="height: 98px; margin: 25px; padding: 10px; background-color: #f2f2f2;">
+      <h5 th:text="${notice.title}"  style="margin-top: 7px; margin-bottom: 20px;"/>
+      <div style="display: inline;"  th:text="${#temporals.format(notice.modified_at, 'yyyy-MM-dd hh:mm')}"></div>
+    </div>
+  </div>
+  <div id="gongjiContent" style="height: 418.4px;">
+    <div id="content" class="entry-content" style="height: 400px; margin: 25px; padding: 10px; background-color: #f2f2f2;">
+      <div>
+        <span style="font-size: 18px;" th:text="${notice.content}"/>
+      </div>
+    </div>
+  </div>
+
+<div>
+  <th:block layout:fragment="script">
+    <div id="blankSpace" style="height: 30px; text-align: center;">
+      <h5>공지 세부 냠냠</h5>
+    </div>
+  </th:block>
+</div>
+
+</body>
+</html>

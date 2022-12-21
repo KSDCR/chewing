@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main/navbar.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div id="information" style="height: 100px; text-align: center; padding-top: 30px; background-color: #ffffff;">
+        <h2>공지사항</h2>
+        <div>
+            <div style="float: right; margin: 20px;">
+                <button class="btn btn-light" onclick="location.href='/notice/list'" style="color: #FF8900">
+                    <i class="fa-solid fa-square-xmark fa-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gongjiRegister" style="margin-left: 35px; margin-right: 35px; ">
+        <div  style="height: 588.6px; margin: auto;">
+            <form action="" method="post" id="f0">
+                <div class="input-group mb-4">
+                    <span class="input-group-text" style="background-color: #f2f2f2;">제목</span>
+                    <input type="text" name="title" class="form-control" style="border-color: darkorange;">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" style="background-color: #f2f2f2;">내용</span>
+                    <textarea class="form-control col-sm-5" rows="5" name="content" style="border-color: darkorange;"></textarea>
+                </div>
+                <div class="my-3">
+                    <div style="float: right; margin-right: 3px;">
+                        <button type="submit"  class="btn btn-light regBtn" style="background-color: #f2f2f2; border-radius: 12px;">등록</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

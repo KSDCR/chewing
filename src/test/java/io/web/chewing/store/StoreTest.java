@@ -24,13 +24,11 @@ public class StoreTest {
                     .name("TestStore"+i)
                     .address("TestStore"+i)
                     .file("TestStore"+i)
-                    .closeTime("TestStore"+i)
-                    .openTime("TestStore"+i)
+                    .close_time("TestStore"+i)
+                    .open_time("TestStore"+i)
                     .detail("TestStore"+i)
                     .phone("TestStore"+i)
             .build();
-            store.addCategories(Categories.Korean);
-
             storeRepository.save(store);
         } );
     }

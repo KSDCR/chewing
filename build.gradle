@@ -27,7 +27,7 @@ repositories {
 dependencies {
 
 
-     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -73,10 +73,11 @@ dependencies {
 
     implementation 'org.modelmapper:modelmapper:3.1.0'
 
-    // https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter
+
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
-
 
 
 }

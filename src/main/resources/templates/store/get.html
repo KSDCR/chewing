@@ -1,58 +1,225 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/main/navbar.html}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
    <!-- <th:block layout:fragment="css"></th:block>-->
+<style>
+    /*.star-ratings {
+        color: #aaa9a9;
+        position: relative;
+        unicode-bidi: bidi-override;
+        width: max-content;
+        -webkit-text-fill-color: transparent; !* Will override color (regardless of order) *!
+        -webkit-text-stroke-width: 1.3px;
+        -webkit-text-stroke-color: #2b2a29;
+    }
+    .star-ratings-fill {
+        color: #fff58c;
+        padding: 0;
+        position: absolute;
+        z-index: 1;
+        display: flex;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        -webkit-text-fill-color: gold;
+    }
+    .star-ratings-base {
+        z-index: 0;
+        padding: 0;
+    }*/
+
+    #img, #noImg {
+        width: 340px;
+        height: 250px;
+        border-radius: 10px;
+    }
+    #store {
+        align-content: center;
+        height: 115px;
+        padding-left: 30px;
+        padding-top: 10px;
+    }
+    a {
+        font-size: large;
+        margin-right: 10px;
+    }
+</style>
+
 </head>
 <body>
-<div>
-    <th:block th:replace="fragments/header :: headerFragment"></th:block>
+<div layout:fragment="content">
+<div style="float: left; margin: 0px 0px 10px 10px;">
+    <button class="btn btn-light" style="background-color: #FF8900;" onclick="location.href='/store/list'">
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
 </div>
-<div id="storeImage" style="width: 390px;height: 270px; padding: 20px; ">
-    <div id="image" style="width: 343px; height: 240px; margin:auto; background-color: #C5CEE0; border-radius: 10px;">
-<!--        <img th:src="@{upload} + ${store.id}/${store.file}" alt="">-->
-        사진
+<div id="storeImage" style="padding: 20px;">
+    <div id="image">
+        <img id="img" th:if="${store.file != '' && store.file != null}"
+             th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}" alt="이미지" />
+        <img id="noImg" th:if="${store.file == '' || store.file == null}"
+             src="/img/noStoreImage.png" alt="매장기본이미지" />
     </div>
 </div>
 
-<div id="store" style="width: 390px; height: 150px; padding-left: 30px; padding-top: 10px;">
-    <h2 th:text="${store.name}"></h2>
-    <div>
-        ⭐⭐⭐⭐⭐ 5.0
-        <div>리뷰수 111</div>
+<div id="store">
+    <h1 style="font-weight: bold;">
+        [[${store.name}]]
+        <input type="hidden" id="storeName" th:value="${store.name}">
+        <!--<수정버튼> admin일 경우만 보이도록 수정!! -->
+        <button th:onclick="|location.href='@{/store/modify(id=${store.id})}'|"
+                id="modify" type="button" class="btn btn"
+                style="width: 90px;background-color: #F2F2F2;float: right;margin-right: 32px;align-content: center;">
+            ✏Edit
+        </button>
+    </h1>
+
+   <div style="display: inline">
+        <div>
+            ⭐
+            <!--<div class="star-ratings">
+                <div class="star-ratings-fill space-x-2 text-lg"
+                        th:style="{ width: `javascript:ratingToPercent` + '%' }"
+                >
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <div class="star-ratings-base space-x-2 text-lg">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+            </div>-->
+            <a th:if="${store.rate == null}">-</a>
+            <a th:if="${store.rate != null}">[[${store.rate}]] / 5.0</a>
+        <!--</div>
+        <div>-->
+            <a th:if="${store.reviewCnt == 0}">리뷰수 0</a>
+            <a th:href="@{/review/list(store_name=${store.name})}" th:if="${store.reviewCnt > 0}">리뷰수 [[${store.reviewCnt}]]</a>
+        </div>
+       <div>
+
+           <button id="likeButton" >
+               <th:block th:if="${store.liked}">💗</th:block>
+               <th:block th:if="${not store.liked}">🤍</th:block>
+           </button>
+           <span id="likeCount">[[${store.countLike}]]</span>
+       </div>
     </div>
-    <span th:text="${store.detail}">가게설명....</span>
+    <!--<div th:text="${store.detail}">가게설명</div>-->
 </div>
 
 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group" role="group me-2" style="padding-left: 20px;">
-        <button type="button" class="btn btn" style="width: 100px; background-color: #FF8900;">정보</button>
-<!--        th:onclick="|index.replyDelete(${store.id})|"-->
-        <button th:onclick="|location.href='@{/review/list(store_name=${store.name})}'|"
-                id="review" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">리뷰</button>
+        <button id="infoButton" type="button" class="btn btn" th:onclick="showInfo()"
+                style="width: 100px; background-color: #FF8900;">정보</button>
+        <button id="mapButton" type="button" class="btn btn" th:onclick="showMap()"
+                style="width: 100px; background-color: #F2F2F2;">지도</button>
+        <!--<button th:onclick="|location.href='@{/review/list(store_name=${store.name})}'|"
+                id="review" type="button" class="btn btn" style="width: 100px; background-color: #F2F2F2;">리뷰</button>-->
     </div>
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn" style="margin-left: 20px; width: 120px; background-color: #FF8900;">예약하기</button>
+        <button th:onclick="|location.href='@{/booking/register(store_name=${store.name})}'|"
+                type="button" class="btn btn" style="margin-left: 30px; width: 120px; background-color: #FF8900;">예약하기</button>
+    </div>
+</div>
+<!--<div hidden id="address" th:text="${store.address}"></div>-->
+<div id="map" style="height:230px;margin:15px;display:none"></div>
+<div id="info" style="padding: 20px;">
+    <div style="margin-bottom: 5px;">
+        [[${store.detail}]]
+    </div>
+    <div style="margin-bottom: 5px;">
+        운영시간 : [[${store.open_time}]] ~ [[${store.close_time}]]
+    </div>
+    <div style="margin-bottom: 5px;">
+        매장주소 : [[${store.address}]]
+    </div>
+    <div style="margin-bottom: 5px;">
+        전화번호 : [[${store.phone}]]
     </div>
 </div>
 
-<div id="btn-info" style="width: 390px; height: 260px;padding: 20px;">
-    <div style="display: flex;">
-        운영시간 : <p th:text="${store.open_time}"></p> ~ <p th:text="${store.close_time}"></p>
-    </div>
-    <div style="display: flex;">
-        매장주소 : <p th:text="${store.address}"></p>
-    </div>
-    <div style="display: flex;">
-        전화번호 : <p th:text="${store.phone}"></p>
-    </div>
-</div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=13e4c49c4b681da6f753e3ea6e9ba777&libraries=services"></script>
+<script type="text/javascript"  th:inline="javascript">
 
-<script th:inline="javascript">
+    /* 매장 찜 버튼 */
+    document.querySelector("#likeButton").addEventListener("click", function() {
+        const storeName = document.querySelector("#storeName").value;
+        fetch(`/store/like`, {
+            method : "put",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+                storeName: storeName
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.current == 'liked') {
+                    document.querySelector("#likeButton").innerHTML = `💗`;
+                } else {
+                    document.querySelector("#likeButton").innerHTML = `🤍`;
+                }
+                document.querySelector("#likeCount").innerText = data.count;
+            });
+    });
 
+    /* 카카오 지도  */
+    /*<![CDATA[*/
+    let info = document.querySelector("#info");
+    let mapInfo = document.querySelector("#map");
+
+    function showMap() {
+        mapInfo.style.display = 'block';
+        info.style.display = 'none';
+
+        const mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
+            };
+        // 지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(/*[[${store.address}]]*/, function(result, status) {
+            // 정상적으로 검색이 완료됐으면
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                // 결과값으로 받은 위치를 마커로 표시합니다
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+                // 인포윈도우로 장소에 대한 설명을 표시합니다
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: '<div style="width:150px;text-align:center;padding:6px 0;">[[${store.name}]]</div>'
+                });
+                infowindow.open(map, marker);
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+            }
+        });
+    }
+
+    function showInfo() {
+        info.style.display = 'block';
+        mapInfo.style.display = 'none';
+    }
+    /*ratingToPercent() {
+        const score = +this.restaurant.averageScore * 20;
+        return score + 1.5;
+    }*/
+
+    /*]]>*/
 </script>
+</div>
 </body>
 </html>
