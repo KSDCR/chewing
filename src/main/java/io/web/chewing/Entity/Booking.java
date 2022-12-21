@@ -26,7 +26,7 @@ public class Booking extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
     private Member member;
 
     @ManyToOne
