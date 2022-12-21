@@ -23,16 +23,10 @@ public interface ReviewMapper {
 
     int countReviewByMember(String member_nickname);
 
-
-    int update(ReviewDto review);
-
     void insertFile(Long id, String fileName);
 
     void deleteFileByReviewIdAndFileName(Long id, String fileName);
 
-    int deleteFileByBoardId(Long id);
-
-    int delete(Long id);
 
     ReviewDto findReviewById(Long id);
 

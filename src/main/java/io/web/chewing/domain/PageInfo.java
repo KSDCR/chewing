@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class PageInfo {
     private int lastPageNumber;
-    private double leftPageNumber;
-    private double rightPageNumber;
+    private int leftPageNumber;
+    private int rightPageNumber;
     private int currentPageNumber;
     private boolean hasNextPageNumber;
 }
