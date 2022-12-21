@@ -2,7 +2,6 @@ package io.web.chewing.mapper.booking;
 
 
 import io.web.chewing.domain.BookingDTO;
-import io.web.chewing.domain.ReviewDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

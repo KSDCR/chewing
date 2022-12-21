@@ -1,8 +1,6 @@
 package io.web.chewing.config.security.service;
 
-import io.web.chewing.Entity.Member;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

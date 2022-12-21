@@ -1,14 +1,10 @@
 package io.web.chewing.domain;
 
 import io.web.chewing.Entity.Booking;
-import io.web.chewing.Entity.Member;
-import io.web.chewing.Entity.Store;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder

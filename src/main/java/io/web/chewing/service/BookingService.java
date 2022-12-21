@@ -1,15 +1,10 @@
 package io.web.chewing.service;
 
 import io.web.chewing.Entity.Booking;
-import io.web.chewing.Entity.Member;
-import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.BookingDTO;
-import io.web.chewing.domain.PageInfo;
 import io.web.chewing.mapper.booking.BookingMapper;
 import io.web.chewing.repository.BookingRepository;
-import io.web.chewing.repository.MemberRepository;
-import io.web.chewing.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

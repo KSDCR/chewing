@@ -1,8 +1,5 @@
 package io.web.chewing.store;
 
-import io.web.chewing.Entity.Categories;
-import io.web.chewing.Entity.Store;
-import io.web.chewing.repository.StoreRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
