@@ -38,13 +38,13 @@
     </div>
 </th:block>-->
 
-<form class="d-flex" role="search" style="margin: 0 10px;">
-    <input class="form-control me-2" th:field="${paging.keyword}" id="search" type="text" name="keyword"
+<form class="d-flex" role="search" style="padding-top: 20px; padding-left: 12px; padding-right: 12px; padding-bottom: 20px;">
+    <input class="form-control me-0" th:field="${paging.keyword}" id="search" type="text" name="keyword"
            placeholder="이름으로 맛집 검색"/>
-    <button class="btn btn-outline-success" type="submit">Search</button>
+    <button class="btn btn-outline-success" type="submit" style="color:dimgray; border-color: #FF8900;">Search</button>
 </form>
 
-<div class="list" th:each="store:${stores}">
+<div class="list" th:each="store:${stores}" th:onclick="|location.href='@{/store/get(id=${store.id})}'|">
     <div class="image">
         <img id="img" th:if="${store.file != '' && store.file != null}"
              th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}" alt="이미지" />
@@ -53,7 +53,8 @@
     </div>
     <div class="text">
         <h4>
-            <a th:href="@{/store/get(id=${store.id})}">[[${store.name}]]</a>
+            <!--<a th:href="@{/store/get(id=${store.id})}">[[${store.name}]]</a>-->
+            <a style="font-weight: bold">[[${store.name}]]</a>
         </h4>
         <div>[[${store.address}]]</div>
        <!-- <div>[[${store.detail}]]</div>-->

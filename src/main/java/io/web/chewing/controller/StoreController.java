@@ -49,7 +49,7 @@ public class StoreController {
         }
         StoreDto storeDto = storeService.get(id, nickname);
         log.info("===========> " + storeDto);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl + "/store");
         model.addAttribute("store", storeDto);
 
         //HttpHeaders headers = new HttpHeaders();
@@ -84,12 +84,12 @@ public class StoreController {
         }
 
         PageDto paging = storeService.page(stores, keyword, category);
-        log.info("stores ================> {}", stores.stream().toList());
+        //log.info("stores ================> {}", stores.stream().toList());
         log.info("paging ================> {}", paging);
 
         model.addAttribute("stores", stores);
         model.addAttribute("paging", paging);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl + "/store");
     }
 
     /*매장 등록 (admin)*/
@@ -120,7 +120,7 @@ public class StoreController {
         StoreDto storeDto = storeService.get(id, authMemberDTO.getNickname());
         log.info("==== modify ====> " + storeDto);
         model.addAttribute("store", storeDto);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl + "/store");
     }
 
     @PostMapping("/modify")
@@ -176,7 +176,7 @@ public class StoreController {
         int likeStoreCnt = stores.size();
 
         model.addAttribute("stores", stores);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl + "/store");
         model.addAttribute("likeStoreCnt", likeStoreCnt);
     }
 

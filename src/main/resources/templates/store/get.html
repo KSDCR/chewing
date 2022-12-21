@@ -56,11 +56,11 @@
 <body>
 <div layout:fragment="content">
 <div style="float: left; margin: 0px 0px 10px 10px;">
-    <button class="btn btn-light" style="background-color: #FF8900;" onclick="location.href='/store/list'">
+    <button class="btn btn-light" style="background-color: #F2F2F2;" onclick="location.href='/store/list'">
         <i class="fa-solid fa-angle-left"></i>
     </button>
 </div>
-<div id="storeImage" style="padding: 20px;">
+<div id="storeImage" style="padding: 10px;">
     <div id="image">
         <img id="img" th:if="${store.file != '' && store.file != null}"
              th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${store.id},fileName=${store.file})}" alt="이미지" />
@@ -103,7 +103,7 @@
         </div>
        <div>
 
-           <button id="likeButton" >
+           <button id="likeButton" style="background-color: white; border-color: navajowhite;" >
                <th:block th:if="${store.liked}">💗</th:block>
                <th:block th:if="${not store.liked}">🤍</th:block>
            </button>
@@ -124,7 +124,7 @@
     </div>
     <div class="btn-group" role="group">
         <button th:onclick="|location.href='@{/booking/register(store_name=${store.name})}'|"
-                type="button" class="btn btn" style="margin-left: 30px; width: 120px; background-color: #FF8900;">예약하기</button>
+                type="button" class="btn btn" style="margin-left: 0px; width: 120px; background-color: #FF8900;">예약하기</button>
     </div>
 </div>
 <!--<div hidden id="address" th:text="${store.address}"></div>-->
