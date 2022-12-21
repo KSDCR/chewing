@@ -79,4 +79,19 @@
         <result column="name" property="name" />
         <result column="countLike" property="countLike" />
     </resultMap>
+
+    <select id="getRandomStore" resultMap="storeRandomMap">
+        (SELECT
+        id, name, file
+        FROM store
+        WHERE file is not null
+        ORDER BY id
+        DESC LIMIT 3)
+        ORDER BY rand();
+    </select>
+    <resultMap type="io.web.chewing.domain.StoreDto" id="storeRandomMap">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="file" property="file" />
+    </resultMap>
 </mapper>

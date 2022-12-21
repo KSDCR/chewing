@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/main/navbar.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,9 +54,7 @@
 
 </head>
 <body>
-<div>
-    <th:block th:replace="fragments/header :: headerFragment"></th:block>
-</div>
+<div layout:fragment="content">
 <div style="float: left; margin: 0px 0px 10px 10px;">
     <button class="btn btn-light" style="background-color: #FF8900;" onclick="location.href='/store/list'">
         <i class="fa-solid fa-angle-left"></i>
@@ -220,5 +220,6 @@
 
     /*]]>*/
 </script>
+</div>
 </body>
 </html>

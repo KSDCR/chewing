@@ -21,4 +21,6 @@ public interface StoreMapper {
     List<String> getStoreNameByMember(String nickname);
 
     List<String> getTop10Store();
+
+    List<StoreDto> getRandomStore();
 }
