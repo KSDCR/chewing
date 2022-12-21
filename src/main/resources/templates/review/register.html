@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/main/navbar.html}">
 
 <head>
     <meta charset="UTF-8">
@@ -35,18 +36,8 @@
 </head>
 
 <body style="margin: 1%;">
-
-<header style=" background-color: #FF8900; height: 10%; margin-bottom: 50px">
-    <h1 class="profile_icon">
-    </h1>
-    <h1 class="title" style=" color: white; text-align: center;  line-height:100px">
-        chewing
-    </h1>
-    <div class="main_menu_button">
-    </div>
-</header>
-
 <div layout:fragment="content">
+
     <div class="row">
         <div class="col">
             <h2 style="text-align: center; margin-bottom: 50px;">리뷰를 남겨주세요</h2>
@@ -104,7 +95,7 @@
             </form>
         </div>
     </div>
-</div>
+
 
 <script>
 
@@ -186,6 +177,6 @@
 
 
 </script>
-
+</div>
 </body>
 </html>
