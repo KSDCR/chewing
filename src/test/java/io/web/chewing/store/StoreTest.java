@@ -26,8 +26,6 @@ public class StoreTest {
                     .detail("TestStore"+i)
                     .phone("TestStore"+i)
             .build();
-            store.addCategories(Categories.Korean);
-
             storeRepository.save(store);
         } );
     }

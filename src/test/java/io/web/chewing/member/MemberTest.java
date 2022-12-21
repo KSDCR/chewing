@@ -1,5 +1,9 @@
 package io.web.chewing.member;
 
+import io.web.chewing.Entity.Categories;
+import io.web.chewing.Entity.Member;
+import io.web.chewing.Entity.MemberRole;
+import io.web.chewing.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

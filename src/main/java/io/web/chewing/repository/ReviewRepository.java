@@ -22,11 +22,6 @@ public interface ReviewRepository extends JpaRepository<Review,Object> {
 
 
 
-    @Query("select r FROM Review r WHERE r.store_name=:store_name")
-    List<Review> findByStore(String store_name);
-
-    @Query("select r FROM Review r WHERE r.store_name=:store_name")
-    List<ReviewDto> listByStore(String store_name);
 
     @Query("select r FROM Review r WHERE r.store_name=:store_name")
     List<ReviewDto> reviewList(String store_name);

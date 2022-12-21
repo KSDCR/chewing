@@ -5,7 +5,6 @@ import io.web.chewing.Entity.Review;
 import io.web.chewing.Entity.Store;
 import io.web.chewing.config.security.dto.AuthMemberDTO;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,8 @@ public class ReviewDto {
     private String modify_time;
 
     private List<String> fileName;
+
+    private int countFile;
 
 
     public Review toEntity(Store store){
