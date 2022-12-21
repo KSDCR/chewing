@@ -83,26 +83,26 @@
                 </div>
                 <div th:if="${pageInfo.leftPageNumber != 1 }">
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${pageInfo.currentPageNumber})}" aria-label="left">
+                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${pageInfo.currentPageNumber}-1)}" aria-label="left">
                             <span aria-hidden="true"><i class="fa-solid fa-angle-left"></i></span>
                         </a>
                     </li>
                 </div>
                 <div th:each="num:${#numbers.sequence(pageInfo.leftPageNumber, pageInfo.rightPageNumber)}">
-                    <li class="page-item ${pageInfo.currentPageNumber eq numStat.count} ? 'active' : '' }">
-                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${numStat.count})}" th:text="${numStat.count}"></a>
+                    <li th:class="${pageInfo.currentPageNumber eq num} ? 'page-item active' : ''">
+                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${num})}" th:text="${num}"></a>
                     </li>
                 </div>
-                <div th:if="${pageInfo.rightPageNumber != '((pageInfo.lastPageNumber-1)/10*10)' }">
+                <div th:if="${pageInfo.rightPageNumber} != (${pageInfo.lastPageNumber}-1)/10*10 and ${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${pageInfo.currentPageNumber+1 })}" aria-label="last">
+                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${pageInfo.currentPageNumber}+1)}" aria-label="last">
                             <span aria-hidden="true"><i class="fa-solid fa-angle-right"></i></span>
                         </a>
                     </li>
                 </div>
                 <div th:if="${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${pageInfo.lastPageNumber })}" aria-label="last">
+                        <a class="page-link" th:href="@{/review/myList(member_nickname=${member_nickname}, page=${pageInfo.lastPageNumber})}" aria-label="last">
                             <span aria-hidden="true"><i class="fa-solid fa-angles-right"></i></span>
                         </a>
                     </li>
@@ -111,6 +111,8 @@
         </nav>
     </div>
 </div>
+
+
 
 <!-- remove Modal -->
 <div class="modal fade" id="removeModal" tabindex="-1" aria-hidden="true">

@@ -23,7 +23,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("review")
@@ -33,15 +35,16 @@ public class ReviewController {
     @Value("${aws.s3.file.url.prefix}")
     String imgUrl;
     private final ReviewService reviewService;
-    
+
+
     // 수정했으니 확인할것
     @GetMapping("/myList")
     public String myList(@RequestParam(name = "page", defaultValue = "1") int page,
-                       PageInfo pageInfo,
-                       Model model,
-                       @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+                         PageInfo pageInfo,
+                         Model model,
+                         @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         // 나중에 롤 처리 일괄로 할꺼라서 일단 임시처리
-        if (authMemberDTO == null){
+        if (authMemberDTO == null) {
             return "redirect:/login";
         }
 
@@ -81,21 +84,6 @@ public class ReviewController {
         log.info("${imgUrl }/${review.id }/${URLEncoder.encode(file, 'utf-8')}");
 
     }
-    /*complete*/
-
-
-//    @GetMapping("/listbefore")
-//    public void list(Long store, PageRequestDto pageRequestDto, Model model){
-//
-//        String member = "";
-//
-//        PageResponseDto<ReviewDto> responseDto = reviewService.list(store,/* member,*/ pageRequestDto);
-//
-//        log.info(responseDto);
-//
-//        model.addAttribute("responseDto", responseDto);
-//
-//    }
 
     @GetMapping("register")
     public void register(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
@@ -251,36 +239,20 @@ public class ReviewController {
     }
 
 
-    public void removeFiles(List<String> files, Long id) {
-
-        for (String fileName : files) {
-
-            Resource resource = new FileSystemResource(imgUrl + File.separator + id + File.separator + fileName);
-            String resourceName = resource.getFilename();
 
 
-            try {
-                String contentType = Files.probeContentType(resource.getFile().toPath());
-                resource.getFile().delete();
-
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-
-        }//end for
-    }
-
-//    @PostMapping("beforeremove")
-//    public String beforedeleteReview(Long id, RedirectAttributes rttr) {
+//    @DeleteMapping("removeFile/{id}&{fileName}")
+//    public String removeFileByName(@PathVariable ReviewDto reviewDto,@PathVariable String fileName) {
 //
-//        log.info("remove post.. " + id);
+//        Long id = reviewDto.getId();
 //
-//        reviewService.beforeremove(id);
+//        reviewService.removeFileByName(id, fileName);
 //
-//        rttr.addFlashAttribute("result", "removed");
+//        return "redirect:/review/modify?id=" + id;
 //
-//        return "redirect:/review/list";
 //    }
+
+
 }
 
 
