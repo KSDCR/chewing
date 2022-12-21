@@ -70,12 +70,14 @@
 
             .content{
                 clear:both;
-                background-color: #e5e5e5;
+                background-color: #e3e3e3;
                 width: 99%;
                 text-align: center;
-                height: 190px;
-                line-height: 190px;
-                font-size: 18px;
+                height: 150px;
+                line-height: 150px;
+                font-size: 17px;
+                border-radius: 5px;
+                margin-top: 15px;
             }
 
             .star{
@@ -96,7 +98,7 @@
     </style>
 </head>
 <body style="position: relative; height: 96%; margin: 1%;">
-<div layout:fragment="content">
+<div layout:fragment="content" style="margin: 8px;">
 
 
 
@@ -104,9 +106,9 @@
 <div th:each="list:${myReviewList}" class="main">
 
 
-    <h1 style="clear: both; font-size: 250%; height: 60px">
+    <h1 style="clear: both; font-size: 250%; height: 60px; font-weight: bold;">
         <span class="name" style="line-height: 30px;">[[${list.store_name}]]</span>
-        <span class="star" style="position:absolute; vertical-align: bottom;">
+        <span class="star" style="position:absolute; vertical-align: bottom; margin-right: 9px;">
                 <span class="star-rating">
                     <span th:if="${list.rate}==0.5" style="width:10%"></span>
                     <span th:if="${list.rate}==1.0" style="width:20%"></span>
@@ -137,9 +139,9 @@
     <div style="font-size: 24px;">
         <div class="time" style="clear:both; width:100% ; border-radius: 30px; color: grey">
             [[${list.creat_time}]]
-            <span style="position:absolute;right : 13%;">
+            <span style="position:absolute; right : 11%;">
                 <span th:onclick="|location.href='@{/review/modify(id=${list.id})}'|"
-                  id="modifyButton" type="button" style="text-decoration: underline;">수정</span>
+                  id="modifyButton" type="button" style="text-decoration: underline; margin-right: 15px;">수정</span>
                 <span style="text-decoration: underline;" type="submit"data-bs-toggle="modal" data-bs-target="#removeModal">삭제</span>
             </span>
             <br>

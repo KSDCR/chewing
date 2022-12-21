@@ -40,10 +40,10 @@
 <div layout:fragment="content">
     <div class="row">
         <div class="col">
-            <h2 style="text-align: center; margin-bottom: 50px;">리뷰 수정</h2>
+            <h5 style="text-align: center; margin-bottom: 20px; margin-top: 30px; font-weight: bold; color: chocolate;">리뷰 수정</h5>
             <form id="modifyForm" action="" method="post" enctype="multipart/form-data">
                 <div class="mb-3" style="text-align: center;">
-                    <div class="rate_wrap" style="margin-right: 20px">
+                    <div class="rate_wrap" style="margin-right: 0px">
                         <div class="rate_box">
                             <label for="rate_1" class="label_star" title="0.5"><span class="blind" >0.5점</span></label>
                             <label for="rate_2" class="label_star" title="1"><span class="blind" >1점</span></label>
@@ -71,7 +71,7 @@
                     <span id="star_rating" class="star-rating" style="width: 100%; color: darkgrey"></span>
                 </div>
 
-                <div class="mb-3" style="margin-top: 50px;">
+                <div class="mb-3" style="margin-top: 30px; margin-left: 10px; margin-right:10px;">
                     <textarea required="required" rows="14" class="content form-control" name="content" th:text="${reviewDto.content}" style="text-align: center;  padding : 20px;"></textarea>
                 </div>
 
@@ -87,7 +87,7 @@
                 <!-- 이미지 미리보기 영역 -->
                 <div id="image_old" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;" >
                     <div th:each="file, i:${reviewDto.fileName }" style="margin-bottom: 20px; display: inline; position: relative">
-                        <img style="width:300px; height: 300px; margin: 10px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" th:id="${file}"  alt="">
+                        <img style="width:70px; height: 70px; margin: 10px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" th:id="${file}"  alt="">
                         <button type="button" th:value="${file}" style="position: absolute; left: 10px" th:id="${i.index}" th:class="delete">
                             <i class="fa-solid fa-xmark"></i></button>
 
@@ -96,7 +96,11 @@
 
                 <div id="image_container" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;/* width: 80%; left: 7%;*/"></div>
 
-                <input style="clear:both;" class="btn btn-primary" type="submit" value="등록">
+                <input style="clear:both; background-color: #ff8900; border: none;" class="btn btn-primary" type="submit" value="등록">
+
+                <div style="float: right;" onclick="location.href='/review/myList'">
+                    <input style="clear:both; background-color: #f2f2f2; border: none; color: dimgray;" class="btn btn-primary" type="button" value="뒤로가기">
+                </div>
 
 
             </form>

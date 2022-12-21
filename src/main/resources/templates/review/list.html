@@ -70,12 +70,15 @@
 
             .content{
                 clear:both;
-                background-color: #e5e5e5;
+                background-color: #e3e3e3;
                 width: 99%;
                 text-align: center;
-                height: 190px;
-                line-height: 190px;
+                height: 150px;
+                line-height: 150px;
                 font-size: 18px;
+                font-size: 17px;
+                border-radius: 5px;
+                margin-top: 15px;
             }
 
             .star{
@@ -83,7 +86,7 @@
             }
 
             .img{
-                min-height: 100px; max-height:150px
+                min-height: 100px; max-height:150px; margin-top: 15px;
             }
 
 
@@ -96,14 +99,14 @@
     </style>
 </head>
 <body style="position: relative; height: 96%; margin: 1%;">
-<div layout:fragment="content">
+<div layout:fragment="content" style="margin: 8px;">
 
     <div th:each="list:${reviewList}" class="main">
 
 
-        <h1 style="clear: both; font-size: 250%; height: 60px">
+        <h1 style="clear: both; font-size: 50%; height: 60px">
             <span class="name" style="line-height: 30px;"><i class="fa-sharp fa-solid fa-user"></i>  [[${list.member_nickname}]]</span>
-            <span class="star" style="position:absolute; vertical-align: bottom;">
+            <div><span class="star" style="position:absolute; vertical-align: bottom; margin-right: 9px;"></span></div>
                 <span class="star-rating">
                     <span th:if="${list.rate}==0.5" style="width:10%"></span>
                     <span th:if="${list.rate}==1.0" style="width:20%"></span>
