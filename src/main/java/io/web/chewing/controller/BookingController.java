@@ -7,6 +7,7 @@ import io.web.chewing.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,11 +81,11 @@ public class BookingController {
 
     //
     @PostMapping("remove")
-    public String deleteBooking(long id, RedirectAttributes rttr) {
+    public String deleteBooking(long id, RedirectAttributes rttr, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
 
         log.info("remove post.. " + id);
 
-        bookingService.remove(id);
+        bookingService.remove(id, authMemberDTO);
 
         rttr.addFlashAttribute("result", "removed");
 

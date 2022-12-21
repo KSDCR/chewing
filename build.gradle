@@ -45,6 +45,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 
     annotationProcessor 'org.projectlombok:lombok'

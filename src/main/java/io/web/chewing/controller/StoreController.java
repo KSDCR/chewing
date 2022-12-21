@@ -69,7 +69,7 @@ public class StoreController {
 
         // 전체 매장 리스트
         Page<StoreDto> stores;
-        
+
         // 키워드 검색 매장 리스트
         if (keyword != null && keyword != "") {
             stores = storeService.listByKeyword(page, 6, keyword);
@@ -133,7 +133,7 @@ public class StoreController {
 
         return "redirect:/store/get?id=" + storeDto.getId();
     }
-    
+
     /*매장 정보 삭제 (admin)*/
     @PostMapping("/remove")
     public String remove(Long id) {
@@ -187,5 +187,5 @@ public class StoreController {
         log.info("storeRank ====================> {}",storeRank);
         model.addAttribute("storeRank", storeRank);
     }
-    
+
 }

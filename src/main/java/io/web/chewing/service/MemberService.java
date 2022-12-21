@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @RequiredArgsConstructor
 public class MemberService {
+
     private final ModelMapper modelMapper;
 
     private final MemberRepository memberRepository;

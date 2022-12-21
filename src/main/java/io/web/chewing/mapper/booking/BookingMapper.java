@@ -13,7 +13,7 @@ public interface BookingMapper {
 
     default ReviewDto select(Long id){
         return select(id);
-    }
+    };
 
     List<ReviewDto> findReviewByStore(String store_name,int offset, int records);
 

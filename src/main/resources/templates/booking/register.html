@@ -1,91 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
-    <title>Bootstrap Example</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    .registerForm {
+        width: 390px;
+    }
+    .btn {
+        background-color: #FF8900;
+    }
+</style>
 </head>
+<body>
+<div>
+    <th:block th:replace="fragments/header :: headerFragment"></th:block>
+</div>
 
-<body class="p-3 m-0 border-0 bd-example">
-<!-- navbar -->
-<nav class="navbar fixed-top shadow-sm p-3" style="background-color: #FF8900">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="/static/img/LOL.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top" style="border-radius: 100px;">
-        </a>
-        <div style="margin: auto; text-align: center;">
-            <h5>chewing</h5>
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="width: 54px; height: 44px; padding: unset; margin: unset;">
-            <div style="margin: auto; width: 50px; height: 40px;">
-                <span class="navbar-toggler-icon" style="margin-top: 5px; margin-bottom: 5px; margin-left: 10px; margin-right: 10px;"></span>
-            </div>
-        </button>
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header" style="background-color: #FF8900">
-                <h5 class="offcanvas-title"  id="offcanvasNavbarLabel" style="color: white;">Nav-bar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">마이페이지</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">예약페이지</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">공지사항</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<h1>예약 등록 페이지</h1>
+
+<form class="registerForm" action="" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label class="form-label">예약자명</label>
+        <input class="form-control" type="text" name="real_name">
     </div>
-</nav>
+    <div class="mb-3">
+        <label class="form-label">인원수</label>
+        <input class="form-control" type="number" name="people">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">예약일</label>
+        <input class="form-control" type="date" name="date">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">시간</label>
+        <input class="form-control" type="time" name="time">
+    </div>
+    <input class="btn" type="submit" value="등록">
+</form>
 
-<div id="bookingRegister" style="height: 110px; text-align: center; padding-top: 30px; padding-bottom: 30px; background-color: #ffffff; color: #7B3F00	;">
-    <h4 style="margin: auto;">예약하기</h4>
-</div>
-
-<div layout:fragment="content">
-
-    <form class="registerForm" action="" method="post" enctype="multipart/form-data" style="margin: auto;  height: 664px;">
-        <div style="margin: 20px;">
-            <div class="mb-3 mx-4">
-                <div>
-                    <label class="form-label">예약자명</label>
-                </div>
-                <input class="form-control" type="text" name="real_name">
-            </div>
-            <div class="mb-3 mx-4">
-                <label class="form-label">인원수</label>
-                <input class="form-control" type="number" name="people">
-            </div>
-            <div class="mb-3 mx-4">
-                <label class="form-label">예약일</label>
-                <input class="form-control" type="date" name="date">
-            </div>
-            <div class="mb-3 mx-4">
-                <label class="form-label">시간</label>
-                <input class="form-control" type="time" name="time">
-            </div>
-            <div style="float: left;">
-                <input class="btn" type="submit" value="등록" style=" background-color: #FF8900;
-            color: white;
-            margin-left: 20px;
-            margin-top: 3px;
-            width: 55px;
-            height: 33px;
-            border-radius: 6px;
-            padding: 3px;">
-            </div>
-        </div>
-
-    </form>
-</div>
 </body>
 </html>

@@ -85,7 +85,7 @@ public class SecurityConfig {
         http.formLogin();
         http.csrf().disable();
         http.logout();
-        http.oauth2Login().successHandler(successHandler());
+        http.oauth2Login()/*.successHandler(successHandler())*/;
         http.rememberMe().key("12345678").tokenRepository(persistentTokenRepository()).tokenValiditySeconds(60 * 10).userDetailsService(userDetailsService);//10분짜리 로그인 유지 토큰
 
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
