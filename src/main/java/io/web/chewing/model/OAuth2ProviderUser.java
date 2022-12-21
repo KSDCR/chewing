@@ -1,5 +1,6 @@
 package io.web.chewing.model;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Data
 public abstract class OAuth2ProviderUser  implements ProviderUser{
 
 
@@ -30,7 +32,7 @@ public abstract class OAuth2ProviderUser  implements ProviderUser{
 
     @Override
     public String getProvider() {
-        return clientRegistration.getClientId();
+        return clientRegistration.getRegistrationId();
     }
 
     @Override
@@ -40,13 +42,7 @@ public abstract class OAuth2ProviderUser  implements ProviderUser{
 
     @Override
     public List<? extends GrantedAuthority> getAuthorities() {
-        return oAuth2User.getAuthorities().stream()
-                .map(grantedAuthority -> new SimpleGrantedAuthority(grantedAuthority.getAuthority()))
-                .collect(Collectors.toList());
+        return oAuth2User.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getAuthority())).collect(Collectors.toList());
     }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
-    }
 }

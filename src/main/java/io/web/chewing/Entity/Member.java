@@ -2,16 +2,19 @@ package io.web.chewing.Entity;
 
 
 import com.sun.istack.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.NotFound;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +24,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Table
-public class Member extends BaseEntity implements Serializable{
+public class Member extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +50,7 @@ public class Member extends BaseEntity implements Serializable{
 
     @ColumnDefault("0")
     private char delete_yn;
-    
+
     private String gender;
 
     private boolean verify;
@@ -56,6 +59,10 @@ public class Member extends BaseEntity implements Serializable{
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
+    
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<String> authoritiesSet = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
@@ -78,4 +85,7 @@ public class Member extends BaseEntity implements Serializable{
         this.categoriesSet.clear();
     }
 
+    public void addAuthoritiesSet(List<? extends GrantedAuthority> authorities) {
+        authorities.forEach(grantedAuthority -> authoritiesSet.add(String.valueOf(grantedAuthority)));
+    }
 }

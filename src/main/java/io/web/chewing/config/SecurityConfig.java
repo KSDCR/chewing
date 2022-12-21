@@ -10,7 +10,6 @@ import io.web.chewing.config.security.filter.ApiLoginFilter;
 import io.web.chewing.config.security.handler.ApiLoginFailHandler;
 import io.web.chewing.config.security.handler.Custom403Handler;
 import io.web.chewing.config.security.handler.MemberLoginSuccessHandler;
-import io.web.chewing.config.security.service.AuthUserDetailsService;
 import io.web.chewing.config.security.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,8 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -52,7 +49,6 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     private final DataSource dataSource;
-    private final AuthUserDetailsService userDetailsService;
 
     @Value("${aws.accessKeyId}")
     private String accessKeyId;
@@ -72,38 +68,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-/*
-        Controller 단에서 롤 걸어줌
-        http.authorizeRequests().antMatchers("/api/title").permitAll();
-        http.authorizeRequests().antMatchers("/api/main").hasRole("USER");
-        http.authorizeRequests().antMatchers("api/admin").hasRole("ADMIN");*/
-
-        http.authorizeRequests().antMatchers("/**").permitAll();
-        http.formLogin();
-        http.csrf().disable();
-        http.logout();
-        http.oauth2Login()/*.successHandler(successHandler())*/;
-        http.rememberMe().key("12345678").tokenRepository(persistentTokenRepository()).tokenValiditySeconds(60 * 10).userDetailsService(userDetailsService);//10분짜리 로그인 유지 토큰
-
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-
-
-
-        http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(apiLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-
-        return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-
-        return (web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
-    }
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {

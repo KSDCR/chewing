@@ -9,6 +9,7 @@ import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.PageInfo;
 import io.web.chewing.domain.ReviewDto;
 import io.web.chewing.mapper.review.ReviewMapper;
+import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.repository.ReviewRepository;
 import io.web.chewing.repository.StoreRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -93,8 +94,15 @@ public class ReviewService {
                 .build();
     }
 
-    public Member memberBuild(AuthMemberDTO authMemberDTO) {
-        return modelMapper.map(authMemberDTO, Member.class);
+    private static Member getBuild(PrincipalUser principalUser) {
+        return Member.builder()
+                .id(0L)
+                .nickname(principalUser.providerUser().getNickName())
+                .password(principalUser.providerUser().getPassword())
+                .delete_yn('0')
+                .email(principalUser.providerUser().getEmail())
+                .provider(principalUser.providerUser().getProvider())
+                .build();
     }
 
 
