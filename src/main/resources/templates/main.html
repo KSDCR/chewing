@@ -9,6 +9,11 @@
     <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
     <title>Bootstrap Example</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .d-block {
+            height: 245px;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,7 +32,7 @@
 
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel"
          style="border-radius: 20px; margin-top: 40px; margin-left: 10px; margin-right: 10px; padding-bottom: 10px;">
-        <div class="carousel-inner">
+        <div class="carousel-inner rounded">
             <div class="carousel-item active">
                 <img th:onclick="|location.href='@{/store/get(id=${storeRandom[0].id})}'|"
                      th:src="@{{imgUrl}/{id}/{fileName}(imgUrl=${imgUrl},id=${storeRandom[0].id},fileName=${storeRandom[0].file})}"
@@ -97,24 +102,30 @@
 
     <!-- categories -->
     <div style="height: 360.4px; margin:15px;">
-        <div style="height: 120px;">
+        <div style="height: 120px; margin-bottom: 10px;">
             <div class="btn_image" style="float: left;">
                 <button th:onclick="|location.href='/store/rank'|"
                         type="button" class="img_color"  id="img_btn1" style="border-color: #e5e5e5; background-color: white; border-radius: 60px; color: white; border: none;">
                     <img src="/img/color_size_store.png" style="width: 95px; height: 95px; border-radius: 60px;">
                 </button>
+                <h6     th:onclick="|location.href='/store/rank'|"
+                        style="text-align: center;">랭킹</h6>
             </div>
             <div class="btn_image" style="float: left;">
                 <button th:onclick="|location.href='@{/store/list(category=Korean)}'|"
                         type="button" class="img_color"  id="img_btn2" style="border-color: #e5e5e5; background-color: white; border-radius: 60px; color: white;  border: none;">
                     <img src="/img/color_size_korean.png" style="width: 95px; height: 95px; border-radius: 60px;">
                 </button>
+                <h6 th:onclick="|location.href='@{/store/list(category=Korean)}'|"
+                    style="text-align: center;">한식</h6>
             </div>
             <div class="btn_image" style="float: left;">
                 <button th:onclick="|location.href='@{/store/list(category=Japanese)}'|"
                         type="button" class="img_color"  id="img_btn3" style="border-color: #e5e5e5; background-color: white; border-radius: 60px; color: white;  border: none;">
                     <img src="/img/color_size_japanese.png" style="width: 95px; height: 95px; border-radius: 60px;">
                 </button>
+                <h6     th:onclick="|location.href='@{/store/list(category=Japanese)}'|"
+                        style="text-align: center;">일식</h6>
             </div>
         </div>
         <div style="height: 120px;">
@@ -123,18 +134,24 @@
                         type="button" class="img_color"  id="img_btn4" style="border-color: #e5e5e5; background-color: white; border-radius: 60px; color: white; border: none;">
                     <img src="/img/color_size_western.png" style="width: 95px; height: 95px; border-radius: 60px;">
                 </button>
+                <h6     th:onclick="|location.href='@{/store/list(category=Western)}'|"
+                        style="text-align: center;">양식</h6>
             </div>
             <div class="btn_image" style="float: left;">
                 <button th:onclick="|location.href='@{/store/list(category=Chinese)}'|"
-                        type="button" class="img_color"  id="img_btn5" style="border-color: #e5e5e5; background-color: white; border-radius: 60px color: white; border: none;;">
+                        type="button" class="img_color"  id="img_btn5" style="border-color: #e5e5e5; background-color: white; border-radius: 60px; color: white; border: none;;">
                     <img src="/img/color_size_chinese.png" style="width: 95px; height: 95px; border-radius: 60px;">
                 </button>
+                <h6     th:onclick="|location.href='@{/store/list(category=Chinese)}'|"
+                        style="text-align: center;">중식</h6>
             </div>
             <div class="btn_image" style="float: left;">
                 <button th:onclick="|location.href='@{/store/list(category=Cafe)}'|"
                         type="button" class="img_color"  id="img_btn6" style="border-color: #e5e5e5; background-color: white; border-radius: 60px; color: white; border: none;">
                     <img src="/img/color_size_dessert.png" style="width: 95px; height: 95px; border-radius: 60px;">
                 </button>
+                <h6     th:onclick="|location.href='@{/store/list(category=Cafe)}'|"
+                        style="text-align: center;">카페</h6>
             </div>
         </div>
     </div>

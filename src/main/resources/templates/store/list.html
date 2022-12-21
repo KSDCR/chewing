@@ -38,10 +38,10 @@
     </div>
 </th:block>-->
 
-<form class="d-flex" role="search" style="margin: 0 10px;">
-    <input class="form-control me-2" th:field="${paging.keyword}" id="search" type="text" name="keyword"
+<form class="d-flex" role="search" style="padding-top: 20px; padding-left: 12px; padding-right: 12px; padding-bottom: 20px;">
+    <input class="form-control me-0" th:field="${paging.keyword}" id="search" type="text" name="keyword"
            placeholder="이름으로 맛집 검색"/>
-    <button class="btn btn-outline-success" type="submit">Search</button>
+    <button class="btn btn-outline-success" type="submit" style="color:dimgray; border-color: #FF8900;">Search</button>
 </form>
 
 <div class="list" th:each="store:${stores}">

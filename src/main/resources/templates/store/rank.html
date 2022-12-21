@@ -24,18 +24,18 @@
 </head>
 <body>
 <div layout:fragment="content">
-<h2 style="height: 45px;">
+<h2 style="height: 45px; margin-top: 30px;">
     <div style="float: left; margin: 0 10px;">
-        <button class="btn btn-light" onclick="location.href='/main'" style=" background-color: #FF8900">
+        <button class="btn btn-light" onclick="location.href='/main'" style=" background-color: #FF8900; color: white;">
             <i class="fa-solid fa-angle-left"></i>
         </button>
     </div>
     매장 TOP 10
 </h2>
 <div class="myLikeList" th:each="store,i:${storeRank}" th:onclick="|location.href='@{/store/get(id=${store.id})}'|">
-    <div class="store" id="rank" th:text="${i.index+1}"></div>
+    <div class="store" id="rank" th:text="${i.index+1}" style="color: #FC8A17; margin-right: 7px;"></div>
     <div class="store" id="name" th:text="${store.name}"></div>
-    <i class="fa-solid fa-angle-right" style="float: right"></i>
+    <i class="fa-solid fa-angle-right" style="float: right; color: #f2f2f2;"></i>
     <!--<div class="store" id="like" th:text="${store.countLike}"></div>-->
 </div>
 </div>
