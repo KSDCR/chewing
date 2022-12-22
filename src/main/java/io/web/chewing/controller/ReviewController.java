@@ -54,7 +54,7 @@ public class ReviewController {
         String member_nickname = principalUser.providerUser().getNickName();
         model.addAttribute("myReviewList", list);
         model.addAttribute("member_nickname", member_nickname);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl+"/review");
 
         log.info(list);
 
@@ -75,7 +75,7 @@ public class ReviewController {
 
         model.addAttribute("reviewList", list);
         model.addAttribute("store_name", store_name);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl+"/review");
 
         log.info(imgUrl);
 
@@ -117,7 +117,8 @@ public class ReviewController {
         rttr.addFlashAttribute("result", id);
         rttr.addFlashAttribute("store_name", store_name);
 
-        return "redirect:/review/list?store_name=" + store_name;
+        //return "redirect:/review/list?store_name=" + store_name;
+        return "redirect:/review/myList";
     }
 
     @GetMapping({"remove", "modify"})
@@ -128,7 +129,7 @@ public class ReviewController {
         log.info("===================" + reviewDto);
 
         model.addAttribute("reviewDto", reviewDto);
-        model.addAttribute("imgUrl", imgUrl);
+        model.addAttribute("imgUrl", imgUrl+"/review");
 
     }
 

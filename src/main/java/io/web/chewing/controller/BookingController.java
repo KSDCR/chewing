@@ -76,6 +76,7 @@ public class BookingController {
         log.info("넘어온 데이터" + String.valueOf(bookingDTO));
         log.info("넘어온 가게 이름" + store_name);
 
+        bookingDTO.setStore_name(store_name);
         String id = String.valueOf(bookingService.register(bookingDTO, principalUser, store_name));
 
         log.info("id" + id);

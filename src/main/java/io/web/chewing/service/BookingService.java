@@ -43,6 +43,7 @@ public class BookingService {
 
         Optional<Store> optionalStore = storeRepository.findByName(store_name);
         Store store = optionalStore.orElseThrow(RuntimeException::new);
+        log.info("서비스단에 스토어 이름 있나?"+store.getName());
         Optional<Member> optionalMember = memberRepository.findByNickname(principalUser.providerUser().getNickName());
         Member member = optionalMember.orElseThrow();
         log.info("잘 가져왔나?" + member.getNickname());
@@ -107,8 +108,8 @@ public class BookingService {
         return bookingMapper.findBookingByMember(member_nickname);
     }
 
-    public Page<BookingDTO> listPage(int page2, int size, String member_nickname) {
-        PageRequest pageRequest = PageRequest.of(page2, size);
+    public Page<BookingDTO> listPage(int page, int size, String member_nickname) {
+        PageRequest pageRequest = PageRequest.of(page, size);
 
 
         Page<Booking> bookings = bookingRepository.findAllByMember_Nickname(pageRequest, member_nickname);

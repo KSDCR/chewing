@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/main/navbar.html}">
 
 <head>
     <meta charset="UTF-8">
@@ -35,24 +36,14 @@
 </head>
 
 <body style="margin: 1%;">
-
-<header style=" background-color: #FF8900; height: 10%; margin-bottom: 50px">
-    <h1 class="profile_icon">
-    </h1>
-    <h1 class="title" style=" color: white; text-align: center;  line-height:100px">
-        chewing
-    </h1>
-    <div class="main_menu_button">
-    </div>
-</header>
-
 <div layout:fragment="content">
+
     <div class="row">
         <div class="col">
-            <h2 style="text-align: center; margin-bottom: 50px;">리뷰를 남겨주세요</h2>
+            <h5 style="text-align: center; margin-bottom: 20px; margin-top: 30px; font-weight: bold; color: chocolate;">리뷰를 남겨주세요</h5>
             <form id="registerForm1" action="" method="post" enctype="multipart/form-data">
                 <div class="mb-3" style="text-align: center;">
-                    <div class="rate_wrap" style="margin-right: 20px">
+                    <div class="rate_wrap">
                         <div class="rate_box">
                             <label for="rate_1" class="label_star" title="0.5"><span class="blind" >0.5점</span></label>
                             <label for="rate_2" class="label_star" title="1"><span class="blind" >1점</span></label>
@@ -80,7 +71,7 @@
                     <span id="star_rating" class="star-rating" style="width: 100%; color: darkgrey"></span>
                 </div>
 
-                <div class="mb-3" style="margin-top: 50px;">
+                <div class="mb-3" style="margin-top: 30px; margin-left: 10px; margin-right:10px;">
                     <textarea required="required" rows="14" class="content form-control" name="content" placeholder="음식점에 대한 솔직한 후기를 남겨주세요 !" style="text-align: center;  padding : 20px;"></textarea>
                 </div>
 
@@ -95,18 +86,19 @@
 
                 <!-- 이미지 미리보기 영역 -->
 
-                <div id="image_container" style="margin-bottom: 20px; position: relative; overflow-x: auto; white-space: nowrap;"></div>
+                <div id="image_container" style="margin: 20px; position: relative; overflow-x: auto; white-space: nowrap;"></div>
 
-                <input type="hidden" value="">
-                <input style="clear:both;" class="btn btn-primary" type="submit" value="등록">
+
+                <input style="clear:both; background-color: #ff8900; border: none;" class="btn btn-primary" type="submit" value="등록">
 
 
             </form>
         </div>
     </div>
-</div>
+
 
 <script>
+
     function getRate(event) {
         document.getElementById('star_rating').innerText =
             event.target.value;
@@ -125,7 +117,6 @@
             let reader = new FileReader();
 
             reader.onload = function(event) {
-
 
 
                 let img = document.createElement("img");
@@ -186,5 +177,6 @@
 
 
 </script>
+</div>
 </body>
 </html>

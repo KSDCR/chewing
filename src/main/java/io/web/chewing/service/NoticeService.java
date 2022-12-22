@@ -2,10 +2,13 @@ package io.web.chewing.service;
 
 import io.web.chewing.Entity.Notice;
 import io.web.chewing.domain.NoticeDTO;
+import io.web.chewing.domain.PageDto;
 import io.web.chewing.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -62,5 +65,24 @@ public class NoticeService {
         beNotice.change(notice);
         log.info("beNotice = "+String.valueOf(beNotice));
         noticeRepository.save(beNotice);
+    }
+
+    public Page<NoticeDTO> listPage(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page,size);
+        Page<Notice> notices = noticeRepository.findAll(pageRequest);
+
+        return notices.map(notice -> NoticeDTO.builder()
+                .id(notice.getId())
+                .title(notice.getTitle())
+                .content(notice.getContent())
+                .modify_time((notice.getModified_at()))
+                .build());
+    }
+
+    public PageDto page(Page<NoticeDTO> notices, int page, String keyword) {
+        return PageDto.builder()
+                .total(notices.getTotalPages())
+                .number(notices.getNumber())
+                .keyword(keyword).build();
     }
 }

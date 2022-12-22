@@ -2,9 +2,13 @@ package io.web.chewing.controller;
 
 import io.web.chewing.Entity.Notice;
 import io.web.chewing.domain.NoticeDTO;
+import io.web.chewing.domain.PageDto;
 import io.web.chewing.service.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/notice")
 @Controller
 @Slf4j
@@ -39,10 +44,17 @@ public class NoticeController {
     }
 
     @GetMapping("/list")
-    public void list(Model model) {
-        List<Notice> list = noticeService.noticeDTOList();
-        list.forEach(notice -> log.info(String.valueOf(notice)));
-        model.addAttribute("notice", list);
+    public String list(Model model, Pageable pageable,
+                     @RequestParam(required = false, name = "keyword") String keyword
+                     ) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+        Page<NoticeDTO> notice = noticeService.listPage(page, 4);
+        PageDto paging = noticeService.page(notice, page, keyword);
+
+        model.addAttribute("notice", notice);
+        model.addAttribute("paging", paging);
+
+        return "notice/list";
     }
 
     @PostMapping("/modify")
@@ -53,7 +65,7 @@ public class NoticeController {
         noticeService.modify(noticeDTO);
         redirectAttributes.addFlashAttribute("result", "modified");
         redirectAttributes.addAttribute("id", notice.getId());
-        return "redirect:/notice/get?id="+id;
+        return "redirect:/notice/get?id=" + id;
     }
 
     @PostMapping("/delete")
