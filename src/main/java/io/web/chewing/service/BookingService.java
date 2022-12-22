@@ -45,6 +45,8 @@ public class BookingService {
         Store store = optionalStore.orElseThrow(RuntimeException::new);
         log.info("서비스단에 스토어 이름 있나?"+store.getName());
         Optional<Member> optionalMember = memberRepository.findByNickname(principalUser.providerUser().getNickName());
+        log.info(String.valueOf(optionalMember));
+        log.info("이게 왜 없지"+principalUser.providerUser().getNickName());
         Member member = optionalMember.orElseThrow();
         log.info("잘 가져왔나?" + member.getNickname());
 

@@ -20,19 +20,25 @@
 <div style="background-color: #e5e5e5; margin: 18px; border-radius: 12px;">
     <div id="bookingList" style="height: 548.4px; padding-top: 7px;">
         <div id="titleList" style="height: 128px; margin: 25px; padding: 10px; background-color: white; border-radius: 10px;" th:each="list:${myBookingList}">
-            <div style="float: right; margin-right: 7px; margin-top: 33px;">
+            <div style="float: right; margin-right: 7px; margin-top: 7px;">
+                <div>
+                    <button class="bookingStatus" type="button" style="background-color: white; border: none; color: dimgray;">
+                        예약상태
+                    </button>
+                </div>
                 <form action="remove" method="post">
                     <input type="hidden" name="id" th:value="${list.id}">
-                    <button class="bookingCancel" type="submit">
+                    <button class="bookingCancel" type="submit" style="background-color: white; border-color: #ff8900; color: #ff8900; border-radius: 5px; margin-top: 40px;">
                         예약취소
                     </button>
                 </form>
+<!--                <div><h6>예약상태</h6></div>-->
             </div>
-            <div>
+            <div style="margin: 5px;">
                 <a th:href="@{/store/get(id=${list.store_id})}" th:text="${list.store_name}"
-                   style="margin-top: 7px; margin-bottom: 20px;"/>
-                <p th:text="|예약자:${list.real_name}|"/>
-                <p th:text="|인원:${list.people}|"/>
+                   style="margin-top: 7px;"/>
+                <p th:text="|예약자:${list.real_name}|" style="margin-bottom: 0px;"/>
+                <p th:text="|인원:${list.people}|" style="margin-bottom: 0px;"/>
                 <p style="display: inline;" th:text="|${list.date}-${list.time}|"></p>
             </div>
         </div>
