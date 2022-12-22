@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/main/navbar.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,12 +70,15 @@
 
             .content{
                 clear:both;
-                background-color: #e5e5e5;
+                background-color: #e3e3e3;
                 width: 99%;
                 text-align: center;
-                height: 190px;
-                line-height: 190px;
+                height: 150px;
+                line-height: 150px;
                 font-size: 18px;
+                font-size: 17px;
+                border-radius: 5px;
+                margin-top: 15px;
             }
 
             .star{
@@ -81,7 +86,7 @@
             }
 
             .img{
-                min-height: 100px; max-height:150px
+                min-height: 100px; max-height:150px; margin-top: 15px;
             }
 
 
@@ -94,26 +99,15 @@
     </style>
 </head>
 <body style="position: relative; height: 96%; margin: 1%;">
-    <header class="header" style=" background-color: #FF8900; height: 100px;">
-        <h1 class="profile_icon">
-        </h1>
-        <h1 class="title" style=" color: white; text-align: center;  line-height:120px; font-size: 50px">
-            chewing
-        </h1>
-        <div class="main_menu_button">
-        </div>
-
-    </header>
-
-
+<div layout:fragment="content" style="margin: 8px;">
 
     <div th:each="list:${reviewList}" class="main">
 
 
-        <h1 style="clear: both; font-size: 250%; height: 60px">
+        <h1 style="clear: both; font-size: 50%; height: 60px">
             <span class="name" style="line-height: 30px;"><i class="fa-sharp fa-solid fa-user"></i>  [[${list.member_nickname}]]</span>
-            <span class="star" style="position:absolute; vertical-align: bottom;">
-                <span class="star-rating">
+            <div><span class="star" style="position:absolute; vertical-align: bottom; margin-right: 9px;"></span></div>
+            <span class="star-rating">
                     <span th:if="${list.rate}==0.5" style="width:10%"></span>
                     <span th:if="${list.rate}==1.0" style="width:20%"></span>
                     <span th:if="${list.rate}==1.5" style="width:30%"></span>
@@ -125,7 +119,7 @@
                     <span th:if="${list.rate}==4.5" style="width:90%"></span>
                     <span th:if="${list.rate}==5.0" style="width:100%"></span>
                 </span>
-                <span style="font-size: 32px;">
+            <span style="font-size: 32px;">
                     <span style="color: grey; font-weight: lighter" class="star-rate">[[${list.rate}]]</span>
                 </span>
 
@@ -151,56 +145,49 @@
 
     </div>
 
-    <div style="margin-left: 13.2%; margin-right: 5%">
-        <button th:onclick="|location.href='@{/review/register(store_name=${store_name})}'|"
-                id="review" type="button" class="btn btn-lg" style="background-color: #FF8900; letter-spacing: 1.5px; width: 90%">리뷰등록</button>
-    </div>
-
-
-
-
-
 
 
 
     <div class="row">
         <div class="col">
             <nav class="mt-3 page" aria-label="Page navigation example">
-                <ul id= "pagination" >
-                    <div th:if="${pageInfo.currentPageNumber != 1 }">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=1)}" aria-label="first">
-                                <span aria-hidden="true"><i class="fa-solid fa-angles-left"></i></span>
-                            </a>
-                        </li>
-                    </div>
-                    <div th:if="${pageInfo.leftPageNumber != 1 }">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}-1)}" aria-label="left">
-                                <span aria-hidden="true"><i class="fa-solid fa-angle-left"></i></span>
-                            </a>
-                        </li>
-                    </div>
-                    <div th:each="num:${#numbers.sequence(pageInfo.leftPageNumber, pageInfo.rightPageNumber)}">
-                        <li th:class="${pageInfo.currentPageNumber eq num} ? 'page-item active' : ''">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${num})}" th:text="${num}"></a>
-                        </li>
-                    </div>
-                    <div th:if="${pageInfo.rightPageNumber} != ${pageInfo.lastPageNumber}/10*10 and ${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}+1)}" aria-label="last">
-                                <span aria-hidden="true"><i class="fa-solid fa-angle-right"></i></span>
-                            </a>
-                        </li>
-                    </div>
-                    <div th:if="${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.lastPageNumber})}" aria-label="last">
-                                <span aria-hidden="true"><i class="fa-solid fa-angles-right"></i></span>
-                            </a>
-                        </li>
-                    </div>
-                </ul>
+                <div th:if="${list != null}">
+                    <ul id= "pagination" >
+                        <div th:if="${pageInfo.currentPageNumber != 1 }">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=1)}" aria-label="first">
+                                    <span aria-hidden="true"><i class="fa-solid fa-angles-left"></i></span>
+                                </a>
+                            </li>
+                        </div>
+                        <div th:if="${pageInfo.leftPageNumber != 1 }">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}-1)}" aria-label="left">
+                                    <span aria-hidden="true"><i class="fa-solid fa-angle-left"></i></span>
+                                </a>
+                            </li>
+                        </div>
+                        <div th:each="num:${#numbers.sequence(pageInfo.leftPageNumber, pageInfo.rightPageNumber)}">
+                            <li th:class="${pageInfo.currentPageNumber eq num} ? 'page-item active' : ''">
+                                <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${num})}" th:text="${num}"></a>
+                            </li>
+                        </div>
+                        <div th:if="${pageInfo.rightPageNumber} != ${pageInfo.lastPageNumber}/10*10 and ${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.currentPageNumber}+1)}" aria-label="last">
+                                    <span aria-hidden="true"><i class="fa-solid fa-angle-right"></i></span>
+                                </a>
+                            </li>
+                        </div>
+                        <div th:if="${pageInfo.currentPageNumber != pageInfo.lastPageNumber }">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{/review/list(store_name=${store_name}, page=${pageInfo.lastPageNumber})}" aria-label="last">
+                                    <span aria-hidden="true"><i class="fa-solid fa-angles-right"></i></span>
+                                </a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
             </nav>
         </div>
     </div>
@@ -208,16 +195,14 @@
 
 
 
+    <script>
 
+        if(matchMedia("screen and (max-width: 700px)").matches){
+            document.querySelector("#pagination").setAttribute("class", "pagination pagination-sm justify-content-center ");
+        }else{
+            document.querySelector("#pagination").setAttribute("class", "pagination pagination-lg justify-content-center ");
+        }
+    </script>
+</div>
 </body>
-
-<script>
-
-    if(matchMedia("screen and (max-width: 700px)").matches){
-        document.querySelector("#pagination").setAttribute("class", "pagination pagination-sm justify-content-center ");
-    }else{
-        document.querySelector("#pagination").setAttribute("class", "pagination pagination-lg justify-content-center ");
-    }
-</script>
-
 </html>

@@ -1,32 +1,210 @@
-<input type="file" id="u_file" name="u_file" accept="image/*">
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/main/navbar.html}">
 
-<!-- 이미지 미리보기 영역 -->
-<div id="imgViewArea" style="margin-top:10px; display:none;">
-    <img id="imgArea" style="width:200px; height:100px;" onerror="imgAreaError()"/>
-</div>
-
-<script type="text/javascript">
-    // 콘텐츠 수정 :: 사진 수정 시 이미지 미리보기
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#imgArea').attr('src', e.target.result);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/common.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .star-rating{
+            font-size: 450%;
+            font-weight: lighter;
+            vertical-align: top;
+        }
+        .content{
+            font-size: 24px;
+        }
+        @media screen and (max-width: 700px ){
+            .star-rating{
+                font-size: 240%;
+                font-weight: lighter;
+                vertical-align: top;
             }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 
-    $(":input[name='u_file']").change(function() {
-        if( $(":input[name='u_file']").val() == '' ) {
-            $('#imgArea').attr('src' , '');
-        }
-        $('#imgViewArea').css({ 'display' : '' });
-        readURL(this);
-    });
+            .content{
+                font-size: 17px
+            }
 
-    // 이미지 에러 시 미리보기영역 미노출
-    function imgAreaError(){
-        $('#imgViewArea').css({ 'display' : 'none' });
-    }
-</script>
+
+        }
+
+    </style>
+</head>
+
+<body style="margin: 1%;">
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col">
+            <input type="hidden" id="id" th:value="${reviewDto.id}">
+            <h5 style="text-align: center; margin-bottom: 20px; margin-top: 30px; font-weight: bold; color: chocolate;">리뷰 수정</h5>
+            <form id="modifyForm" action="" method="post" enctype="multipart/form-data">
+                <div class="mb-3" style="text-align: center;">
+                    <div class="rate_wrap" style="margin-right: 0px">
+                        <div class="rate_box">
+                            <label for="rate_1" class="label_star" title="0.5"><span class="blind" >0.5점</span></label>
+                            <label for="rate_2" class="label_star" title="1"><span class="blind" >1점</span></label>
+                            <label for="rate_3" class="label_star" title="1.5"><span class="blind" >1.5점</span></label>
+                            <label for="rate_4" class="label_star" title="2"><span class="blind" >2점</span></label>
+                            <label for="rate_5" class="label_star" title="2.5"><span class="blind" >2.5점</span></label>
+                            <label for="rate_6" class="label_star" title="3"><span class="blind" >3점</span></label>
+                            <label for="rate_7" class="label_star" title="3.5"><span class="blind" >3.5점</span></label>
+                            <label for="rate_8" class="label_star" title="4"><span class="blind" >4점</span></label>
+                            <label for="rate_9" class="label_star" title="4.5"><span class="blind" >4.5점</span></label>
+                            <label for="rate_10" class="label_star" title="5"><span class="blind" >5점</span></label>
+                            <input type="radio"  id="rate_1" class="star_radio" name="rate" value="0.5" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_2" class="star_radio" name="rate" value="1.0" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_3" class="star_radio" name="rate" value="1.5" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_4" class="star_radio" name="rate" value="2.0" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_5" class="star_radio" name="rate" value="2.5" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_6" class="star_radio" name="rate" value="3.0" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_7" class="star_radio" name="rate" value="3.5" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_8" class="star_radio" name="rate" value="4.0" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_9" class="star_radio" name="rate" value="4.5" onclick='getRate(event)'>
+                            <input type="radio"  id="rate_10" class="star_radio" name="rate" value="5.0" onclick='getRate(event)'>
+                            <span class="rate_bg"></span>
+                        </div>
+                    </div>
+                    <span id="star_rating" class="star-rating" style="width: 100%; color: darkgrey"></span>
+                </div>
+
+                <div class="mb-3" style="margin-top: 30px; margin-left: 10px; margin-right:10px;">
+                    <textarea required="required" rows="14" class="content form-control" name="content" th:text="${reviewDto.content}" style="text-align: center;  padding : 20px;"></textarea>
+                </div>
+
+
+
+
+
+                <div class="mb-3" style="margin-bottom: 20px">
+                    <label class="form-label">파일</label>
+                    <input multiple="multiple" type="file" accept="image/*" class="form-control" name="files" id="image" onchange="setThumbnail(event);">
+                </div>
+
+                <!-- 이미지 미리보기 영역 -->
+                <div id="image_old" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;" >
+                    <div th:each="file, i:${reviewDto.fileName }" style="margin-bottom: 20px; display: inline; position: relative">
+                        <img style="width:70px; height: 70px; margin: 10px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" th:id="${file}"  alt="">
+                        <button type="button" th:value="${file}" style="position: absolute; left: 10px" th:id="${i.index}" th:class="delete">
+                            <i class="fa-solid fa-xmark"></i></button>
+
+                    </div>
+                </div>
+
+                <div id="image_container" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;/* width: 80%; left: 7%;*/"></div>
+
+                <input style="clear:both; background-color: #ff8900; border: none;" class="btn btn-primary" type="submit" value="등록">
+
+                <div style="float: right;" onclick="location.href='/review/myList'">
+                    <input style="clear:both; background-color: #f2f2f2; border: none; color: dimgray;" class="btn btn-primary" type="button" value="뒤로가기">
+                </div>
+
+
+            </form>
+
+
+
+        </div>
+    </div>
+
+
+    <script>
+
+        function getRate(event) {
+            document.getElementById('star_rating').innerText =
+                event.target.value;
+        }
+
+        let fileNo = 0  // 첨부된 이미지 총 갯수 (삭제되도 줄어들지않음). 이미지마다 다른 id를 지정하기 위함
+        let filesArr = []  // 첨부된 모든 파일 리스트 (삭제되도 제거되지않음)
+
+        function imgUpload(obj) {  // 파일을 인자값으로 받음
+
+            let maxFileCnt = 5   // 첨부파일 최대 개수
+            let attFileCnt = document.querySelectorAll('.filebox').length    // 기존 추가된 첨부파일 개수
+            // 업로드를 하면 바디에 생성된 태그 갯수로 계산
+            let remainFileCnt = maxFileCnt - attFileCnt    // 추가로 첨부가능한 개수
+            let curFileCnt = obj.files.length  // 현재 선택된 첨부파일 개수
+
+            // 첨부파일 개수 확인
+            // 최대 개수 초과 시
+            if (curFileCnt > remainFileCnt) {
+                alert("이미지는 최대 " + maxFileCnt + "개 까지 첨부 가능합니다.")
+            }
+
+            // 최대 개수 넘지 않았을 시
+            else {
+                // 첨부된 복수의 파일 하나씩
+                for (const file of obj.files) {
+
+                    // 파일 배열에 담기
+                    filesArr.push(file)  // 파일 리스트에 추가
+
+                    // 이미지 미리보기
+                    let img = new Image()  // 이미지 태그 객체 생성
+                    img.src = URL.createObjectURL(file)  // 이미지 src에 blob으로 이미지 url 생성
+
+                    let previewHtmlData = img
+                    previewHtmlData.setAttribute('id', `preview-img-${fileNo}`)  // 이미지마다 다른 id 부여
+                    $('.file-input-custom').before(previewHtmlData)
+
+                    // 이미지 목록에 추가
+                    // 업로드한 파일마다 파일이름과 삭제 가능한 버튼을 문서에 붙인다
+                    let htmlData = ''
+                    htmlData += '<div id="file' + fileNo + '" class="filebox">'
+                    htmlData += '   <p class="name">' + file.name + '</p>'
+                    htmlData += '   <a class="delete" onclick="deleteFile(' + fileNo + ')">❌</a>'  // 온클릭 이벤트 추가하고 해당 파일을 파라미터에 담음
+                    htmlData += '</div>'
+                    $('.file-list').append(htmlData)
+
+                    fileNo++  // 파일 번호 +1
+                }
+            }
+        }
+
+        /* 첨부파일 삭제 */
+        function deleteFile(num) {
+            document.querySelector("#file" + num).remove();
+            filesArr[num].is_delete = true;
+        }
+
+        /* 폼 전송 */
+        function submitForm() {
+            // 폼데이터 담기
+            var form = document.querySelector("form");
+            var formData = new FormData(form);
+            for (var i = 0; i < filesArr.length; i++) {
+                // 삭제되지 않은 파일만 폼데이터에 담기
+                if (!filesArr[i].is_delete) {
+                    formData.append("attach_file", filesArr[i]);
+                }
+            }
+
+            $.ajax({
+                method: 'POST',
+                url: '/register',
+                dataType: 'json',
+                data: formData,
+                async: true,
+                timeout: 30000,
+                cache: false,
+                headers: {'cache-control': 'no-cache', 'pragma': 'no-cache'},
+                success: function () {
+                    alert("파일업로드 성공");
+                },
+                error: function (xhr, desc, err) {
+                    alert('에러가 발생 하였습니다.');
+                    return;
+                }
+            })
+        }
+
+
+    </script>
+</div>
+</body>
+</html>

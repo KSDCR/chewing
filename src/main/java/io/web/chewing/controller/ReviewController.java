@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +118,8 @@ public class ReviewController {
         rttr.addFlashAttribute("result", id);
         rttr.addFlashAttribute("store_name", store_name);
 
+
+
         return "redirect:/review/list?store_name=" + store_name;
     }
 
@@ -133,6 +136,7 @@ public class ReviewController {
     }
 
 
+    @ResponseBody
     @PostMapping("modify")
     public String updateReview(
 //            PageRequestDto pageRequestDto,
@@ -140,7 +144,7 @@ public class ReviewController {
             BindingResult bindingResult,
             RedirectAttributes rttr,
             MultipartFile[] files,
-            @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
+            @RequestParam(name = "removeFiles", required = false) String removeFiles) {
 
 
         if (bindingResult.hasErrors()) {
@@ -155,15 +159,16 @@ public class ReviewController {
             return "redirect:/list/modify?id=" + reviewDto.getId();
         }
 
-        if (removeFiles != null) {
-            for (String name : removeFiles) {
-                System.out.println(name);
-            }
-        }
+        log.info("99999999999999999999999"+reviewDto.getRemoveFiles());
+//        if (removeFiles != null) {
+//            for (String name : removeFiles) {
+//                System.out.println(name);
+//            }
+//        }
 
         log.info("===================" + reviewDto);
 
-        String member_nickname = reviewService.modify(reviewDto, files, removeFiles);
+        String member_nickname = reviewService.modify(reviewDto, files, Collections.singletonList(removeFiles));
 
         rttr.addFlashAttribute("result", "modified");
 
@@ -178,7 +183,8 @@ public class ReviewController {
             BindingResult bindingResult,
             RedirectAttributes rttr,
             MultipartFile[] files,
-            @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
+            @RequestParam(name = "removeFiles", required = false) String removeFiles) {
+
 
 
         if (bindingResult.hasErrors()) {
@@ -193,7 +199,7 @@ public class ReviewController {
             return "redirect:/list/modify?" + link;
         }
 
-        reviewService.modify(reviewDto, files, removeFiles);
+        reviewService.modify(reviewDto, files, Collections.singletonList(removeFiles));
 
         rttr.addFlashAttribute("result", "modified");
 
