@@ -40,7 +40,6 @@ public class BookingController {
 
         Page<BookingDTO> bookings = bookingService.listPage(page, 3, principalUser.providerUser().getNickName());;
 
-        bookings.forEach(booking -> log.info("entity: " + booking));
 
         PageDto paging = bookingService.page(bookings, page, keyword);
 
@@ -64,22 +63,15 @@ public class BookingController {
                            @AuthenticationPrincipal PrincipalUser principalUser,
                            String store_name) throws NotFoundException {
 
-        log.info("POST register.......");
-        log.info("인증객체는?" + principalUser.providerUser());
-
         if (bindingResult.hasErrors()) {
             log.info("has errors......." + bindingResult.getAllErrors());
             rttr.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/booking/register";
         }
 
-        log.info("넘어온 데이터" + String.valueOf(bookingDTO));
-        log.info("넘어온 가게 이름" + store_name);
 
         bookingDTO.setStore_name(store_name);
         String id = String.valueOf(bookingService.register(bookingDTO, principalUser, store_name));
-
-        log.info("id" + id);
 
         rttr.addFlashAttribute("result", id);
         rttr.addFlashAttribute("store_name", store_name);
@@ -90,15 +82,15 @@ public class BookingController {
 
     //
     @PostMapping("remove")
-    public String deleteBooking(long id, RedirectAttributes rttr, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+    public String deleteBooking(long id, RedirectAttributes rttr, @AuthenticationPrincipal PrincipalUser  principalUser) {
 
         log.info("remove post.. " + id);
 
-        bookingService.remove(id, authMemberDTO);
+        bookingService.remove(id, principalUser);
 
         rttr.addFlashAttribute("result", "removed");
 
-        return "redirect:/booking/Mylist";
+        return "redirect:/booking/myList";
     }
 }
 

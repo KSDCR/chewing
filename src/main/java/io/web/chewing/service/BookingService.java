@@ -3,11 +3,8 @@ package io.web.chewing.service;
 import io.web.chewing.Entity.Booking;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Store;
-import io.web.chewing.config.security.dto.AuthMemberDTO;
 import io.web.chewing.domain.BookingDTO;
 import io.web.chewing.domain.PageDto;
-import io.web.chewing.domain.PageInfo;
-import io.web.chewing.mapper.booking.BookingMapper;
 import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.repository.BookingRepository;
 import io.web.chewing.repository.MemberRepository;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,19 +33,14 @@ public class BookingService {
 
     private final MemberRepository memberRepository;
 
-    private final BookingMapper bookingMapper;
 
     public Long register(BookingDTO bookingDTO, PrincipalUser principalUser, String store_name) {
 
-        Optional<Store> optionalStore = storeRepository.findByName(store_name);
-        Store store = optionalStore.orElseThrow(RuntimeException::new);
-        log.info("서비스단에 스토어 이름 있나?"+store.getName());
-        Optional<Member> optionalMember = memberRepository.findByNickname(principalUser.providerUser().getNickName());
-        Member member = optionalMember.orElseThrow();
-        log.info("잘 가져왔나?" + member.getNickname());
+        Store store = storeRepository.findByName(store_name).orElseThrow(RuntimeException::new);
+
+        Member member = memberRepository.findByNickname(principalUser.providerUser().getNickName()).orElseThrow();
 
         Booking booking = bookingDTO.toEntity(store, member);
-
 
         return bookingRepository.save(booking).getId();
     }
@@ -74,38 +65,13 @@ public class BookingService {
     }
 
 
-    public void remove(Long id, AuthMemberDTO authMemberDTO) {
-        Optional<Booking> optional = bookingRepository.findByIdAndMember_Nickname(id, authMemberDTO.getNickname());
+    public void remove(Long id, PrincipalUser principalUser) {
+        Optional<Booking> optional = bookingRepository.findByIdAndMember_Nickname(id, principalUser.providerUser().getNickName());
         Booking booking = optional.orElseThrow();
 
-        if (Objects.equals(booking.getMember().getNickname(), authMemberDTO.getNickname())) {
+        if (Objects.equals(booking.getMember().getNickname(), principalUser.providerUser().getNickName())) {
             bookingRepository.deleteById(id);
         }
-    }
-
-    public List<BookingDTO> listBookingByMember(String member_nickname, int page, PageInfo pageInfo) {
-        int records = 10;
-        int offset = (page - 1) * records;
-
-
-        int countAll = bookingMapper.countBookingByMember(member_nickname);
-        int lastPage = (countAll - 1) / records + 1;
-
-        log.info("===========" + countAll);
-
-        int leftPageNumber = (page - 1) / 10 * 10 + 1;
-        int rightPageNumber = leftPageNumber + 9;
-        int currentPageNumber = page;
-        rightPageNumber = Math.min(rightPageNumber, lastPage);
-        boolean hasNextPageNumber = page <= ((lastPage - 1) / 10 * 10);
-
-        pageInfo.setHasNextPageNumber(hasNextPageNumber);
-        pageInfo.setCurrentPageNumber(currentPageNumber);
-        pageInfo.setLeftPageNumber(leftPageNumber);
-        pageInfo.setRightPageNumber(rightPageNumber);
-        pageInfo.setLastPageNumber(lastPage);
-
-        return bookingMapper.findBookingByMember(member_nickname);
     }
 
     public Page<BookingDTO> listPage(int page, int size, String member_nickname) {

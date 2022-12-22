@@ -46,7 +46,7 @@ public class Booking extends BaseEntity {
     @NotNull
     private String time;
 
-    @ColumnDefault("false")
-    private boolean confirm;
+
+    private String state;
 
 }
