@@ -1,3 +1,4 @@
+/*
 package io.web.chewing.member;
 
 import io.web.chewing.Entity.Categories;
@@ -57,3 +58,4 @@ public class MemberTest {
 
 
 }
+*/

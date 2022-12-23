@@ -27,8 +27,12 @@ public class MainController {
     @GetMapping(value = {"/","main"})
     public String main(Model model) {
         /*랜덤 매장 보여주기*/
+
         List<StoreDto> storeRandom = storeService.getRandomStore();
         log.info("storeRandom ====================> {}", storeRandom);
+        boolean count = storeRandom.size() > 2;
+        log.info("제대로 나오나여?" + count);
+        model.addAttribute("count", count);
         model.addAttribute("storeRandom", storeRandom);
         model.addAttribute("imgUrl", imgUrl + "/store");
 
