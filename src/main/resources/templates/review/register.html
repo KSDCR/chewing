@@ -123,24 +123,24 @@
 
                     let img = document.createElement("img");
 
-                    let button = document.createElement("button");
+                    // let button = document.createElement("button");
 
                     img.setAttribute("src", event.target.result);
 
 
-                    document.getElementById('image_container').appendChild(button);
+                    // document.getElementById('image_container').appendChild(button);
                     document.querySelector("#image_container").appendChild(img);
 
 
                     let cnt=0;
-                    for (let num=1; num<(document.getElementById('image').files.length)*2; num= num+2){
-
-                        button.style.position = 'absolute';
-                        button.setAttribute("th:value", image.name);
-                        button.setAttribute("name", "removeFiles");
-                        button.setAttribute("onClick", "delImg();");
-                        button.setAttribute("id", "delete");
-                        button.innerHTML ='<i class="fa-solid fa-xmark"></i>';
+                    for (let num=0; num<document.getElementById('image').files.length; num++){
+                        //
+                        // button.style.position = 'absolute';
+                        // button.setAttribute("th:value", image.name);
+                        // button.setAttribute("name", "removeFiles");
+                        // button.setAttribute("onClick", "delImg();");
+                        // button.setAttribute("id", "delete");
+                        // button.innerHTML ='<i class="fa-solid fa-xmark"></i>';
 
 
                         if(matchMedia("screen and (max-width: 700px)").matches){
@@ -148,7 +148,7 @@
                             cnt++;
                             //화면 크기가 700px이하일때
                             document.getElementById('image_container').children[num].setAttribute('width',70);
-                            document.getElementById('image_container').children[num-1].style.left = left + 'px';
+                            // document.getElementById('image_container').children[num-1].style.left = left + 'px';
                             document.getElementById('image_container').children[num].setAttribute('height',70);
                             document.getElementById('image_container').children[num].style.margin = '10px';
 
@@ -156,7 +156,7 @@
                             let left =  10+(220*cnt);
                             cnt++;
                             document.getElementById('image_container').children[num].setAttribute('width',200);
-                            document.getElementById('image_container').children[num-1].style.left = left + 'px';
+                            // document.getElementById('image_container').children[num-1].style.left = left + 'px';
                             document.getElementById('image_container').children[num].setAttribute('height',200);
                             document.getElementById('image_container').children[num].style.margin = '10px';
 

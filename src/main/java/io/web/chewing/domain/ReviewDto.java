@@ -27,7 +27,6 @@ public class ReviewDto {
 
     private List<String> fileName;
 
-    private  String removeFiles;
 
     private int countFile;
 

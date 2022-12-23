@@ -136,7 +136,7 @@ public class ReviewController {
     }
 
 
-    @ResponseBody
+
     @PostMapping("modify")
     public String updateReview(
 //            PageRequestDto pageRequestDto,
@@ -144,8 +144,8 @@ public class ReviewController {
             BindingResult bindingResult,
             RedirectAttributes rttr,
             MultipartFile[] files,
-            @RequestParam(name = "removeFiles", required = false) String removeFiles) {
-
+            @RequestParam(name = "removeFiles", required = false) List<String> removeFiles) {
+            log.info("이게 오나요?"+removeFiles);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors.......");
@@ -159,16 +159,16 @@ public class ReviewController {
             return "redirect:/list/modify?id=" + reviewDto.getId();
         }
 
-        log.info("99999999999999999999999"+reviewDto.getRemoveFiles());
-//        if (removeFiles != null) {
-//            for (String name : removeFiles) {
-//                System.out.println(name);
-//            }
-//        }
+
+        if (removeFiles != null) {
+            for (String name : removeFiles) {
+                System.out.println(name);
+            }
+        }
 
         log.info("===================" + reviewDto);
 
-        String member_nickname = reviewService.modify(reviewDto, files, Collections.singletonList(removeFiles));
+        String member_nickname = reviewService.modify(reviewDto, files, removeFiles);
 
         rttr.addFlashAttribute("result", "modified");
 

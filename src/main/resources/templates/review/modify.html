@@ -19,6 +19,10 @@
         .content{
             font-size: 24px;
         }
+        .old_image{
+            width:300px;
+            height: 300px;
+        }
         @media screen and (max-width: 700px ){
             .star-rating{
                 font-size: 240%;
@@ -28,6 +32,10 @@
 
             .content{
                 font-size: 17px
+            }
+            .old_image{
+                width:70px;
+                height: 70px;
             }
 
 
@@ -83,21 +91,22 @@
                 <div class="mb-3" style="margin-bottom: 20px">
                     <label class="form-label">파일</label>
                     <input multiple="multiple" type="file" accept="image/*" class="form-control" name="files" id="image" onchange="setThumbnail(event);">
-                    <input type="hidden" name="removeFiles" id="remove">
+                    <input type="hidden" name="removeFiles" id="remove" >
                 </div>
 
 
                 <!-- 이미지 미리보기 영역 -->
                 <div id="image_old" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;" >
-                    <div th:each="file, i:${reviewDto.fileName }" style="margin-bottom: 20px; display: inline; position: relative">
-                        <img style="width:70px; height: 70px; margin: 10px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" th:id="${file}"  alt="">
+                    <span id="image_container" style="position: relative; overflow-x: auto; white-space: nowrap;/* width: 80%; left: 7%;*/"></span>
+                    <span th:each="file, i:${reviewDto.fileName }" style="margin-bottom: 20px; display: inline; position: relative">
+                        <img style="margin: 10px" th:src="|${imgUrl}/${reviewDto.id}/${file}|" th:id="${file}" class="old_image" alt="">
                         <button type="button" th:value="${file}" style="position: absolute; left: 10px" th:id="${i.index}" th:class="delete">
                             <i class="fa-solid fa-xmark"></i></button>
 
-                    </div>
+                    </span>
                 </div>
 
-                <div id="image_container" style="margin: 20px;position: relative; overflow-x: auto; white-space: nowrap;/* width: 80%; left: 7%;*/"></div>
+
 
                 <input style="clear:both; background-color: #ff8900; border: none;" class="btn btn-primary" type="submit" value="등록">
 
@@ -132,26 +141,12 @@
                 console.log(document.getElementById(del));
                 document.getElementById(del).remove();
 
-                document.getElementById("remove").setAttribute("th:value", arr);
+                document.getElementById("remove").setAttribute("value", arr);
 
 
                 const id = document.getElementById('id').value;
 
-
-                const data = {
-                    'removeFiles' : arr
-                }
-
-                fetch(`/review/modify?id=`+id,{
-                    method : "post",
-                    traditional : true,
-                    headers : {
-                        "Content-Type" : "application/json"
-                    },
-                    body : JSON.stringify(data)
-                }).then(res => res.json())
-                    .then(data => console.log(data));
-            });
+            })
         }
 
 
@@ -164,11 +159,6 @@
         // 이미지 미리보기
 
         function setThumbnail(event) {
-
-            if(document.getElementById('image_old')){
-                console.log(document.getElementById('image_old'))
-                document.getElementById('image_old').remove();
-            }
 
 
             while (document.getElementById('image_container').hasChildNodes()) {
@@ -183,34 +173,36 @@
 
 
                     let img = document.createElement("img");
-
-                    let button = document.createElement("button");
+                    //
+                    // let button = document.createElement("button");
 
                     img.setAttribute("src", event.target.result);
 
 
-                    document.getElementById('image_container').appendChild(button);
+                    // document.getElementById('image_container').appendChild(button);
                     document.querySelector("#image_container").appendChild(img);
 
                     let cnt=0;
-                    for (let num=1; num<(document.getElementById('image').files.length)*2; num= num+2){
+                    let size=0;
+                    for (let num=0; num<document.getElementById('image').files.length; num++){
+                        // for (let num=1; num<(document.getElementById('image').files.length)*2; num=num+2){
 
-                        let size=0;
-                        button.style.position = 'absolute';
-                        button.setAttribute("th:value", image.name);
-                        button.setAttribute("name", "removeFiles");
-                        button.setAttribute("id", size);
-                        button.setAttribute("th:class", "delete");
-                        button.innerHTML ='<i class="fa-solid fa-xmark"></i>';
+                        // button.style.position = 'absolute';
+                        // button.setAttribute("value", image.name);
+                        // button.setAttribute("name", "removeFiles");
+                        // button.setAttribute("id", size);
+                        // button.setAttribute("class", "delete");
+                        // button.setAttribute("onclick", "deleteFile");
+                        // button.innerHTML ='<i class="fa-solid fa-xmark"></i>';
+                        //
 
-                        size++;
 
                         if(matchMedia("screen and (max-width: 700px)").matches){
                             let left =  10+(90*cnt);
                             cnt++;
                             //화면 크기가 700px이하일때
                             document.getElementById('image_container').children[num].setAttribute('width',70);
-                            document.getElementById('image_container').children[num-1].style.left = left + 'px';
+                            // document.getElementById('image_container').children[num-1].style.left = left + 'px';
                             document.getElementById('image_container').children[num].setAttribute('height',70);
                             document.getElementById('image_container').children[num].style.margin = '10px';
 
@@ -218,11 +210,12 @@
                             let left =  10+(320*cnt);
                             cnt++;
                             document.getElementById('image_container').children[num].setAttribute('width',300);
-                            document.getElementById('image_container').children[num-1].style.left = left + 'px';
+                            // document.getElementById('image_container').children[num-1].style.left = left + 'px';
                             document.getElementById('image_container').children[num].setAttribute('height',300);
                             document.getElementById('image_container').children[num].style.margin = '10px';
 
                         }
+                        size++;
                     }
 
                 };
@@ -232,7 +225,36 @@
             }
         }
 
-
+        //
+        // let arr2 = [];
+        //
+        // function deleteFile(num) {
+        //
+        //         let del = document.getElementById(i).value;
+        //
+        //
+        //         arr.push(del);
+        //
+        //         console.log(del);
+        //         console.log(arr);
+        //         console.log(document.getElementById(del));
+        //         document.getElementById(del).remove();
+        //
+        //         document.getElementById("remove").setAttribute("value", arr);
+        //
+        //     document.querySelector("#file" + num).remove()
+        //     document.querySelector("#preview-img-" + num).remove()
+        //
+        //     // go_delete 키값을 조회함으로써 기존 이미지인지 새로 저장한 이미지인지 구분한다
+        //     if (filesArr[num]['go_delete'] == false) {
+        //         // 기존에 저장된 이미지는 go_delete true 로 지정
+        //         filesArr[num].go_delete = true
+        //     }
+        //     // 새로 첨부한 이미지는 is_delete true 로 지정
+        //     else {
+        //         filesArr[num].is_delete = true
+        //     }
+        // }
 
 
 
