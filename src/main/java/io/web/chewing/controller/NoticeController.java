@@ -37,6 +37,7 @@ public class NoticeController {
     @PostMapping("/register")
     public String register(NoticeDTO noticeDTO) {
         log.info("NoticeController register");
+        log.info("이게 깨지나요?" + noticeDTO);
         noticeService.register(noticeDTO);
 
         return "redirect:/notice/list";

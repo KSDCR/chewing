@@ -24,6 +24,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
 
     public Long register(NoticeDTO noticeDTO) {
+        log.info("서비스 단에서 깨지나요?"+noticeDTO.getContent());
 
         /*Notice notice = modelMapper.map(noticeDTO, Notice.class);*/
         Notice notice1 = io.web.chewing.Entity.Notice.builder()
@@ -31,6 +32,7 @@ public class NoticeService {
                 .title(noticeDTO.getTitle())
                 .build();
             log.info("NoticeService register()");
+            log.info("Entity에서 깨지나요?" + notice1.getContent());
 
         Long bno = noticeRepository.save(notice1).getId();
 
