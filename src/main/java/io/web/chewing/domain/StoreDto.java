@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class StoreDto {
+    // 이 파일이 이상해서 커밋하려고 적은 내용
     private Long id;
     private String name;
     private String address;
