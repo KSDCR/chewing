@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
 @Table
 @EntityListeners(value = {AuditingEntityListener.class})
 public class Notice {
@@ -26,6 +25,10 @@ public class Notice {
     private String title;
 
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
+    private Member member;
 
 
     @CreatedDate
