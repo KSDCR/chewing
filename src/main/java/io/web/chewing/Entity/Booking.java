@@ -1,14 +1,13 @@
 package io.web.chewing.Entity;
 
 
-import com.sun.istack.NotNull;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Builder
@@ -37,7 +36,7 @@ public class Booking extends BaseEntity {
 
     private String real_name;
 
-    @NonNull
+    @NotNull
     private Long people;
 
     @NotNull

@@ -2,9 +2,12 @@ package io.web.chewing.repository;
 
 import io.web.chewing.Entity.Member;
 import lombok.extern.slf4j.Slf4j;
+import ognl.BooleanExpression;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -27,4 +30,5 @@ public class UserRepository {
         members.put(member.getEmail(), member);
         members.forEach((s, o) -> log.info("냥냥펀치" + s + ":" + o));
     }
+
 }

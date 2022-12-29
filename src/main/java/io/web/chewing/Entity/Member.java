@@ -1,7 +1,6 @@
 package io.web.chewing.Entity;
 
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +10,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +24,6 @@ import java.util.Set;
 @Getter
 @Table
 public class Member extends BaseEntity implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -87,5 +85,12 @@ public class Member extends BaseEntity implements Serializable {
 
     public void addAuthoritiesSet(List<? extends GrantedAuthority> authorities) {
         authorities.forEach(grantedAuthority -> authoritiesSet.add(String.valueOf(grantedAuthority)));
+    }
+
+    @Builder
+    public  Member(String email,String password,String provider){
+        this.email = email;
+        this.password = password;
+        this.provider = provider;
     }
 }

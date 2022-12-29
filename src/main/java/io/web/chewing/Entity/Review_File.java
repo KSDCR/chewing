@@ -1,12 +1,12 @@
 package io.web.chewing.Entity;
 
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Builder
@@ -24,7 +24,7 @@ public class Review_File{
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @NonNull
+    @NotNull
     private String name;
 
 }

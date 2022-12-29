@@ -1,16 +1,16 @@
 package io.web.chewing.Entity;
 
-import io.web.chewing.config.security.dto.AuthMemberDTO;
-import lombok.*;
-import org.apache.ibatis.javassist.NotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Builder
@@ -29,7 +29,7 @@ public class Review implements Serializable {
     @JoinColumn(name = "store_name", referencedColumnName = "name")
     private Store store_name;
 
-    @NonNull
+    @NotNull
     private double rate;
 
     @OneToOne
