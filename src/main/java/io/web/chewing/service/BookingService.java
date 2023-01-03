@@ -1,9 +1,9 @@
 package io.web.chewing.service;
 
-import io.web.chewing.Entity.Booking;
+import io.web.chewing.domain.booking.Booking;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Store;
-import io.web.chewing.domain.BookingDTO;
+import io.web.chewing.domain.booking.BookingDTO;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.repository.BookingRepository;

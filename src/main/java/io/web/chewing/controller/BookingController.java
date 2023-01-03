@@ -1,7 +1,6 @@
 package io.web.chewing.controller;
 
-import io.web.chewing.config.security.dto.AuthMemberDTO;
-import io.web.chewing.domain.BookingDTO;
+import io.web.chewing.domain.booking.BookingDTO;
 import io.web.chewing.domain.PageDto;
 import io.web.chewing.model.PrincipalUser;
 import io.web.chewing.service.BookingService;

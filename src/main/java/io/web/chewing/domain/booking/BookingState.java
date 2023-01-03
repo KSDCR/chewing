@@ -1,8 +1,8 @@
-package io.web.chewing.common.enums;
+package io.web.chewing.domain.booking;
 
-public class BookingEnums {
+public class BookingState {
 
-    public enum BookingState {
+    public enum bookingState {
         needConfirm("예약대기"),
         agreedConfirm("예약확인"),
         disagreeConfirm("예약거절"),
@@ -10,7 +10,7 @@ public class BookingEnums {
 
         private final String state;
 
-        BookingState(String state) {
+        bookingState(String state) {
             this.state = state;
         }
 

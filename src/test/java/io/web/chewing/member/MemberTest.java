@@ -42,7 +42,7 @@ public class MemberTest {
         String nickname = "crow";
         String password = "1234";
         String provider = "test";
-        memberRepository.save(new Member(email, passwordEncoder.encode(password), provider));
+        memberRepository.save(new Member(email, passwordEncoder.encode(password), nickname, provider));
 
         //when
         List<Member> result = memberCustomRepository.findByEmail(email);

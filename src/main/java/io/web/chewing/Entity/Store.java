@@ -56,4 +56,12 @@ public class Store extends BaseEntity implements Serializable {
 //
 //        this.member_id = member;
 //    }
+
+    @Builder
+    public Store(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
 }

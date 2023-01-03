@@ -57,7 +57,7 @@ public class Member extends BaseEntity implements Serializable {
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
-    
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<String> authoritiesSet = new HashSet<>();
@@ -88,9 +88,11 @@ public class Member extends BaseEntity implements Serializable {
     }
 
     @Builder
-    public  Member(String email,String password,String provider){
+    public Member(String email, String password, String nickname, String provider) {
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
         this.provider = provider;
+
     }
 }

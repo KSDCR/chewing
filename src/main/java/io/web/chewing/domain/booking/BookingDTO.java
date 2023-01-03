@@ -1,17 +1,11 @@
-package io.web.chewing.domain;
+package io.web.chewing.domain.booking;
 
-import io.web.chewing.Entity.Booking;
 import io.web.chewing.Entity.Member;
 import io.web.chewing.Entity.Store;
-import io.web.chewing.common.enums.BookingEnums;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -35,7 +29,7 @@ public class BookingDTO {
     private String time;
 
 
-    private String state;
+    private BookingState state;
 
 
     public Booking toEntity(Store store, Member member) {
@@ -44,7 +38,7 @@ public class BookingDTO {
                 .people(people)
                 .date(date)
                 .time(time)
-                .state(BookingEnums.BookingState.needConfirm.getState())
+                .bookingState(BookingState.bookingState.needConfirm)
                 .store(store)
                 .store_id(store.getId())
                 .member(member)
