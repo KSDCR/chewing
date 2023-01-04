@@ -10,6 +10,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.web.chewing.Entity.QMember.member;
+import static io.web.chewing.Entity.QStore.store;
 import static io.web.chewing.domain.booking.QBooking.booking;
 
 
@@ -28,9 +30,11 @@ public class BookingCustomRepositoryImpl {
                         booking.id.as("id"),
                         booking.real_name,
                         booking.people,
+                        booking.member,
                         booking.store,
                         booking.date,
                         booking.time,
+                        booking.member.nickname,
                         booking.bookingState))
                 .from(booking)
                 .where(
@@ -45,27 +49,89 @@ public class BookingCustomRepositoryImpl {
     /**
      * 커버링 인덱스 by Querydsl
      */
+    public List<BookingPaginationDto> paginationCoveringIndexByEntityToDto(String name, int pageNo, int pageSize) {
+        // 1) 커버링 인덱스로 대상 조회
+        List<Long> ids = queryFactory.select(booking.id)
+                .from(booking)
+                .where(booking.real_name.like(name + "%"))
+                .orderBy(booking.id.desc())
+                .limit(pageSize)
+                .offset((long) pageNo * pageSize)
+                .fetch();
+        // 1-1) 대상이 없을 경우 추가 쿼리 수행 할 필요 없이 바로 반환
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
+
+        // 2)
+        return queryFactory.select(Projections.fields(BookingPaginationDto.class,
+                        booking.id.as("id"),
+                        booking.real_name,
+                        booking.people,
+                        booking.date,
+                        booking.time,
+                        booking.member.nickname.as("member_nickname"),
+                        booking.store.name.as("store_name"),
+                        booking.bookingState))
+                .from(booking)
+                .innerJoin(booking.store, store)
+                .innerJoin(booking.member, member)
+                .where(booking.id.in(ids))
+                .orderBy(booking.id.desc())
+                .fetch();
+    }
+    public List<BookingPaginationDto> paginationCoveringIndexByEntityToDtoLeftJoin(String name, int pageNo, int pageSize) {
+        // 1) 커버링 인덱스로 대상 조회
+        List<Long> ids = queryFactory.select(booking.id)
+                .from(booking)
+                .where(booking.real_name.like(name + "%"))
+                .orderBy(booking.id.desc())
+                .limit(pageSize)
+                .offset((long) pageNo * pageSize)
+                .fetch();
+        // 1-1) 대상이 없을 경우 추가 쿼리 수행 할 필요 없이 바로 반환
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
+
+        // 2)
+        return queryFactory.select(Projections.fields(BookingPaginationDto.class,
+                        booking.id.as("id"),
+                        booking.real_name,
+                        booking.people,
+                        booking.date,
+                        booking.time,
+                        booking.member.nickname.as("member_nickname"),
+                        booking.store.name.as("store_name"),
+                        booking.bookingState))
+                .from(booking)
+                .leftJoin(booking.store, store)
+                .leftJoin(booking.member, member)
+                .where(booking.id.in(ids))
+                .orderBy(booking.id.desc())
+                .fetch();
+    }
+
     public List<BookingPaginationDto> paginationCoveringIndex(String name, int pageNo, int pageSize) {
         // 1) 커버링 인덱스로 대상 조회
         List<Long> ids = queryFactory.select(booking.id)
                 .from(booking)
                 .where(booking.real_name.like(name + "%"))
                 .orderBy(booking.id.desc())
-                .offset(pageSize)
+                .limit(pageSize)
                 .offset((long) pageNo * pageSize)
                 .fetch();
         // 1-1) 대상이 없을 경우 추가 쿼리 수행 할 필요 없이 바로 반환
         if (CollectionUtils.isEmpty(ids)) {
-            log.info("검색 안됨");
             return new ArrayList<>();
         }
 
-        log.info("검색됨");
         // 2)
         return queryFactory.select(Projections.fields(BookingPaginationDto.class,
                         booking.id.as("id"),
                         booking.real_name,
                         booking.people,
+                        booking.member,
                         booking.store,
                         booking.date,
                         booking.time,
