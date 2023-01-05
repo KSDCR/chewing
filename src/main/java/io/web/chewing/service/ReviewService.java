@@ -33,20 +33,20 @@ import java.util.Optional;
 public class ReviewService {
 
     @Autowired
-    private  ModelMapper modelMapper;
+    private ModelMapper modelMapper;
     @Autowired
-    private  ReviewRepository reviewRepository;
+    private ReviewRepository reviewRepository;
     @Autowired
-    private  StoreRepository storeRepository;
+    private StoreRepository storeRepository;
     @Autowired
-    private  ReviewMapper reviewMapper;
+    private ReviewMapper reviewMapper;
 
     @Autowired
     private AmazonS3Client s3Client;
 
 
     @Value("${aws.s3.bucket}")
-    private  String bucketName;
+    private String bucketName;
 
 
     public String register(ReviewDto reviewDto,
@@ -70,7 +70,7 @@ public class ReviewService {
         log.info(String.valueOf(review.getId()));
 
         for (MultipartFile file : files) {
-            log.info("abcd"+file.getOriginalFilename());
+            log.info("abcd" + file.getOriginalFilename());
 
             if (file != null && file.getSize() > 0) {
                 reviewMapper.insertFile(review.getId(), file.getOriginalFilename());
@@ -95,7 +95,6 @@ public class ReviewService {
     }
 
 
-
     private void uploadFile(Long id, MultipartFile file) {
         try {
             // S3에 파일 저장
@@ -110,7 +109,7 @@ public class ReviewService {
             // object(파일) 올리기
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
-            s3Client.putObject(bucketName, key, inputStream,metadata);
+            s3Client.putObject(bucketName, key, inputStream, metadata);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,10 +121,10 @@ public class ReviewService {
     public String modify(ReviewDto reviewDto, MultipartFile[] addFiles, List<String> removeFiles) {
         log.info(String.valueOf(reviewDto.getId()));
         Optional<Review> result = reviewRepository.findById(reviewDto.getId());
-        log.info("Optional<Review>:"+String.valueOf(result));
+        log.info("Optional<Review>:" + String.valueOf(result));
         Review review = result.orElseThrow();
 
-        log.info("modify"+review);
+        log.info("modify" + review);
 
         review.change(reviewDto.getContent());
 
@@ -137,7 +136,8 @@ public class ReviewService {
 
                 deleteFile(reviewDto.getId(), fileName);
 
-            };
+            }
+        ;
 
         for (MultipartFile file : addFiles) {
 
@@ -156,7 +156,6 @@ public class ReviewService {
 
 
         return reviewRepository.save(review).getMember_id().getNickname();
-
     }
 
 
@@ -165,19 +164,14 @@ public class ReviewService {
         ReviewDto reviewDto = reviewMapper.select(id);
         List<String> fileNames = reviewDto.getFileName();
 
-        log.info("---------------------"+String.valueOf(id));
+        log.info("---------------------" + String.valueOf(id));
 
         if (fileNames != null) {
             for (String fileName : fileNames) {
                 deleteFile(id, fileName);
-
                 reviewMapper.deleteFileByReviewIdAndFileName(id, fileName);
             }
-
-
         }
-
-
         reviewRepository.deleteById(id);
         return reviewDto.getMember_nickname();
     }
@@ -186,20 +180,21 @@ public class ReviewService {
         String key = "chewing/review/" + id + "/" + fileName;
 
         s3Client.deleteObject(bucketName, key);
-        log.info("==========="+ key);
+        log.info("===========" + key);
 
     }
 
 
     public ReviewDto get(Long id) {
-        ReviewDto reviewDto= reviewMapper.findReviewById(id);
+        ReviewDto reviewDto = reviewMapper.findReviewById(id);
 
 
         return reviewDto;
     }
+
     public List<ReviewDto> listReviewByStore(String store_name, int page, PageInfo pageInfo) {
 
-        log.info("bbbbbbbbbbbPage"+page);
+        log.info("bbbbbbbbbbbPage" + page);
 
         int records = 10;
         int offset = (page - 1) * records;
@@ -208,28 +203,28 @@ public class ReviewService {
         int countAll = reviewMapper.countReviewByStore(store_name);
         int lastPage = (countAll - 1) / records + 1;
 
-        log.info("==========="+countAll);
-        log.info("===========lastPage"+lastPage);
+        log.info("===========" + countAll);
+        log.info("===========lastPage" + lastPage);
 
         int leftPageNumber = (page - 1) / 10 * 10 + 1;
 
-        log.info("ccccccccccccccLeftPageNum"+leftPageNumber);
+        log.info("ccccccccccccccLeftPageNum" + leftPageNumber);
 
         int rightPageNumber = leftPageNumber + 9;
 
-        log.info("==========="+rightPageNumber);
+        log.info("===========" + rightPageNumber);
 
 
         int currentPageNumber = page;
 
-        log.info("ccccccccccccccCurrentPageNum"+currentPageNumber);
+        log.info("ccccccccccccccCurrentPageNum" + currentPageNumber);
 
         rightPageNumber = Math.min(rightPageNumber, lastPage);
 
-        log.info("ccccccccccccccRightPageNum"+rightPageNumber);
-        boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
+        log.info("ccccccccccccccRightPageNum" + rightPageNumber);
+        boolean hasNextPageNumber = page <= ((lastPage - 1) / 10 * 10);
 
-        log.info("cccccccccccccchasNextPageNum"+hasNextPageNumber);
+        log.info("cccccccccccccchasNextPageNum" + hasNextPageNumber);
 
         pageInfo.setHasNextPageNumber(hasNextPageNumber);
         pageInfo.setCurrentPageNumber(currentPageNumber);
@@ -237,7 +232,7 @@ public class ReviewService {
         pageInfo.setRightPageNumber(rightPageNumber);
         pageInfo.setLastPageNumber(lastPage);
 
-        log.info("FFF"+reviewMapper.findReviewByStore(store_name,offset,records).toString());
+        log.info("FFF" + reviewMapper.findReviewByStore(store_name, offset, records).toString());
         return reviewMapper.findReviewByStore(store_name, offset, records);
     }
 
@@ -248,7 +243,7 @@ public class ReviewService {
         int countAll = reviewMapper.countReviewByMember(member_nickname);
         int lastPage = (countAll - 1) / records + 1;
 
-        log.info("==========="+countAll);
+        log.info("===========" + countAll);
 
         int leftPageNumber = (page - 1) / 10 * 10 + 1;
         int rightPageNumber = leftPageNumber + 9;
@@ -256,8 +251,8 @@ public class ReviewService {
 
         rightPageNumber = Math.min(rightPageNumber, lastPage);
 
-        log.info("==========="+rightPageNumber);
-        boolean hasNextPageNumber = page <= ((lastPage-1)/10*10);
+        log.info("===========" + rightPageNumber);
+        boolean hasNextPageNumber = page <= ((lastPage - 1) / 10 * 10);
 
         pageInfo.setHasNextPageNumber(hasNextPageNumber);
         pageInfo.setCurrentPageNumber(currentPageNumber);
@@ -268,11 +263,11 @@ public class ReviewService {
         return reviewMapper.findReviewByMember(member_nickname, offset, records);
     }
 
-        public File multipartToFile(MultipartFile mfile) throws IllegalStateException, IOException{
-            File file = new File(mfile.getOriginalFilename());
-            mfile.transferTo(file);
-            return file;
-        }
+    public File multipartToFile(MultipartFile mfile) throws IllegalStateException, IOException {
+        File file = new File(mfile.getOriginalFilename());
+        mfile.transferTo(file);
+        return file;
+    }
 
 
 //    public void removeFileByName(Long id, String fileName) {

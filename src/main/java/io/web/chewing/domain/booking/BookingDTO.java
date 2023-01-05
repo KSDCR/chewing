@@ -29,10 +29,9 @@ public class BookingDTO {
     private String time;
 
 
-    private BookingState state;
+    private BookingState.bookingState state;
 
-    @QueryProjection
-    public BookingDTO(Long id, String store_name, Long store_id, String member_nickname, String real_name, Long people, String date, String time, BookingState state) {
+    public BookingDTO(Long id, String store_name, Long store_id, String member_nickname, String real_name, Long people, String date, String time, BookingState.bookingState state) {
         this.id = id;
         this.store_name = store_name;
         this.store_id = store_id;

@@ -67,6 +67,11 @@ public class Member extends BaseEntity implements Serializable {
     @Builder.Default
     private Set<Categories> categoriesSet = new HashSet<>();
 
+    @Builder
+    public Member(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void addMemberRole(MemberRole memberRole) {
         roleSet.add(memberRole);
     }
