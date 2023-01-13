@@ -122,13 +122,37 @@ public class BookingPaginationRepositoryTest {
     }
 
     @Test
+    public void testInsert1M() {
+        Member member = memberRepository.save(new Member(prefixReal_name + "email10k", prefixReal_name + "password",
+                prefixReal_name + "nick10k", prefixReal_name + "provider10k"));
+
+        Store store = storeRepository.save(Store.builder()
+                .name(prefixReal_name + "store10k")
+                .detail(prefixReal_name + "detail10k")
+                .open_time(prefixReal_name + "open_time10k")
+                .close_time(prefixReal_name + "close_time10k")
+                .address(prefixReal_name + "address10k")
+                .build());
+
+        for (int i = 0; i <= 1000000; i++) {
+            bookingRepository.save(Booking.builder()
+                    .real_name(prefixReal_name + i)
+                    .member(member)
+                    .store(store)
+                    .bookingState(BookingState.bookingState.needConfirm)
+                    .date("testDate")
+                    .time("testTime")
+                    .people((long) i)
+                    .build());
+        }
+    }
+    @Test
     public void chewing() {
         //given
         String searchNick = "testnick10k";
 
         //when
-        Page<BookingDTO> bookings = bookingRepository.findAllByMember_Nickname(PageRequest.of(990, 10), searchNick).map(booking -> {
-            log.info("아이디"+booking.getId());
+        Page<BookingDTO> bookings = bookingRepository.findAllByMember_Nickname(PageRequest.of(2, 10), searchNick).map(booking -> {
             return BookingDTO.builder()
                     .id(booking.getId())
                     .store_name(booking.getStore().getName())
@@ -159,10 +183,10 @@ public class BookingPaginationRepositoryTest {
     @Test
     public void legacy() throws Exception {
         //given
-        String searchName = "test";
+        String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationLegacy(searchName, 1200, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationLegacy(searchName, 50000, 10);
 
         //then
         assertThat(bookings).hasSize(10);
@@ -171,13 +195,13 @@ public class BookingPaginationRepositoryTest {
     @Test
     public void CoveringIndex() {
         //given
-        String searchName = "test12999";
+        String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndex(searchName, 0, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndex(searchName, 50000, 10);
 
         //then
-        assertThat(bookings).hasSize(1);
+        assertThat(bookings).hasSize(10);
     }
 
     @Test
@@ -186,7 +210,7 @@ public class BookingPaginationRepositoryTest {
 
         String searchName = "testnick10k";
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndexByEntityToDto(searchName, 0, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndexByEntityToDto(searchName, 50000, 10);
 
         //then
         assertThat(bookings).hasSize(10);
@@ -195,7 +219,7 @@ public class BookingPaginationRepositoryTest {
     @Test
     public void NoOffsetBuilder() {
         //given
-        String searchName = "test";
+        String searchName = "testnick10k";
 
         //when
         List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffsetBuilder(21000L, searchName, 10);
@@ -209,7 +233,6 @@ public class BookingPaginationRepositoryTest {
         //given
         String searchNick = "testnick10k";
 
-
         //when
         List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffset(null, searchNick, 10);
 
@@ -220,12 +243,13 @@ public class BookingPaginationRepositoryTest {
     @Test
     public void NoOffsetSecondPage() {
         //given
-        String searchName = "test";
+        String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffset(23613L, searchName, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffset(999990L, searchName, 10);
 
-
+        //then
+        assertThat(bookings).hasSize(10);
     }
 
 /*    @After

@@ -40,7 +40,7 @@ public class BookingCustomRepositoryImpl {
                         booking.bookingState))
                 .from(booking)
                 .where(
-                        booking.real_name.like(searchName + "%")
+                        booking.member.nickname.eq(searchName)
                 )
                 .orderBy(booking.id.desc())
                 .limit(PageSize)
@@ -92,7 +92,7 @@ public class BookingCustomRepositoryImpl {
         // 1) 커버링 인덱스로 대상 조회
         List<Long> ids = queryFactory.select(booking.id)
                 .from(booking)
-                .where(booking.real_name.like(name + "%"))
+                .where(booking.member.nickname.eq(name))
                 .orderBy(booking.id.desc())
                 .limit(pageSize)
                 .offset((long) pageNo * pageSize)
@@ -129,7 +129,7 @@ public class BookingCustomRepositoryImpl {
         // 1) 커버링 인덱스로 대상 조회
         List<Long> ids = queryFactory.select(booking.id)
                 .from(booking)
-                .where(booking.real_name.eq(name))
+                .where(booking.member.nickname.eq(name))
                 .orderBy(booking.id.desc())
                 .limit(pageSize)
                 .offset((long) pageNo * pageSize)
@@ -179,7 +179,7 @@ public class BookingCustomRepositoryImpl {
                         booking.store.name,
                         booking.bookingState))
                 .from(booking)
-                .where(booleanBuilder.and(booking.real_name.like(name + "%")))
+                .where(booleanBuilder.and(booking.member.nickname.eq(name)))
                 .orderBy(booking.id.desc())
                 .limit(pageSize)
                 .fetch();
