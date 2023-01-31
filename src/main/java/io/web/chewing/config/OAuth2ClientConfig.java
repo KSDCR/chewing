@@ -50,6 +50,8 @@ public class OAuth2ClientConfig {
 
         http.logout().logoutSuccessUrl("/login");
         http.exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+
+        http.headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");
         return http.build();
     }
 

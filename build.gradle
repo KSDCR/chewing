@@ -28,41 +28,49 @@ dependencies {
 
 
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
+    
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // Spring security & Security test , 소셜로그인 OAuth2
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    // 테스트 코드 작성 관련 의존성
     testImplementation 'org.projectlombok:lombok:1.18.22'
     testImplementation 'junit:junit:4.13.1'
+
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 
-    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 
-    /*implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"*/
-
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    
     annotationProcessor(
-
+            
+            // query dsl
             "javax.persistence:javax.persistence-api",
-
+            
+            // lombok 
             "javax.annotation:javax.annotation-api",
-
-            /*"com.querydsl:querydsl-apt:${queryDslVersion}:jpa"*/
     )
+    
+    //spring boot test 코드
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+    
+    
+    // json webtoken 의존성
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 
@@ -82,9 +90,11 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    
+    // aws S3 파일 업로드 관련 의존성
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.0'
 
-    // @NotNull 이슈 해결위해 추가 의존성
+    // @NotNull 어노테이션 중복 이슈 해결위해 추가 의존성
     implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
 
 
@@ -103,7 +113,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-//Querydsl 설정
+//Querydsl QClass 위치 설정 및 생성 코드
 apply plugin: "io.spring.dependency-management"
 def generated = 'src/main/generated'
 sourceSets {

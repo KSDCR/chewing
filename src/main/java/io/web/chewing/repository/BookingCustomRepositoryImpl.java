@@ -36,7 +36,6 @@ public class BookingCustomRepositoryImpl {
                         booking.store.name.as("store_name"),
                         booking.date,
                         booking.time,
-                        booking.member.nickname,
                         booking.bookingState))
                 .from(booking)
                 .where(

@@ -186,7 +186,7 @@ public class BookingPaginationRepositoryTest {
         String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationLegacy(searchName, 50000, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationLegacy(searchName, 99097, 10);
 
         //then
         assertThat(bookings).hasSize(10);
@@ -198,7 +198,7 @@ public class BookingPaginationRepositoryTest {
         String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndex(searchName, 50000, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndex(searchName, 1, 10);
 
         //then
         assertThat(bookings).hasSize(10);
@@ -210,7 +210,7 @@ public class BookingPaginationRepositoryTest {
 
         String searchName = "testnick10k";
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndexByEntityToDto(searchName, 50000, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationCoveringIndexByEntityToDto(searchName, 1, 10);
 
         //then
         assertThat(bookings).hasSize(10);
@@ -222,7 +222,7 @@ public class BookingPaginationRepositoryTest {
         String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffsetBuilder(21000L, searchName, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffsetBuilder(500011L, searchName, 10);
 
         //then
         assertThat(bookings).hasSize(10);
@@ -246,7 +246,7 @@ public class BookingPaginationRepositoryTest {
         String searchName = "testnick10k";
 
         //when
-        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffset(999990L, searchName, 10);
+        List<BookingPaginationDto> bookings = bookingCustomRepository.paginationNoOffset(9970L, searchName, 10);
 
         //then
         assertThat(bookings).hasSize(10);
